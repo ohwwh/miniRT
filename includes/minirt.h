@@ -7,7 +7,7 @@
 #include "../mlx/mlx.h"
 #include "../libft/libft.h"
 
-# define HIGHT 600
+# define HEIGHT 600
 # define WIDTH 900
 # define ESC 53
 
@@ -75,10 +75,20 @@ typedef struct s_scene
 	t_objs	*objs;
 }	t_scene;
 
+typedef struct s_ray
+{
+	t_vec origin;
+	t_vec dir;
+	t_vec color;
+} t_ray;
+
 typedef struct	s_minirt
 {
 	t_mlx		mlx;
 	t_scene		scene;
+	t_ray		ray;
+	double		u;
+	double		v;
 }               t_minirt;
 
 int		check_file(int ac, char **av);
@@ -104,3 +114,16 @@ void	free_split(char **s);
 void print_scene(t_scene sc);
 
 void	rt_render(t_minirt *data);
+
+t_vec create_vec(double x, double y, double z);
+void set_vec(t_vec *vec, double x, double y, double z);
+double vec_len(t_vec vec);
+t_vec vec_sum(t_vec vec1, t_vec vec2);
+t_vec      vec_sub(t_vec vec, t_vec vec2);
+t_vec vec_scalar_mul(t_vec vec, double s);
+t_vec   vec_mul(t_vec vec1, t_vec vec2);
+t_vec      vec_division(t_vec vec, double t);
+double  vdot(t_vec vec, t_vec vec2);
+t_vec  vcross(t_vec vec1, t_vec vec2);
+t_vec      unit_vec(t_vec vec);
+t_vec  vmin(t_vec vec1, t_vec vec2);
