@@ -3,8 +3,8 @@
 void	init_rt(t_minirt *data)
 {
 	data->mlx.mlx = mlx_init();
-	data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, WIDTH, HIGHT, "miniRT");
-	data->mlx.img = mlx_new_image(data->mlx.mlx, WIDTH, HIGHT);
+	data->mlx.mlx_win = mlx_new_window(data->mlx.mlx, WIDTH, HEIGHT, "miniRT");
+	data->mlx.img = mlx_new_image(data->mlx.mlx, WIDTH, HEIGHT);
 	data->mlx.addr = mlx_get_data_addr(data->mlx.img, &data->mlx.bits_per_pixel, \
 	&data->mlx.line_length, &data->mlx.endian);
 	data->scene.objs = NULL;
