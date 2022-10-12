@@ -10,6 +10,7 @@
 # define PI 3.14159265358979323846
 # define EPS 0.0001
 # define LUMEN 3 
+# define ROTATE 1
 
 # define HEIGHT 600
 # define WIDTH 900
@@ -29,6 +30,8 @@ typedef enum s_keycode{
 	TWO = 19,
 	THREE = 20,
 	FOUR = 21,
+	FIVE = 23,
+	SIX = 22,
 	W = 13,
 	A = 0,
 	S = 1,
