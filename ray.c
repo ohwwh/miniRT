@@ -60,7 +60,7 @@ t_vec get_raycolor(t_minirt *data)
         {
             hr.normal = vec_scalar_mul(hr.normal, -1);
         }
-        color = calcul_color(&data->scene, hr, amb);
+        color = calcul_color(&data->scene, hr, amb, data->ray);
 		return (color);
 	}
 	return (vec_scalar_mul(data->scene.amb.col, data->scene.amb.ratio));

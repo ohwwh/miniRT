@@ -9,6 +9,7 @@
 
 # define PI 3.14159265358979323846
 # define EPS 0.0001
+# define LUMEN 3 
 
 # define HEIGHT 600
 # define WIDTH 900
@@ -159,7 +160,7 @@ t_ray       ray_primary(t_cam *cam, double u, double v);
 
 t_vec get_raycolor(t_minirt *data);
 t_vec calcul_ratio(t_vec col1, t_vec col2, double ratio);
-t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb);
+t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb, t_ray ray);
 
 t_hit_record find_hitpoint(t_ray *ray, t_objs *objs);
 t_hit_record hit_plane(t_hit_record saved, t_ray *ray, t_objs *pl);
