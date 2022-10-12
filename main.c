@@ -24,7 +24,7 @@ int	main(int ac, char **av)
 	init_rt(&data);
 	parse(&data.scene, fd);
 
-	print_scene(data.scene);
+	// print_scene(data.scene);
 	rt_render(&data);
 
 	return (0);

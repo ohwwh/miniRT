@@ -9,10 +9,11 @@
 
 # define PI 3.14159265358979323846
 # define EPS 0.0001
+# define LUMEN 3 
+# define ROTATE 1
 
 # define HEIGHT 600
 # define WIDTH 900
-# define ESC 53
 
 # define CY 1
 # define PL 2
@@ -22,6 +23,21 @@ typedef enum s_bool{
 	FALSE = 0,
 	TRUE
 } t_bool;
+
+typedef enum s_keycode{
+	ESC = 53,
+	ZERO = 29,
+	ONE = 18,
+	TWO = 19,
+	THREE = 20,
+	FOUR = 21,
+	FIVE = 23,
+	SIX = 22,
+	W = 13,
+	A = 0,
+	S = 1,
+	D = 2
+} t_keycode;
 
 typedef struct	s_mlx
 {
@@ -73,12 +89,13 @@ typedef struct s_amb
 typedef struct s_objs
 {
 	int				type;
-	t_vec			cen;
+	t_vec			center;
 	t_vec			dir;
-	t_vec			p;
-	t_vec			col;
-	t_vec			norm;
+	double			radius;
+	double			height;
+	t_vec			color;
 	struct s_objs	*next;
+	int				mat;
 }	t_objs;
 
 typedef struct s_scene
@@ -104,7 +121,6 @@ typedef struct s_hit_record
     double      tmax;
     double      t;
     t_bool      front_face; // 객체가 카메라 앞에 있는지
-    t_vec       albedo; // 반사율
 	t_vec		color;
 } t_hit_record;
 
@@ -159,7 +175,7 @@ t_ray       ray_primary(t_cam *cam, double u, double v);
 
 t_vec get_raycolor(t_minirt *data);
 t_vec calcul_ratio(t_vec col1, t_vec col2, double ratio);
-t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb);
+t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb, t_ray ray);
 
 t_hit_record find_hitpoint(t_ray *ray, t_objs *objs);
 t_hit_record hit_plane(t_hit_record saved, t_ray *ray, t_objs *pl);

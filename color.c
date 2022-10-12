@@ -31,6 +31,31 @@ t_vec diffuse(t_hit_record hr, t_light *light, double d)
 	return (diff);
 }
 
+t_vec	reflect(t_vec v, t_vec n)
+{
+    return (vec_sub(v, vec_scalar_mul(n, vdot(v, n) * 2)));
+}
+
+t_vec specular(t_hit_record hr, t_light *light, t_ray ray)
+{
+	double ks;
+	double ksn;
+	double spec;
+	t_vec view_dir;
+	t_vec reflect_dir;
+	t_vec specular;
+	t_vec light_dir;
+
+	light_dir = unit_vec(vec_sub(light->src, hr.p));
+	view_dir = unit_vec(vec_scalar_mul(ray.dir, -1));
+    reflect_dir = reflect(vec_scalar_mul(light_dir, -1), hr.normal);
+    ksn = 64; // shininess value
+    ks = 0.5; // specular strength
+    spec = pow(fmax(vdot(view_dir, reflect_dir), 0.0), ksn);
+    specular = vec_scalar_mul(vec_scalar_mul(create_vec(255,255,255), ks), spec);
+	return (specular);
+}
+
 int	shadow(t_scene *sc, t_hit_record hr, t_light *light)
 {
 	t_vec			hit_light;
@@ -49,7 +74,7 @@ int	shadow(t_scene *sc, t_hit_record hr, t_light *light)
 }
 
 
-t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb)
+t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb, t_ray ray)
 {
 	t_light		*light;
 	t_vec		ret;
@@ -72,6 +97,8 @@ t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb)
 		ret = add_color(ret, amb);
 		if (d >= 0)
 			ret = add_color(ret, diffuse(hr, light, d));
+		ret = add_color(ret, specular(hr, light, ray));
+		ret = vec_scalar_mul(ret, LUMEN * light->ratio);
 	}
-	return (ret);
+	return (vmin(ret, create_vec(255, 255, 255)));
 }
