@@ -27,7 +27,6 @@ void print_objects(t_objs *objs)
         printf("direction : "); print_vec(tmp->dir);
         printf("p : "); print_vec(tmp->p);
         printf("color : "); print_vec(tmp->col);
-        printf("norm : "); print_vec(tmp->norm);
         tmp = tmp->next;
     }
 }

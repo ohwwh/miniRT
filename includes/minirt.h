@@ -92,7 +92,6 @@ typedef struct s_objs
 	t_vec			dir;
 	t_vec			p;
 	t_vec			col;
-	t_vec			norm;
 	struct s_objs	*next;
 }	t_objs;
 
