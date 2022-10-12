@@ -26,6 +26,7 @@ typedef enum s_bool{
 
 typedef enum s_keycode{
 	ESC = 53,
+	ZERO = 29,
 	ONE = 18,
 	TWO = 19,
 	THREE = 20,
