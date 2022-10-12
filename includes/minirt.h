@@ -13,7 +13,6 @@
 
 # define HEIGHT 600
 # define WIDTH 900
-# define ESC 53
 
 # define CY 1
 # define PL 2
@@ -23,6 +22,18 @@ typedef enum s_bool{
 	FALSE = 0,
 	TRUE
 } t_bool;
+
+typedef enum s_keycode{
+	ESC = 53,
+	ONE = 18,
+	TWO = 19,
+	THREE = 20,
+	FOUR = 21,
+	W = 13,
+	A = 0,
+	S = 1,
+	D = 2
+} t_keycode;
 
 typedef struct	s_mlx
 {
