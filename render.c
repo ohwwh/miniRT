@@ -1,20 +1,5 @@
 #include "minirt.h"
 
-int	ft_close(t_minirt *data)
-{
-	mlx_clear_window(data->mlx.mlx, data->mlx.mlx_win);
-	mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
-	exit(0);
-}
-
-int	keybind(int keycode, t_minirt *data)
-{
-	printf("keycode=%d\n", keycode);
-	if (keycode == ESC)
-		ft_close(data);
-	return (0);
-}
-
 void	put_color(t_mlx *data, int x, int y, int color)
 {
 	char	*dst;
@@ -38,15 +23,10 @@ void	define_color(t_minirt *data)
 		x = 0;
 		while (x < WIDTH)
 		{
-			data->v = (double)x * 2 / WIDTH - 1;
-			data->u = (double)y * 2 / HEIGHT - 1;
-			// data->ray = primary_ray(); // 대강 이런식으로 구현할 것
-			// data->ray.color = get_raycolor(); // 대강 이런식으로 구현할 것
-			// /* test
-			data->ray.color.x = 255;
-			data->ray.color.y = 0;
-			data->ray.color.z = 0;
-			// */
+			data->u = (double)x * 2 / WIDTH - 1;
+			data->v = (double)y * 2 / HEIGHT - 1;
+			data->ray = ray_primary(&data->scene.cam, data->u, data->v); // 대강 이런식으로 구현할 것
+			data->ray.color = get_raycolor(data); // 대강 이런식으로 구현할 것
 			put_color(&data->mlx, x, HEIGHT - 1 - y,
 				convert_rgb(data->ray.color.x, data->ray.color.y, data->ray.color.z));
 			x++;
@@ -57,6 +37,7 @@ void	define_color(t_minirt *data)
 
 void	rt_render(t_minirt *data)
 {
+	set_camera_param(&data->scene.cam);
 	define_color(data);
 	mlx_put_image_to_window(data->mlx.mlx, data->mlx.mlx_win, data->mlx.img, 0, 0);
 	mlx_key_hook(data->mlx.mlx_win, keybind, data);

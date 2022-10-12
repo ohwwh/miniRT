@@ -7,6 +7,9 @@
 #include "../mlx/mlx.h"
 #include "../libft/libft.h"
 
+# define PI 3.14159265358979323846
+# define EPS 0.0001
+
 # define HEIGHT 600
 # define WIDTH 900
 # define ESC 53
@@ -14,6 +17,11 @@
 # define CY 1
 # define PL 2
 # define SP 3
+
+typedef enum s_bool{
+	FALSE = 0,
+	TRUE
+} t_bool;
 
 typedef struct	s_mlx
 {
@@ -38,6 +46,13 @@ typedef struct t_cam
 	t_vec	cen;
 	t_vec	dir;
 	double	fov;
+	double	aspect_r;
+	double	theta;
+	double	height;
+	double 	width;
+	t_vec 	forward;
+	t_vec	up;
+	t_vec	right;
 	int		count;
 }	t_cam;
 
@@ -68,7 +83,6 @@ typedef struct s_objs
 
 typedef struct s_scene
 {
-	t_vec	col;
 	t_cam	cam;
 	t_light	*light;
 	t_amb	amb;
@@ -81,6 +95,18 @@ typedef struct s_ray
 	t_vec dir;
 	t_vec color;
 } t_ray;
+
+typedef struct s_hit_record
+{
+    t_vec       p; // 교점
+    t_vec       normal; // 법선
+    double      tmin;
+    double      tmax;
+    double      t;
+    t_bool      front_face; // 객체가 카메라 앞에 있는지
+    t_vec       albedo; // 반사율
+	t_vec		color;
+} t_hit_record;
 
 typedef struct	s_minirt
 {
@@ -127,3 +153,19 @@ double  vdot(t_vec vec, t_vec vec2);
 t_vec  vcross(t_vec vec1, t_vec vec2);
 t_vec      unit_vec(t_vec vec);
 t_vec  vmin(t_vec vec1, t_vec vec2);
+
+void set_camera_param(t_cam *cam);
+t_ray       ray_primary(t_cam *cam, double u, double v);
+
+t_vec get_raycolor(t_minirt *data);
+t_vec calcul_ratio(t_vec col1, t_vec col2, double ratio);
+t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb);
+
+t_hit_record find_hitpoint(t_ray *ray, t_objs *objs);
+t_hit_record hit_plane(t_hit_record saved, t_ray *ray, t_objs *pl);
+t_hit_record hit_sphere(t_hit_record saved, t_ray *ray, t_objs *sp);
+t_hit_record hit_cylinder(t_hit_record saved, t_ray *ray, t_objs *cy);
+t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy);
+
+int	keybind(int keycode, t_minirt *data);
+int	ft_close(t_minirt *data);
