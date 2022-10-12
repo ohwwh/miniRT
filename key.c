@@ -11,7 +11,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
 		{
 			if (tmp->type == type)
 			{
-				tmp->cen.y += 5;
+				tmp->center.y += 5;
 			}
 			tmp = tmp->next;
 		}
@@ -23,7 +23,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
 		{
 			if (tmp->type == type)
 			{
-				tmp->cen.x += 5;
+				tmp->center.x += 5;
 			}
 			tmp = tmp->next;
 		}
@@ -35,7 +35,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
 		{
 			if (tmp->type == type)
 			{
-				tmp->cen.z += 5;
+				tmp->center.z += 5;
 			}
 			tmp = tmp->next;
 		}

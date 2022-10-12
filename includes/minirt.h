@@ -89,11 +89,12 @@ typedef struct s_amb
 typedef struct s_objs
 {
 	int				type;
-	t_vec			cen;
+	t_vec			center;
 	t_vec			dir;
 	t_vec			p;
-	t_vec			col;
+	t_vec			color;
 	struct s_objs	*next;
+	int				mat;
 }	t_objs;
 
 typedef struct s_scene
@@ -119,7 +120,6 @@ typedef struct s_hit_record
     double      tmax;
     double      t;
     t_bool      front_face; // 객체가 카메라 앞에 있는지
-    t_vec       albedo; // 반사율
 	t_vec		color;
 } t_hit_record;
 
