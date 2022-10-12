@@ -5,7 +5,8 @@ CFLAGS = -Wall -Wextra -Werror
 FRAMEW = -Lmlx -lmlx -framework OpenGL -framework Appkit
 
 SRCS = main.c parse.c parse_objs.c utils.c parse_equip.c \
-		render.c vector.c \
+		render.c vector.c ray.c sphere.c color.c plane.c \
+		key.c cylinder.c \
 		tests.c
 INCS = ./includes/
 OBJS = $(SRCS:.c=.o)

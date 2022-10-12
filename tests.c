@@ -5,6 +5,16 @@ void print_vec(t_vec v)
     printf("x : %lf, y : %lf, z : %lf\n", v.x, v.y, v.z);
 }
 
+void print_type(int type)
+{
+    if (type == CY)
+        printf("type : %s\n", "Cylinder");
+    else if (type == SP)
+        printf("type : %s\n", "Shpere");
+    else if (type == PL)
+        printf("type : %s\n", "Plane");
+}
+
 void print_objects(t_objs *objs)
 {
     t_objs *tmp;
@@ -12,7 +22,7 @@ void print_objects(t_objs *objs)
     tmp = objs;
     while (tmp)
     {
-        printf("type : %d\n", tmp->type);
+        print_type(tmp->type);
         printf("center : "); print_vec(tmp->cen);
         printf("direction : "); print_vec(tmp->dir);
         printf("p : "); print_vec(tmp->p);
@@ -24,9 +34,6 @@ void print_objects(t_objs *objs)
 
 void print_scene(t_scene sc)
 {
-    printf("-------- color --------\n");
-    print_vec(sc.col);
-
     printf("-------- cam --------\n");
     printf("center >> "); print_vec(sc.cam.cen);
     printf("direction >> "); print_vec(sc.cam.dir);
