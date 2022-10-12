@@ -31,7 +31,7 @@ t_hit_record find_hitpoint(t_ray *ray, t_objs *objs)
         }
         else if (tmp->type == CY)
         {
-            // saved = hit_cylinder(saved, ray, tmp);
+            saved = hit_cylinder(saved, ray, tmp);
 	        saved = hit_caps(saved, ray, tmp);
         }
         tmp = tmp->next;

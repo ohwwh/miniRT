@@ -1,4 +1,4 @@
-NAME=RayTracer
+NAME=miniRT
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
