@@ -11,9 +11,9 @@ void	parse_sphere(t_scene *sc, char **tokens)
 		err_handler("invalid sphere");
 	obj->type = SP;
 	obj->center = get_vec(tokens[1]);
-	obj->p.x = ft_atod(tokens[2]);
-	if (obj->p.x <= 0)
-		err_handler("invalid diameter sphere");
+	obj->radius = ft_atod(tokens[2]) / 2.0;
+	if (obj->radius <= 0)
+		err_handler("invalid radius sphere");
 	obj->color = get_color(tokens[3]);
 }
 
@@ -35,10 +35,10 @@ void	parse_cylinder(t_scene *sc, char **tokens)
 		err_handler("invalid orientation cylinder");
 	if (obj->dir.x < -1 || obj->dir.y < -1 || obj->dir.z < -1)
 		err_handler("invalid orientation cylinder");
-	obj->p.x = ft_atod(tokens[3]);
-	obj->p.y = ft_atod(tokens[4]);
-	if (obj->p.x <= 0 || obj->p.y <= 0)
-		err_handler("invalid diameter cy");
+	obj->radius = ft_atod(tokens[3]) / 2.0;
+	obj->height = ft_atod(tokens[4]);
+	if (obj->radius <= 0 || obj->height <= 0)
+		err_handler("invalid radius cy");
 	obj->color = get_color(tokens[5]);
 }
 

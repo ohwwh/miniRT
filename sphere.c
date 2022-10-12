@@ -14,7 +14,7 @@ t_hit_record hit_sphere(t_hit_record saved, t_ray *ray, t_objs *sp)
     oc = vec_sub(ray->origin, sp->center);
 	a = vdot(ray->dir, ray->dir);
 	b = 2.0 * vdot(oc, ray->dir);
-	c = vdot(oc, oc) - (sp->p.x / 2.0) * (sp->p.x / 2.0);
+	c = vdot(oc, oc) - (sp->radius) * (sp->radius);
 	t = b * b - (4 * a * c);
 	if (t < EPS)
 		hr.t = -1;

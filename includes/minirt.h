@@ -91,7 +91,8 @@ typedef struct s_objs
 	int				type;
 	t_vec			center;
 	t_vec			dir;
-	t_vec			p;
+	double			radius;
+	double			height;
 	t_vec			color;
 	struct s_objs	*next;
 	int				mat;

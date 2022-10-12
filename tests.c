@@ -25,7 +25,7 @@ void print_objects(t_objs *objs)
         print_type(tmp->type);
         printf("center : "); print_vec(tmp->center);
         printf("direction : "); print_vec(tmp->dir);
-        printf("p : "); print_vec(tmp->p);
+        printf("%lf %lf\n", objs->radius, objs->height);
         printf("color : "); print_vec(tmp->color);
         tmp = tmp->next;
     }

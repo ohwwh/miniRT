@@ -11,9 +11,9 @@ t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy)
 
 	top_cap.center = unit_vec(top_cap.center);
 
-	top_cap.center.x = cy->p.y * top_cap.center.x + cy->center.x;
-	top_cap.center.y = cy->p.y * top_cap.center.y + cy->center.y;
-	top_cap.center.z = cy->p.y * top_cap.center.z + cy->center.z;
+	top_cap.center.x = cy->height * top_cap.center.x + cy->center.x;
+	top_cap.center.y = cy->height * top_cap.center.y + cy->center.y;
+	top_cap.center.z = cy->height * top_cap.center.z + cy->center.z;
 	
 	top_cap.dir.x = cy->dir.x;
 	top_cap.dir.y = cy->dir.y;
@@ -24,10 +24,10 @@ t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy)
 	top_cap.color.z = cy->color.z;
 
 	hr = hit_plane(saved, ray, &top_cap);
-	if (powf(hr.p.x - top_cap.center.x, 2.) + powf(hr.p.y - top_cap.center.y, 2.) + powf(hr.p.z - top_cap.center.z, 2.) <= powf(cy->p.x / 2, 2.))
+	if (powf(hr.p.x - top_cap.center.x, 2.) + powf(hr.p.y - top_cap.center.y, 2.) + powf(hr.p.z - top_cap.center.z, 2.) <= powf(cy->radius, 2.))
 		saved = hr;
 	hr = hit_plane(saved, ray, cy);
-	if (powf(hr.p.x - cy->center.x, 2.) + powf(hr.p.y - cy->center.y, 2.) + powf(hr.p.z - cy->center.z, 2.) <= powf(cy->p.x / 2, 2.))
+	if (powf(hr.p.x - cy->center.x, 2.) + powf(hr.p.y - cy->center.y, 2.) + powf(hr.p.z - cy->center.z, 2.) <= powf(cy->radius, 2.))
 		saved = hr;
 	return (saved);
 }
@@ -55,7 +55,7 @@ t_hit_record hit_cylinder(t_hit_record saved, t_ray *ray, t_objs *cy)
 				* vdot(oc, normalized)));
 	c = vdot(oc, oc)
 		- (vdot(oc, normalized) * vdot(oc, normalized))
-		- (cy->p.x / 2) * (cy->p.x / 2);
+		- (cy->radius) * (cy->radius);
 	D = b * b - 4 * a * c;
 	if (D < EPS)
 		hr.t = -1.0;
@@ -69,9 +69,9 @@ t_hit_record hit_cylinder(t_hit_record saved, t_ray *ray, t_objs *cy)
 		{
 	    	h1 = vdot(ray->dir, normalized) * t1 + vdot(oc, normalized);
 	    	h2 = vdot(ray->dir, normalized) * t2 + vdot(oc, normalized);
-	    	if (h2 >= EPS && h2 <= cy->p.y)
+	    	if (h2 >= EPS && h2 <= cy->height)
 		    	hr.t = t2;
-	    	else if (h1 >= EPS && h1 <= cy->p.y)
+	    	else if (h1 >= EPS && h1 <= cy->height)
 		    	hr.t = t1;
 	    	else
             	hr.t = -1.0;
