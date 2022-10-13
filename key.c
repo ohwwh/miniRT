@@ -11,9 +11,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type, int *status) // objec
 		while (tmp)
 		{
 			if (tmp->type == type)
-			{
 				tmp->center.y += 5;
-			}
 			tmp = tmp->next;
 		}
 		rt_render(data);
@@ -23,9 +21,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type, int *status) // objec
 		while (tmp)
 		{
 			if (tmp->type == type)
-			{
 				tmp->center.x += 5;
-			}
 			tmp = tmp->next;
 		}
 		rt_render(data);
@@ -35,9 +31,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type, int *status) // objec
 		while (tmp)
 		{
 			if (tmp->type == type)
-			{
 				tmp->center.z += 5;
-			}
 			tmp = tmp->next;
 		}
 		rt_render(data);
@@ -51,17 +45,11 @@ int transpose_light(t_minirt *data, t_keycode keycode, int *status)
 
 	*status = -1;
 	if (keycode == W)
-	{
 		light->src.y += 5;
-	}
 	else if (keycode == A)
-	{
 		light->src.x += 5;
-	}
 	else if (keycode == D)
-	{
 		light->src.z += 5;
-	}
 	rt_render(data);
 	return (0);
 }
@@ -236,6 +224,5 @@ int	keybind(int keycode, t_minirt *data)
 		else if (status == SIX)
 			rotate(data, keycode, PL, &status);
 	}
-	printf("status : %d\n", status);
 	return (0);
 }
