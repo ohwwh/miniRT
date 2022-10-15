@@ -1,18 +1,17 @@
 #include "minirt.h"
 
-int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
+int transpose(t_minirt *data, t_keycode keycode, int type, int *status) // object sphere
 {	
 	t_objs *tmp;
 
+	*status = -1;
 	tmp = data->scene.objs;
 	if (keycode == W)
 	{
 		while (tmp)
 		{
 			if (tmp->type == type)
-			{
 				tmp->center.y += 5;
-			}
 			tmp = tmp->next;
 		}
 		rt_render(data);
@@ -22,9 +21,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
 		while (tmp)
 		{
 			if (tmp->type == type)
-			{
 				tmp->center.x += 5;
-			}
 			tmp = tmp->next;
 		}
 		rt_render(data);
@@ -34,9 +31,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
 		while (tmp)
 		{
 			if (tmp->type == type)
-			{
 				tmp->center.z += 5;
-			}
 			tmp = tmp->next;
 		}
 		rt_render(data);
@@ -44,22 +39,17 @@ int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
 	return (0);
 }
 
-int transpose_light(t_minirt *data, t_keycode keycode)
+int transpose_light(t_minirt *data, t_keycode keycode, int *status)
 {
 	t_light *light = data->scene.light;
 
+	*status = -1;
 	if (keycode == W)
-	{
 		light->src.y += 5;
-	}
 	else if (keycode == A)
-	{
 		light->src.x += 5;
-	}
 	else if (keycode == D)
-	{
 		light->src.z += 5;
-	}
 	rt_render(data);
 	return (0);
 }
@@ -87,8 +77,9 @@ int	ft_close(t_minirt *data)
 	exit(0);
 }
 
-int cam_transpose(t_minirt *data, t_keycode keycode) // 1
+int cam_transpose(t_minirt *data, t_keycode keycode, int *status) // 1
 {
+	*status = -1;
 	if (keycode == W)
 	{
 		data->scene.cam.cen.y += 5;		
@@ -107,12 +98,13 @@ int cam_transpose(t_minirt *data, t_keycode keycode) // 1
 	return (0);
 }
 
-int cam_rotate(t_minirt *data, t_keycode keycode) // 0
+int cam_rotate(t_minirt *data, t_keycode keycode, int *status) // 0
 {
 	double x;
 	double y;
 	double z;
 
+	*status = -1;
 	if (keycode == W)
 	{
 		x = data->scene.cam.dir.x;
@@ -143,13 +135,14 @@ int cam_rotate(t_minirt *data, t_keycode keycode) // 0
 	return (1);
 }
 
-int rotate(t_minirt *data, t_keycode keycode, int type)
+int rotate(t_minirt *data, t_keycode keycode, int type, int *status)
 {
 	t_objs *tmp;
 	double x;
 	double y;
 	double z;
 
+	*status = -1;
 	tmp = data->scene.objs;
 	if (keycode == W) // y축 중심 회전
 	{
@@ -212,42 +205,24 @@ int	keybind(int keycode, t_minirt *data)
 	printf("keycode=%d\n", keycode);
 	if (keycode == ESC)
 		ft_close(data);
-	if (status == -1)
+	if (status == -1 && ((18 <= keycode && keycode <= 23) || keycode == 29))
 		status = keycode;
-	else if (status == ONE)
+	else if (status != -1)
 	{
-		status = -1;
-		cam_transpose(data, keycode);
-	}
-	else if (status == ZERO)
-	{
-		status = -1;
-		cam_rotate(data, keycode);
-	}
-	else if (status == TWO)
-	{
-		status = -1;
-		transpose(data, keycode, SP);
-	}
-	else if (status == THREE)
-	{
-		status = -1;
-		transpose(data, keycode, CY);
-	}
-	else if (status == FOUR)
-	{
-		status = -1;
-		transpose_light(data, keycode);
-	}
-	else if (status == FIVE)
-	{
-		status = -1;
-		rotate(data, keycode, CY);
-	}
-	else if (status == SIX)
-	{
-		status = -1;
-		rotate(data, keycode, PL);
+		if (status == ONE)
+			cam_transpose(data, keycode, &status);
+		else if (status == ZERO)
+			cam_rotate(data, keycode, &status);
+		else if (status == TWO)
+			transpose(data, keycode, SP, &status);
+		else if (status == THREE)
+			transpose(data, keycode, CY, &status);
+		else if (status == FOUR)
+			transpose_light(data, keycode, &status);
+		else if (status == FIVE)
+			rotate(data, keycode, CY, &status);
+		else if (status == SIX)
+			rotate(data, keycode, PL, &status);
 	}
 	return (0);
 }
