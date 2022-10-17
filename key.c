@@ -1,18 +1,17 @@
 #include "minirt.h"
 
-int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
+int transpose(t_minirt *data, t_keycode keycode, int type, int *status) // object sphere
 {	
 	t_objs *tmp;
 
+	*status = -1;
 	tmp = data->scene.objs;
 	if (keycode == W)
 	{
 		while (tmp)
 		{
 			if (tmp->type == type)
-			{
-				tmp->center.y += 5;
-			}
+				tmp->center.y += STEP;
 			tmp = tmp->next;
 		}
 		rt_render(data);
@@ -22,9 +21,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
 		while (tmp)
 		{
 			if (tmp->type == type)
-			{
-				tmp->center.x += 5;
-			}
+				tmp->center.x += STEP;
 			tmp = tmp->next;
 		}
 		rt_render(data);
@@ -34,9 +31,7 @@ int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
 		while (tmp)
 		{
 			if (tmp->type == type)
-			{
-				tmp->center.z += 5;
-			}
+				tmp->center.z += STEP;
 			tmp = tmp->next;
 		}
 		rt_render(data);
@@ -44,34 +39,28 @@ int transpose(t_minirt *data, t_keycode keycode, int type) // object sphere
 	return (0);
 }
 
-int transpose_light(t_minirt *data, t_keycode keycode)
+int transpose_light(t_minirt *data, t_keycode keycode, int *status)
 {
 	t_light *light = data->scene.light;
 
+	*status = -1;
 	if (keycode == W)
-	{
-		light->src.y += 5;
-	}
+		light->src.y += STEP;
 	else if (keycode == A)
-	{
-		light->src.x += 5;
-	}
+		light->src.x += STEP;
 	else if (keycode == D)
-	{
-		light->src.z += 5;
-	}
+		light->src.z += STEP;
 	rt_render(data);
 	return (0);
 }
 
 int	ft_close(t_minirt *data)
 {
-	mlx_clear_window(data->mlx.mlx, data->mlx.mlx_win);
-	mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
-	
 	t_light *light;
 	t_objs *obj;
 
+	mlx_clear_window(data->mlx.mlx, data->mlx.mlx_win);
+	mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
 	while (data->scene.light)
 	{
 		light = data->scene.light;
@@ -87,69 +76,60 @@ int	ft_close(t_minirt *data)
 	exit(0);
 }
 
-int cam_transpose(t_minirt *data, t_keycode keycode) // 1
+int cam_transpose(t_minirt *data, t_keycode keycode, int *status) // 1
 {
+	*status = -1;
 	if (keycode == W)
 	{
-		data->scene.cam.cen.y += 5;		
+		data->scene.cam.cen.y += STEP;
 		rt_render(data);
 	}
 	else if (keycode == A)
 	{
-		data->scene.cam.cen.x += 5;		
+		data->scene.cam.cen.x += STEP;
 		rt_render(data);
 	}
 	if (keycode == D)
 	{
-		data->scene.cam.cen.z += 5;
+		data->scene.cam.cen.z += STEP;
 		rt_render(data);
 	}
 	return (0);
 }
 
-int cam_rotate(t_minirt *data, t_keycode keycode) // 0
+int cam_rotate(t_minirt *data, t_keycode keycode, int *status) // 0
 {
-	double x;
-	double y;
-	double z;
+	t_vec tmp;
 
+	*status = -1;
+	set_vec(&tmp, data->scene.cam.dir.x, data->scene.cam.dir.y, data->scene.cam.dir.z);
 	if (keycode == W)
 	{
-		x = data->scene.cam.dir.x;
-		y = data->scene.cam.dir.y;
-		z = data->scene.cam.dir.z;
-		data->scene.cam.dir.x = z * sin(ROTATE) + x * cos(ROTATE);
-		data->scene.cam.dir.z = z * cos(ROTATE) - x * sin(ROTATE);
+		data->scene.cam.dir.x = tmp.z * sin(ROTATE) + tmp.x * cos(ROTATE);
+		data->scene.cam.dir.z = tmp.z * cos(ROTATE) - tmp.x * sin(ROTATE);
 		rt_render(data);
 	}
 	else if (keycode == A)
 	{
-		x = data->scene.cam.dir.x;
-		y = data->scene.cam.dir.y;
-		z = data->scene.cam.dir.z;
-		data->scene.cam.dir.y = y * cos(ROTATE) - z * sin(ROTATE);
-		data->scene.cam.dir.z = y * sin(ROTATE) + z * cos(ROTATE);
+		data->scene.cam.dir.y = tmp.y * cos(ROTATE) - tmp.z * sin(ROTATE);
+		data->scene.cam.dir.z = tmp.y * sin(ROTATE) + tmp.z * cos(ROTATE);
 		rt_render(data);
 	}
 	if (keycode == D)
 	{
-		x = data->scene.cam.dir.x;
-		y = data->scene.cam.dir.y;
-		z = data->scene.cam.dir.z;
-		data->scene.cam.dir.x = x * cos(ROTATE) - y * sin(ROTATE);
-		data->scene.cam.dir.y = x * sin(ROTATE) + y * cos(ROTATE);
+		data->scene.cam.dir.x = tmp.x * cos(ROTATE) - tmp.y * sin(ROTATE);
+		data->scene.cam.dir.y = tmp.x * sin(ROTATE) + tmp.y * cos(ROTATE);
 		rt_render(data);
 	}
 	return (1);
 }
 
-int rotate(t_minirt *data, t_keycode keycode, int type)
+int rotate(t_minirt *data, t_keycode keycode, int type, int *status)
 {
 	t_objs *tmp;
-	double x;
-	double y;
-	double z;
+	t_vec ori;
 
+	*status = -1;
 	tmp = data->scene.objs;
 	if (keycode == W) // y축 중심 회전
 	{
@@ -158,11 +138,9 @@ int rotate(t_minirt *data, t_keycode keycode, int type)
 			if (tmp->type == type)
 			{
 				printf("y axis\n");
-				x = tmp->dir.x;
-				y = tmp->dir.y;
-				z = tmp->dir.z;
-				tmp->dir.x = z * sin(ROTATE) + x * cos(ROTATE);
-				tmp->dir.z = z * cos(ROTATE) - x * sin(ROTATE);
+				set_vec(&ori, tmp->dir.x, tmp->dir.y, tmp->dir.z);
+				tmp->dir.x = ori.z * sin(ROTATE) + ori.x * cos(ROTATE);
+				tmp->dir.z = ori.z * cos(ROTATE) - ori.x * sin(ROTATE);
 			}
 			tmp = tmp->next;
 		}
@@ -175,11 +153,9 @@ int rotate(t_minirt *data, t_keycode keycode, int type)
 			if (tmp->type == type)
 			{
 				printf("x axis\n");
-				x = tmp->dir.x;
-				y = tmp->dir.y;
-				z = tmp->dir.z;
-				tmp->dir.y = y * cos(ROTATE) - z * sin(ROTATE);
-				tmp->dir.z = y * sin(ROTATE) + z * cos(ROTATE);
+				set_vec(&ori, tmp->dir.x, tmp->dir.y, tmp->dir.z);
+				tmp->dir.y = ori.y * cos(ROTATE) - ori.z * sin(ROTATE);
+				tmp->dir.z = ori.y * sin(ROTATE) + ori.z * cos(ROTATE);
 			}
 			tmp = tmp->next;
 		}
@@ -192,11 +168,9 @@ int rotate(t_minirt *data, t_keycode keycode, int type)
 			if (tmp->type == type)
 			{
 				printf("z axis\n");
-				x = tmp->dir.x;
-				y = tmp->dir.y;
-				z = tmp->dir.z;
-				tmp->dir.x = x * cos(ROTATE) - y * sin(ROTATE);
-				tmp->dir.y = x * sin(ROTATE) + y * cos(ROTATE);
+				set_vec(&ori, tmp->dir.x, tmp->dir.y, tmp->dir.z);
+				tmp->dir.x = ori.x * cos(ROTATE) - ori.y * sin(ROTATE);
+				tmp->dir.y = ori.x * sin(ROTATE) + ori.y * cos(ROTATE);
 			}
 			tmp = tmp->next;
 		}
@@ -212,42 +186,24 @@ int	keybind(int keycode, t_minirt *data)
 	printf("keycode=%d\n", keycode);
 	if (keycode == ESC)
 		ft_close(data);
-	if (status == -1)
+	if (status == -1 && ((18 <= keycode && keycode <= 23) || keycode == 29))
 		status = keycode;
-	else if (status == ONE)
+	else if (status != -1)
 	{
-		status = -1;
-		cam_transpose(data, keycode);
-	}
-	else if (status == ZERO)
-	{
-		status = -1;
-		cam_rotate(data, keycode);
-	}
-	else if (status == TWO)
-	{
-		status = -1;
-		transpose(data, keycode, SP);
-	}
-	else if (status == THREE)
-	{
-		status = -1;
-		transpose(data, keycode, CY);
-	}
-	else if (status == FOUR)
-	{
-		status = -1;
-		transpose_light(data, keycode);
-	}
-	else if (status == FIVE)
-	{
-		status = -1;
-		rotate(data, keycode, CY);
-	}
-	else if (status == SIX)
-	{
-		status = -1;
-		rotate(data, keycode, PL);
+		if (status == ONE)
+			cam_transpose(data, keycode, &status);
+		else if (status == ZERO)
+			cam_rotate(data, keycode, &status);
+		else if (status == TWO)
+			transpose(data, keycode, SP, &status);
+		else if (status == THREE)
+			transpose(data, keycode, CY, &status);
+		else if (status == FOUR)
+			transpose_light(data, keycode, &status);
+		else if (status == FIVE)
+			rotate(data, keycode, CY, &status);
+		else if (status == SIX)
+			rotate(data, keycode, PL, &status);
 	}
 	return (0);
 }

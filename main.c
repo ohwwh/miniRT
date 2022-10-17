@@ -16,16 +16,13 @@ void	init_rt(t_minirt *data)
 int	main(int ac, char **av)
 {
 	t_minirt	data;
-	int fd;
+	int			fd;
 
 	if (check_file(ac, av))
 		err_handler("wrong argument");
 	fd = open(av[1], O_RDONLY);
 	init_rt(&data);
 	parse(&data.scene, fd);
-
-	// print_scene(data.scene);
 	rt_render(&data);
-
 	return (0);
 }

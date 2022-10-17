@@ -10,7 +10,8 @@
 # define PI 3.14159265358979323846
 # define EPS 0.0001
 # define LUMEN 3 
-# define ROTATE 1
+# define ROTATE 0.1
+# define STEP 5
 
 # define HEIGHT 600
 # define WIDTH 900
