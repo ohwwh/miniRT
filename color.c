@@ -88,7 +88,6 @@ t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb, t_ray ray)
 	if (shadow(sc, hr, light))
 	{
 		ret = add_color(ret, amb);
-		// printf("shadow\n");
 	}
 	else
 	{
