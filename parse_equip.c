@@ -16,8 +16,10 @@ void	parse_ambient(t_scene *sc, char **tokens)
 {
 	if (!tokens || !tokens[1] || !tokens[2] || tokens[3])
 		err_handler("invalid ambiant!");
-	if (sc->amb.count != 0)
+	if (sc->amb.count != 0){
+		//printf("%d\n", sc->amb.count);
 		err_handler("too many ambiant");
+	}
 	sc->amb.count++;
 	sc->amb.ratio = ft_atod(tokens[1]);
 	if (sc->amb.ratio < 0 || sc->amb.ratio > 1)

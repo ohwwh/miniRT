@@ -28,5 +28,6 @@ int	main(int ac, char **av)
 	init_rt(&data);
 	parse(&data.scene, fd);
 	rt_render(&data);
+	//path_render(data);
 	return (0);
 }

@@ -14,6 +14,18 @@ void set_camera_param(t_camera *cam)
     cam->vup = create_vec(0,1,0);
 	cam->right = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), create_vec(0.0, -1.0, 0.0)));
 	cam->up = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), cam->right));
+
+
+    t_vec w = unit_vec(vec_sub(cam->origin, cam->lookat)); //ㅋㅏ메라 뒤통수
+	t_vec u = unit_vec(vcross(cam->vup, w));  //right
+	t_vec v = vcross(w, u);
+
+    cam->horizontal = vec_scalar_mul(u, cam->width);
+	cam->vertical = vec_scalar_mul(v, cam->height);
+	cam->lower_left_corner = create_vec(cam->origin.x + (-cam->horizontal.x / 2) + (-cam->vertical.x / 2) + (-w.x)
+		,cam->origin.y + (- cam->horizontal.y / 2) + (-cam->vertical.y / 2) + (-w.y) 
+		,cam->origin.z + (- cam->horizontal.z / 2) + (-cam->vertical.z / 2) + (-w.z));
+
 }
 
 t_hit_record find_hitpoint(t_ray *ray, t_objs *objs)
@@ -76,7 +88,7 @@ t_ray       ray_primary(t_camera *cam, double u, double v)
 
     ray.origin = cam->origin;
     ray.dir = vec_sum(vec_sum(vec_scalar_mul(cam->up, v * cam->height),
-				vec_scalar_mul(cam->right, u * cam->width)), cam->forward);
+				vec_scalar_mul(cam->right, u *  cam->width)), cam->forward);
     ray.dir = unit_vec(ray.dir);
     return (ray);
 }

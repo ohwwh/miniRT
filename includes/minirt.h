@@ -8,12 +8,14 @@
 #include "../libft/libft.h"
 
 #include "camera.h"
+#include "random.h"
 
 # define PI 3.14159265358979323846
 # define EPS 0.0001
 # define LUMEN 3 
 # define ROTATE 0.1
 # define STEP 5
+# define MAX_DEPTH 50
 
 # define HEIGHT 600
 # define WIDTH 900
@@ -50,6 +52,8 @@ typedef struct	s_mlx
 {
 	void	*mlx;
 	void	*mlx_win;
+	int 	window_height;
+	int 	window_width;
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
@@ -77,14 +81,10 @@ typedef struct t_camera
 	t_vec	up;
 	t_vec	right;
 	int		count;
+	t_vec lower_left_corner;
+	t_vec horizontal;
+	t_vec vertical;
 }	t_camera;
-
-typedef struct s_light
-{
-	t_vec			src;
-	double			ratio;
-	struct s_light	*next;
-}	t_light;
 
 typedef struct s_amb
 {
@@ -107,6 +107,14 @@ typedef struct s_objs
 	int 			specular;
 }	t_objs;
 
+typedef struct s_light
+{
+	t_vec			src;
+	double			ratio;
+	t_objs			*object;
+	struct s_light	*next;
+}	t_light;
+
 typedef struct s_scene
 {
 	t_camera	camera;
@@ -124,7 +132,7 @@ typedef struct s_ray
 	t_vec color;
 } t_ray;
 
-typedef struct s_hit_record
+typedef struct s_hit_hit_record
 {
     t_vec       p; // 교점
     t_vec       normal; // 법선
@@ -133,6 +141,10 @@ typedef struct s_hit_record
     double      t;
     t_bool      front_face; // 객체가 카메라 앞에 있는지
 	t_vec		color;
+	int			mat;
+	int			refraction;
+	int			specular;
+	int			type;
 } t_hit_record;
 
 typedef struct	s_minirt
@@ -198,3 +210,43 @@ t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy);
 
 int	keybind(int keycode, t_minirt *data);
 int	ft_close(t_minirt *data);
+
+
+
+void path_render(t_minirt vars);
+
+
+int 	rgb_to_int(t_color c);
+void	put_color(t_mlx *data, int x, int y, int color);
+void 	ft_pixel_put(t_minirt *vars, int x, int y, int color);
+void	ft_mlx_init(t_minirt *vars);
+void	ft_mlx_new(t_minirt *vars, int x, int y, char *name);
+
+
+int front_face(t_ray *r, t_hit_record* rec);
+int find_hitpoint_hoh(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* rec);
+int hit_sphere_hoh(t_objs* s, t_ray* r, t_hit_record* rec);
+int hit_cylinder_hoh(t_objs *cy, t_ray *ray, t_hit_record *rec);
+int hit_caps_hoh(t_objs *cy, t_ray *ray, t_hit_record *rec);
+int hit_plane_hoh(t_objs *pl, t_ray *ray, t_hit_record* rec);
+int hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record* rec);
+int hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record* rec);
+int hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record* rec);
+
+
+
+void set_refraction(t_objs* obj, double ref);
+double get_light_size(t_objs object);
+t_objs create_sphere(t_point c, double r, t_color color, int mat);
+t_objs create_cylinder(t_point c, double r, double h, t_vec dir, t_color color, int mat);
+t_objs create_plane(t_point c, t_vec dir, t_color color, int mat);
+t_objs create_rectangle_xy(t_vec x, t_vec y, double k, t_color color, int mat);
+t_objs create_rectangle_yz(t_vec y, t_vec z, double k, t_color color, int mat);
+t_objs create_rectangle_xz(t_vec x, t_vec z, double k, t_color color, int mat);
+
+
+t_ray 	ray(t_point org, t_vec dir);
+t_point 	ray_end(t_ray* ray, double t);
+t_vec reflect(t_vec v, t_vec n);
+t_color ray_color_2(t_ray r, t_objs* world, t_light* light);
+t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth);
