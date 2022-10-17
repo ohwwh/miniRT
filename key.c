@@ -82,17 +82,17 @@ int cam_transpose(t_minirt *data, t_keycode keycode, int *status) // 1
 	*status = -1;
 	if (keycode == W)
 	{
-		data->scene.cam.cen.y += STEP;
+		data->scene.camera.origin.y += STEP;
 		rt_render(data);
 	}
 	else if (keycode == A)
 	{
-		data->scene.cam.cen.x += STEP;
+		data->scene.camera.origin.x += STEP;
 		rt_render(data);
 	}
 	if (keycode == D)
 	{
-		data->scene.cam.cen.z += STEP;
+		data->scene.camera.origin.z += STEP;
 		rt_render(data);
 	}
 	return (0);
@@ -103,23 +103,23 @@ int cam_rotate(t_minirt *data, t_keycode keycode, int *status) // 0
 	t_vec tmp;
 
 	*status = -1;
-	set_vec(&tmp, data->scene.cam.dir.x, data->scene.cam.dir.y, data->scene.cam.dir.z);
+	set_vec(&tmp, data->scene.camera.lookat.x, data->scene.camera.lookat.y, data->scene.camera.lookat.z);
 	if (keycode == W)
 	{
-		data->scene.cam.dir.x = tmp.z * sin(ROTATE) + tmp.x * cos(ROTATE);
-		data->scene.cam.dir.z = tmp.z * cos(ROTATE) - tmp.x * sin(ROTATE);
+		data->scene.camera.lookat.x = tmp.z * sin(ROTATE) + tmp.x * cos(ROTATE);
+		data->scene.camera.lookat.z = tmp.z * cos(ROTATE) - tmp.x * sin(ROTATE);
 		rt_render(data);
 	}
 	else if (keycode == A)
 	{
-		data->scene.cam.dir.y = tmp.y * cos(ROTATE) - tmp.z * sin(ROTATE);
-		data->scene.cam.dir.z = tmp.y * sin(ROTATE) + tmp.z * cos(ROTATE);
+		data->scene.camera.lookat.y = tmp.y * cos(ROTATE) - tmp.z * sin(ROTATE);
+		data->scene.camera.lookat.z = tmp.y * sin(ROTATE) + tmp.z * cos(ROTATE);
 		rt_render(data);
 	}
 	if (keycode == D)
 	{
-		data->scene.cam.dir.x = tmp.x * cos(ROTATE) - tmp.y * sin(ROTATE);
-		data->scene.cam.dir.y = tmp.x * sin(ROTATE) + tmp.y * cos(ROTATE);
+		data->scene.camera.lookat.x = tmp.x * cos(ROTATE) - tmp.y * sin(ROTATE);
+		data->scene.camera.lookat.y = tmp.x * sin(ROTATE) + tmp.y * cos(ROTATE);
 		rt_render(data);
 	}
 	return (1);

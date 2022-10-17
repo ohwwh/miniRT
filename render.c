@@ -25,19 +25,19 @@ void	define_color(t_minirt *data)
 		{
 			data->u = (double)x * 2 / WIDTH - 1;
 			data->v = (double)y * 2 / HEIGHT - 1;
-			data->ray = ray_primary(&data->scene.cam, data->u, data->v); // 대강 이런식으로 구현할 것
+			data->ray = ray_primary(&data->scene.camera, data->u, data->v); // 대강 이런식으로 구현할 것
 			data->ray.color = get_raycolor(data); // 대강 이런식으로 구현할 것
 			put_color(&data->mlx, x, HEIGHT - 1 - y,
 				convert_rgb(data->ray.color.x, data->ray.color.y, data->ray.color.z));
 			x++;
-		}
+		} 
 		y--;
 	}
 }
 
 void	rt_render(t_minirt *data)
 {
-	set_camera_param(&data->scene.cam);
+	set_camera_param(&data->scene.camera);
 	define_color(data);
 	mlx_put_image_to_window(data->mlx.mlx, data->mlx.mlx_win, data->mlx.img, 0, 0);
 	mlx_key_hook(data->mlx.mlx_win, keybind, data);

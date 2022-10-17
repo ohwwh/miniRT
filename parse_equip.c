@@ -29,19 +29,19 @@ void	parse_camera(t_scene *sc, char **tokens)
 {
 	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		err_handler("invalid camera !");
-	if (sc->cam.count != 0)
+	if (sc->camera.count != 0)
 		err_handler("too many camera");
-	sc->cam.count++;
-	sc->cam.cen = get_vec(tokens[1]);
-	sc->cam.dir = get_vec(tokens[2]);
-	if (sc->cam.dir.x > 1 || sc->cam.dir.y > 1 || sc->cam.dir.z > 1)
+	sc->camera.count++;
+	sc->camera.origin = get_vec(tokens[1]);
+	sc->camera.lookat = get_vec(tokens[2]);
+	if (sc->camera.lookat.x > 1 || sc->camera.lookat.y > 1 || sc->camera.lookat.z > 1)
 		err_handler("invalid orientation camera");
-	if (sc->cam.dir.x < -1 || sc->cam.dir.y < -1 || sc->cam.dir.z < -1)
+	if (sc->camera.lookat.x < -1 || sc->camera.lookat.y < -1 || sc->camera.lookat.z < -1)
 		err_handler("invalid orientation camera");
-	// if (sc->cam.dir.x == 0 && sc->cam.dir.y == 0 && sc->cam.dir.z == 0)
+	// if (sc->camera.lookat.x == 0 && sc->camera.lookat.y == 0 && sc->camera.lookat.z == 0)
 	// 	err_handler("invalid orientation camera");
-	sc->cam.fov = ft_atod(tokens[3]);
-	if (sc->cam.fov < 0 || sc->cam.fov > 180)
+	sc->camera.fov = ft_atod(tokens[3]);
+	if (sc->camera.fov < 0 || sc->camera.fov > 180)
 		err_handler("FOV  in range [0,180]");
 }
 

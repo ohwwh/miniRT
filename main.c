@@ -9,8 +9,12 @@ void	init_rt(t_minirt *data)
 	&data->mlx.line_length, &data->mlx.endian);
 	data->scene.objs = NULL;
 	data->scene.amb.count = 0;
-	data->scene.cam.count = 0;
+	data->scene.camera.count = 0;
 	data->scene.light = NULL;
+	data->is_move = -1;
+	data->is_trace = 0;
+	data->scene.anti = 1;
+	data->scene.changed = 0;
 }
 
 int	main(int ac, char **av)

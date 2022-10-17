@@ -1,15 +1,17 @@
 #include "minirt.h"
 
-void set_camera_param(t_cam *cam)
+void set_camera_param(t_camera *cam)
 {
     double theta;
+    double h;
 
-	cam->aspect_r = (double) WIDTH / (double) HEIGHT;
+	cam->ratio = (double) WIDTH / (double) HEIGHT;
 	theta = cam->fov * PI / 180.0;
 	cam->height = tan(theta / 2);
-	cam->width = cam->aspect_r * cam->height;
-	cam->forward = cam->dir;
+	cam->width = cam->ratio * cam->height;
+    cam->forward = cam->lookat;
 	cam->forward.x += EPS;
+    cam->vup = create_vec(0,1,0);
 	cam->right = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), create_vec(0.0, -1.0, 0.0)));
 	cam->up = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), cam->right));
 }
@@ -68,11 +70,11 @@ t_vec get_raycolor(t_minirt *data)
 	return (vec_scalar_mul(data->scene.amb.col, data->scene.amb.ratio));
 }
 
-t_ray       ray_primary(t_cam *cam, double u, double v)
+t_ray       ray_primary(t_camera *cam, double u, double v)
 {
     t_ray   ray;
 
-    ray.origin = cam->cen;
+    ray.origin = cam->origin;
     ray.dir = vec_sum(vec_sum(vec_scalar_mul(cam->up, v * cam->height),
 				vec_scalar_mul(cam->right, u * cam->width)), cam->forward);
     ray.dir = unit_vec(ray.dir);

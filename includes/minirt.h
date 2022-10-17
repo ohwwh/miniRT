@@ -7,6 +7,8 @@
 #include "../mlx/mlx.h"
 #include "../libft/libft.h"
 
+#include "camera.h"
+
 # define PI 3.14159265358979323846
 # define EPS 0.0001
 # define LUMEN 3 
@@ -37,7 +39,11 @@ typedef enum s_keycode{
 	W = 13,
 	A = 0,
 	S = 1,
-	D = 2
+	D = 2,
+	UP = 126,
+	LEFT = 123,
+	DOWN = 125,
+	RIGHT = 124
 } t_keycode;
 
 typedef struct	s_mlx
@@ -51,26 +57,27 @@ typedef struct	s_mlx
 	int		endian;
 }				t_mlx;
 
-typedef struct s_vec
+/*typedef struct s_vec
 {
 	double	x;
 	double	y;
 	double	z;
-}	t_vec;
+}	t_vec;*/
 
-typedef struct t_cam
+typedef struct t_camera
 {
-	t_vec	cen;
-	t_vec	dir;
+	t_vec	origin;
+	t_vec	lookat;
 	double	fov;
-	double	aspect_r;
+	double	ratio;
 	double	height;
 	double 	width;
 	t_vec 	forward;
+	t_vec	vup;
 	t_vec	up;
 	t_vec	right;
 	int		count;
-}	t_cam;
+}	t_camera;
 
 typedef struct s_light
 {
@@ -102,10 +109,12 @@ typedef struct s_objs
 
 typedef struct s_scene
 {
-	t_cam	cam;
+	t_camera	camera;
 	t_light	*light;
 	t_amb	amb;
 	t_objs	*objs;
+	int anti;
+	int changed;
 }	t_scene;
 
 typedef struct s_ray
@@ -131,9 +140,11 @@ typedef struct	s_minirt
 	t_mlx		mlx;
 	t_scene		scene;
 	t_ray		ray;
+	int is_move;
+	int is_trace;
 	double		u;
 	double		v;
-}               t_minirt;
+}	t_minirt;
 
 int		check_file(int ac, char **av);
 void 	err_handler(char *msg);
@@ -172,8 +183,8 @@ t_vec  vcross(t_vec vec1, t_vec vec2);
 t_vec      unit_vec(t_vec vec);
 t_vec  vmin(t_vec vec1, t_vec vec2);
 
-void set_camera_param(t_cam *cam);
-t_ray       ray_primary(t_cam *cam, double u, double v);
+void set_camera_param(t_camera *cam);
+t_ray       ray_primary(t_camera *cam, double u, double v);
 
 t_vec get_raycolor(t_minirt *data);
 t_vec calcul_ratio(t_vec col1, t_vec col2, double ratio);
