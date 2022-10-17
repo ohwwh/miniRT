@@ -18,7 +18,7 @@ $(NAME):		$(OBJS)
 				make -C ./mlx
 				cp ./libft/libft.a libft.a
 				cp ./mlx/libmlx.a ./libmlx.a
-				$(CC) -fsanitize=address -g3 $(OBJS) libft.a -I$(INCS) -o $(NAME) $(FRAMEW)
+				$(CC) -g3 $(OBJS) libft.a -I$(INCS) -o $(NAME) $(FRAMEW)
 
 %.o:			%.c
 				$(CC) -I $(INCS) -c $< -o $@
