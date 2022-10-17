@@ -27,8 +27,22 @@ int	check_file(int ac, char **av)
 
 void err_handler(char *msg)
 {
-    printf("Error : %s\n", msg);
+	system("leaks miniRT");
+    printf("Error\n%s", msg);
 	exit(1);
+}
+
+t_bool is_valid_color(char *s)
+{
+	int i = 0;
+
+	while (s[i])
+	{
+		if (!((s[i] >= '0' && s[i] <= '9') || s[i] == '+' || s[i] == '-'))
+			return (FALSE);
+		i++;
+	}
+	return (TRUE);
 }
 
 t_vec	get_color(char *s)
@@ -38,6 +52,8 @@ t_vec	get_color(char *s)
 
 	params = ft_split(s, ',');
 	if (!params || !params[1] || !params[2] || params[3])
+		err_handler("invalid color!");
+	if (!(is_valid_color(params[0]) && is_valid_color(params[1]) && is_valid_color(params[2])))
 		err_handler("invalid color!");
 	cord = (t_vec){ft_atoi(params[0]), ft_atoi(params[1]), ft_atoi(params[2])};
 	if (cord.x > 255 || cord.y > 255 || cord.z > 255)
