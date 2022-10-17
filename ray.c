@@ -2,9 +2,11 @@
 
 void set_camera_param(t_cam *cam)
 {
+    double theta;
+
 	cam->aspect_r = (double) WIDTH / (double) HEIGHT;
-	cam->theta = cam->fov * PI / 180.0;
-	cam->height = tan(cam->theta / 2);
+	theta = cam->fov * PI / 180.0;
+	cam->height = tan(theta / 2);
 	cam->width = cam->aspect_r * cam->height;
 	cam->forward = cam->dir;
 	cam->forward.x += EPS;

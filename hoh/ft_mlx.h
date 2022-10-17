@@ -21,6 +21,23 @@ typedef struct s_vars {
 	
 } t_vars;
 
+typedef struct s_scene
+{
+	t_cam	cam;
+	t_light	*light;
+	t_amb	amb;
+	t_objs	*objs;
+}	t_scene;
+
+typedef struct	s_minirt
+{
+	t_mlx		mlx;
+	t_scene		scene;
+	t_ray		ray;
+	double		u;
+	double		v;
+}               t_minirt;
+
 int 	rgb_to_int(t_color c);
 void 	ft_pixel_put(t_vars *vars, int x, int y, int color);
 void	ft_mlx_init(t_vars *vars);

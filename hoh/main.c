@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   so_long.c                                          :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoh <marvin@42.fr>                         +#+  +:+       +#+        */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/19 15:32:42 by hoh               #+#    #+#             */
-/*   Updated: 2022/04/19 15:32:43 by hoh              ###   ########.fr       */
+/*   Updated: 2022/10/17 11:29:02 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,143 +57,16 @@ void print_init(t_vars vars)
 	}
 }
 
-int	main(int argc, char *argv[])
+int	main(int ac, char **av)
 {
-	t_object light = create_sphere(create_vec(5,8, -1), 0, 
-	create_vec(15, 15, 15), -1);
+	t_vars	data;
+	int			fd;
 
-	t_object surface = create_sphere(create_vec(0, -100.5, -1), 100, 
-	//create_vec(1, 0.75, 0.8));
-	create_vec(0.8, 0.8, 0), 0);
-	light.next = &surface;
-
-	t_object sphere = create_sphere(create_vec(0,0,-2), 0.5, 
-	create_vec(0.7, 0.3, 0.3), 1);
-	surface.next = &sphere;
-
-	t_object metal = create_sphere(create_vec(1,0, -1), 0.5, 
-	create_vec(0.8, 0.8, 0.8), 1);
-	sphere.next = &metal;
-	metal.next = 0;
-
-	t_object cylinder = create_cylinder(create_vec(0,0,-5), 0.5, 1, 
-	create_vec(0,0,-1), create_vec(0.3,0.3,0.7), 1);
-	sphere.next = &cylinder;
-	cylinder.next = 0;
-	
-	
-
-
-	/*t_object light = create_sphere(create_vec(200,480,200), 80, 
-	create_vec(15, 15, 15), -1);
-	t_object green = create_rectangle_yz(create_vec(0,555,0), create_vec(0,555,0), 555, 
-	create_vec(0.12, 0.45, 0.15), 0);
-	t_object red = create_rectangle_yz(create_vec(0,555,0), create_vec(0,555,0), 0, 
-	create_vec(0.65, 0.05, 0.05), 0);
-	t_object white1 = create_rectangle_xz(create_vec(0,555,0), create_vec(0,555,0), 555, 
-	create_vec(0.73, 0.73, 0.73), 0); //윗면
-	t_object white2 = create_rectangle_xz(create_vec(0,555,0), create_vec(0,555,0), 0, 
-	create_vec(0.73, 0.73, 0.73), 0); //아랫면
-	t_object white3 = create_rectangle_xy(create_vec(0,555,0), create_vec(0,555,0), 555, 
-	create_vec(0.73, 0.73, 0.73), 0); //뒷면
-	t_object sphere = create_sphere(create_vec(270,330,190), 80, 
-	create_vec(0.8, 0.8, 0.8), 2);
-	set_refraction(&sphere, 1.5);
-
-	light.next = 0;
-	green.next = &red;
-	red.next = &white1;
-	white1.next = &white2;
-	white2.next = &white3;
-	white3.next = &sphere;
-	sphere.next = 0;*/
-
-
-
-
-	/*t_object light = create_rectangle_xz(create_vec(213,343,0), create_vec(227,332,0), 554, 
-	create_vec(15, 15, 15), -1);
-	t_object green = create_rectangle_yz(create_vec(0,555,0), create_vec(0,555,0), 555, 
-	create_vec(0.12, 0.45, 0.15), 0);
-	t_object red = create_rectangle_yz(create_vec(0,555,0), create_vec(0,555,0), 0, 
-	create_vec(0.65, 0.05, 0.05), 0);
-	t_object white1 = create_rectangle_xz(create_vec(0,555,0), create_vec(0,555,0), 555, 
-	create_vec(0.73, 0.73, 0.73), 0); //윗면
-	t_object white2 = create_rectangle_xz(create_vec(0,555,0), create_vec(0,555,0), 0, 
-	create_vec(0.73, 0.73, 0.73), 0); //아랫면
-	t_object white3 = create_rectangle_xy(create_vec(0,555,0), create_vec(0,555,0), 555, 
-	create_vec(0.73, 0.73, 0.73), 0); //뒷면
-	t_object sphere = create_sphere(create_vec(190,90,190), -90, 
-	create_vec(0.2, 0.4, 0.9), 0);
-	set_refraction(&sphere, 0.5);
-
-	light.next = 0;
-	green.next = &red;
-	red.next = &white1;
-	white1.next = &white2;
-	white2.next = &white3;
-	white3.next = &sphere;
-	sphere.next = 0;*/
-
-	
-	/*t_object light = create_rectangle_xz(create_vec(4,8,0), create_vec(0,4,0), 
-	8, create_vec(15, 15, 15), -1);
-	
-	//t_object light = create_rectangle_xy(create_vec(3,5,0), create_vec(1,3,0), 
-	//-5, create_vec(15, 15, 15), -1);
-
-	//t_object light2 = create_sphere(create_vec(2, 14, -10), 4, 
-	//create_vec(15, 15, 15), -1);
-	//light.next = &light2;
-	light.next = 0;
-
-	t_object surface = create_sphere(create_vec(0, -1000, 0), 1000, 
-	create_vec(0.4, 0.4, 0.4), 0);
-	//light.next = &light2;
-
-	t_object sphere = create_sphere(create_vec(4,2,-2), 2, 
-	create_vec(0.8, 0.8, 0.8), 0);
-	set_refraction(&sphere, 1.5);
-	surface.next = &sphere;
-	t_object sphere2 = create_sphere(create_vec(-4,2,2), 2, 
-	create_vec(0.7, 0.3, 0.3), 1);
-	sphere.next = &sphere2;
-	t_object wall = create_plane(create_vec(0, 150, 0), 
-	vec_sub(create_vec(0,5,0), create_vec(26,3,6)), create_vec(0.8, 0.8, 0.8), 0);
-	sphere2.next = &wall;
-	t_object cylinder = create_cylinder(create_vec(1.5,0, -6), 1, 4, 
-	create_vec(0,1,0), create_vec(0.3,0.3,0.7), 0);
-	wall.next = &cylinder;
-	cylinder.next = 0;*/
-
-
-	t_vars	vars;
-	vars.is_trace = 0;
-	vars.anti = 1;
-	vars.is_move = -1;
-	vars.changed = 0;
-	vars.world = &surface;
-	vars.light = &surface;
-	vars.window_width = 640;
-	vars.window_height = 320;
-	int window_width = 640;
-	int window_height = 320;
-	double ratio = (double)vars.window_width / (double)vars.window_height;
-
-	//t_camera camera = create_camera(create_vec(-2,2,1), create_vec(0,0,-1), create_vec(0, 1, 0), 70, ratio);
-	t_camera camera = create_camera(create_vec(0,1,1), create_vec(0,0,-1), create_vec(0, 1, 0), 90, ratio);
-	//t_camera camera = create_camera(create_vec(278,278,-800), create_vec(278,278,0), create_vec(0, 1, 0), 40, ratio);
-	//t_camera camera = create_camera(create_vec(26,8,6), create_vec(0,2,0), create_vec(0, 1, 0), 20, ratio);
-
-	//srand(time(0));
-	vars.camera = camera;
-	ft_mlx_init(&vars);
-	print_init(vars);
-	mlx_hook(vars.win, 2, 0, &keybind, &vars);
-	mlx_hook(vars.win, 3, 0, &keyrelease, &vars);
-	mlx_hook(vars.win, 4, 0, &scroll, &vars);
-	//mlx_hook(vars.win,)
-	mlx_loop_hook(vars.mlx, &key_hook_move, &vars);
-	mlx_loop(vars.mlx);
+	if (check_file(ac, av))
+		err_handler("wrong argument");
+	fd = open(av[1], O_RDONLY);
+	init_rt(&data);
+	parse(&data.world, fd);
+	rt_render(&data);
 	return (0);
 }

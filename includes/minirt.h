@@ -64,7 +64,6 @@ typedef struct t_cam
 	t_vec	dir;
 	double	fov;
 	double	aspect_r;
-	double	theta;
 	double	height;
 	double 	width;
 	t_vec 	forward;
@@ -97,6 +96,8 @@ typedef struct s_objs
 	t_vec			color;
 	struct s_objs	*next;
 	int				mat;
+	int				refraction;
+	int 			specular;
 }	t_objs;
 
 typedef struct s_scene

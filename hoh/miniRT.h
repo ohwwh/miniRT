@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include <math.h>
 #include "ray.h"
 #include "ft_mlx.h"
@@ -12,7 +13,7 @@
 #include "light.h"
 #include "camera.h"
 #include "move.h"
-#include "libohw/includes/libft.h"
+#include "../libft/libft.h"
 #define MAX_DEPTH 50
 //#define ANTI 100
 
