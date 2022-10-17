@@ -5,23 +5,12 @@ t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy)
 	t_objs top_cap;
 	t_hit_record hr;
 
-	top_cap.center.x = cy->dir.x;
-	top_cap.center.y = cy->dir.y;
-	top_cap.center.z = cy->dir.z;
-
+	set_vec(&top_cap.center, cy->dir.x, cy->dir.y, cy->dir.z);
 	top_cap.center = unit_vec(top_cap.center);
-
-	top_cap.center.x = cy->height * top_cap.center.x + cy->center.x;
-	top_cap.center.y = cy->height * top_cap.center.y + cy->center.y;
-	top_cap.center.z = cy->height * top_cap.center.z + cy->center.z;
-	
-	top_cap.dir.x = cy->dir.x;
-	top_cap.dir.y = cy->dir.y;
-	top_cap.dir.z = cy->dir.z;
-
-	top_cap.color.x = cy->color.x;
-	top_cap.color.y = cy->color.y;
-	top_cap.color.z = cy->color.z;
+	top_cap.center = vec_scalar_mul(top_cap.center, cy->height);
+	top_cap.center = vec_sum(top_cap.center, cy->center);
+	set_vec(&top_cap.dir, cy->dir.x, cy->dir.y, cy->dir.z);
+	set_vec(&top_cap.color, cy->color.x, cy->color.y, cy->color.z);
 
 	hr = hit_plane(saved, ray, &top_cap);
 	if (powf(hr.p.x - top_cap.center.x, 2.) + powf(hr.p.y - top_cap.center.y, 2.) + powf(hr.p.z - top_cap.center.z, 2.) <= powf(cy->radius, 2.))
