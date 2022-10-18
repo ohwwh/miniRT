@@ -13,8 +13,8 @@
 # define ROTATE 0.1
 # define STEP 5
 
-# define HEIGHT 600
-# define WIDTH 900
+# define HEIGHT 320
+# define WIDTH 640
 
 # define CY 1
 # define PL 2
