@@ -17,8 +17,8 @@
 # define STEP 5
 # define MAX_DEPTH 50
 
-# define HEIGHT 600
-# define WIDTH 900
+# define HEIGHT 320
+# define WIDTH 640
 
 # define CY 1
 # define PL 2
@@ -157,6 +157,16 @@ typedef struct	s_minirt
 	double		u;
 	double		v;
 }	t_minirt;
+
+typedef struct s_discriminant
+{
+	double  Dsc;
+	double  a;
+    double  b;
+    double  c;
+    double  t1;
+    double  t2;
+}	t_discriminant;
 
 int		check_file(int ac, char **av);
 void 	err_handler(char *msg);
