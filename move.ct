@@ -24,76 +24,76 @@ int key_hook_move(t_minirt* vars)
 	if (vars->is_trace == 0)
 	{
 		if (vars->is_move == 13){
-			t_vec dir = vec_sub(vars->scene.camera.lookat, vars->scene.camera.origin);
+			t_vec dir = vec_sub(vars->scene.camera.dir, vars->scene.camera.origin);
 			t_vec new_org = vec_sum(vars->scene.camera.origin, micro_vec(dir));
-			t_vec new_lookat = vec_sum(vars->scene.camera.lookat, micro_vec(dir));
-			vars->scene.camera = create_camera(new_org, new_lookat, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
+			t_vec new_dir = vec_sum(vars->scene.camera.dir, micro_vec(dir));
+			vars->scene.camera = create_camera(new_org, new_dir, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
 			path_render(*vars);
 		}
 		else if (vars->is_move == 0){
-			t_vec dir = vec_sub(vars->scene.camera.lookat, vars->scene.camera.origin);
+			t_vec dir = vec_sub(vars->scene.camera.dir, vars->scene.camera.origin);
 			//t_vec a_dir = create_vec(1, vars->scene.camera.origin.y, (-(dir.x + (dir.y * vars->scene.camera.origin.y)) / dir.z));
 			t_vec a_dir = vcross(vars->scene.camera.vup, dir);
 			t_vec cross = vcross(a_dir, dir);
 			if (vdot(cross, create_vec(0,1,0)) > 0)
 				vec_scalar_mul(a_dir, -1);
 			t_vec new_org = vec_sum(vars->scene.camera.origin, micro_vec(a_dir));
-			t_vec new_lookat = vec_sum(vars->scene.camera.lookat, micro_vec(a_dir));
-			vars->scene.camera = create_camera(new_org, new_lookat, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
+			t_vec new_dir = vec_sum(vars->scene.camera.dir, micro_vec(a_dir));
+			vars->scene.camera = create_camera(new_org, new_dir, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
 			path_render(*vars);
 		}
 		else if (vars->is_move == 1){
-			t_vec dir = vec_sub(vars->scene.camera.origin, vars->scene.camera.lookat);
+			t_vec dir = vec_sub(vars->scene.camera.origin, vars->scene.camera.dir);
 			t_vec new_org = vec_sum(vars->scene.camera.origin, micro_vec(dir));
-			t_vec new_lookat = vec_sum(vars->scene.camera.lookat, micro_vec(dir));
-			vars->scene.camera = create_camera(new_org, new_lookat, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
+			t_vec new_dir = vec_sum(vars->scene.camera.dir, micro_vec(dir));
+			vars->scene.camera = create_camera(new_org, new_dir, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
 			path_render(*vars);
 		}
 		else if (vars->is_move == 2){
-			t_vec dir = vec_sub(vars->scene.camera.lookat, vars->scene.camera.origin);
+			t_vec dir = vec_sub(vars->scene.camera.dir, vars->scene.camera.origin);
 			t_vec a_dir = vcross(vars->scene.camera.vup, dir);
 			t_vec cross = vcross(a_dir, dir);
 			if (vdot(cross, create_vec(0,1,0)) < 0)
 				vec_scalar_mul(a_dir, -1);
 			t_vec new_org = vec_sub(vars->scene.camera.origin, micro_vec(a_dir));
-			t_vec new_lookat = vec_sub(vars->scene.camera.lookat, micro_vec(a_dir));
-			vars->scene.camera = create_camera(new_org, new_lookat, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
+			t_vec new_dir = vec_sub(vars->scene.camera.dir, micro_vec(a_dir));
+			vars->scene.camera = create_camera(new_org, new_dir, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
 			path_render(*vars);
 		}
 		else if (vars->is_move == 126)
 		{
-			t_vec new_lookat = create_vec(vars->scene.camera.lookat.x,
-			vars->scene.camera.lookat.y * cos(0.5) - 
-			vars->scene.camera.lookat.z * sin(0.5),
-			vars->scene.camera.lookat.y * sin(0.5) + vars->scene.camera.lookat.z * cos(0.5));
-			vars->scene.camera = create_camera(vars->scene.camera.origin, new_lookat, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
+			t_vec new_dir = create_vec(vars->scene.camera.dir.x,
+			vars->scene.camera.dir.y * cos(0.5) - 
+			vars->scene.camera.dir.z * sin(0.5),
+			vars->scene.camera.dir.y * sin(0.5) + vars->scene.camera.dir.z * cos(0.5));
+			vars->scene.camera = create_camera(vars->scene.camera.origin, new_dir, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
 			path_render(*vars);
 		}
 		else if (vars->is_move == 123)
 		{
-			t_vec new_lookat = create_vec(vars->scene.camera.lookat.z * sin(0.5) + 
-			vars->scene.camera.lookat.x * cos(0.5), 
-			vars->scene.camera.lookat.y,
-			vars->scene.camera.lookat.z * cos(0.5) - vars->scene.camera.lookat.x * sin(0.5));
-			vars->scene.camera = create_camera(vars->scene.camera.origin, new_lookat, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
+			t_vec new_dir = create_vec(vars->scene.camera.dir.z * sin(0.5) + 
+			vars->scene.camera.dir.x * cos(0.5), 
+			vars->scene.camera.dir.y,
+			vars->scene.camera.dir.z * cos(0.5) - vars->scene.camera.dir.x * sin(0.5));
+			vars->scene.camera = create_camera(vars->scene.camera.origin, new_dir, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
 			path_render(*vars);
 		}
 		else if (vars->is_move == 125)
 		{
-			t_vec new_lookat = create_vec(vars->scene.camera.lookat.x,
-			vars->scene.camera.lookat.y * cos(-0.5) - 
-			vars->scene.camera.lookat.z * sin(-0.5),
-			vars->scene.camera.lookat.y * sin(-0.5) + vars->scene.camera.lookat.z * cos(-0.5));
-			vars->scene.camera = create_camera(vars->scene.camera.origin, new_lookat, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
+			t_vec new_dir = create_vec(vars->scene.camera.dir.x,
+			vars->scene.camera.dir.y * cos(-0.5) - 
+			vars->scene.camera.dir.z * sin(-0.5),
+			vars->scene.camera.dir.y * sin(-0.5) + vars->scene.camera.dir.z * cos(-0.5));
+			vars->scene.camera = create_camera(vars->scene.camera.origin, new_dir, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
 			path_render(*vars);
 		}
 		else if (vars->is_move == 124)
 		{
-			t_vec new_lookat = create_vec(vars->scene.camera.lookat.z * sin(-0.5) + 
-			vars->scene.camera.lookat.x * cos(-0.5), 
-			vars->scene.camera.lookat.y,
-			vars->scene.camera.lookat.z * cos(-0.5) - vars->scene.camera.lookat.x * sin(-0.5));
-			vars->scene.camera = create_camera(vars->scene.camera.origin, new_lookat, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
+			t_vec new_dir = create_vec(vars->scene.camera.dir.z * sin(-0.5) + 
+			vars->scene.camera.dir.x * cos(-0.5), 
+			vars->scene.camera.dir.y,
+			vars->scene.camera.dir.z * cos(-0.5) - vars->scene.camera.dir.x * sin(-0.5));
+			vars->scene.camera = create_camera(vars->scene.camera.origin, new_dir, vars->scene.camera.vup, vars->scene.camera.fov, vars->scene.camera.ratio);
 			path_render(*vars);
 		}
 		else if (vars->is_move == 4 || vars->is_move == 5)
@@ -110,7 +110,7 @@ int key_hook_move(t_minirt* vars)
 				new_vfov = vars->scene.camera.fov - 10;
 			else
 				new_vfov = vars->scene.camera.fov + 10;
-			vars->scene.camera = create_camera(vars->scene.camera.origin, vars->scene.camera.lookat, 
+			vars->scene.camera = create_camera(vars->scene.camera.origin, vars->scene.camera.dir, 
 			vars->scene.camera.vup, new_vfov, vars->scene.camera.ratio);
 			vars->is_move = -1;
 			path_render(*vars);

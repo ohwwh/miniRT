@@ -7,7 +7,7 @@ double degrees_to_radians(double degrees)
 	return (degrees * pi / 180.0);
 }
 
-t_camera create_camera(t_point lookfrom, t_point lookat, t_vec vup, double vfov, double aspect_ratio)
+t_camera create_camera(t_point lookfrom, t_point dir, t_vec vup, double vfov, double aspect_ratio)
 {
 	t_camera ret;
 
@@ -16,12 +16,12 @@ t_camera create_camera(t_point lookfrom, t_point lookat, t_vec vup, double vfov,
 	double viewport_height = 2.0 * h;
 	double viewport_width = aspect_ratio * viewport_height;
 
-	t_vec w = unit_vec(vec_sub(lookfrom, lookat));
+	t_vec w = unit_vec(vec_sub(lookfrom, dir));
 	t_vec u = unit_vec(vcross(vup, w));
 	t_vec v = vcross(w, u);
 
 	ret.origin = lookfrom;
-	ret.lookat = lookat;
+	ret.dir = dir;
 	ret.vup = vup;
 	ret.fov = vfov;
 	ret.ratio = aspect_ratio;

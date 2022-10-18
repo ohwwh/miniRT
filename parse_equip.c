@@ -35,12 +35,12 @@ void	parse_camera(t_scene *sc, char **tokens)
 		err_handler("too many camera");
 	sc->camera.count++;
 	sc->camera.origin = get_vec(tokens[1]);
-	sc->camera.lookat = get_vec(tokens[2]);
-	if (sc->camera.lookat.x > 1 || sc->camera.lookat.y > 1 || sc->camera.lookat.z > 1)
+	sc->camera.dir = get_vec(tokens[2]);
+	if (sc->camera.dir.x > 1 || sc->camera.dir.y > 1 || sc->camera.dir.z > 1)
 		err_handler("invalid orientation camera");
-	if (sc->camera.lookat.x < -1 || sc->camera.lookat.y < -1 || sc->camera.lookat.z < -1)
+	if (sc->camera.dir.x < -1 || sc->camera.dir.y < -1 || sc->camera.dir.z < -1)
 		err_handler("invalid orientation camera");
-	// if (sc->camera.lookat.x == 0 && sc->camera.lookat.y == 0 && sc->camera.lookat.z == 0)
+	// if (sc->camera.dir.x == 0 && sc->camera.dir.y == 0 && sc->camera.dir.z == 0)
 	// 	err_handler("invalid orientation camera");
 	sc->camera.fov = ft_atod(tokens[3]);
 	if (sc->camera.fov < 0 || sc->camera.fov > 180)

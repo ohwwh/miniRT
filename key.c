@@ -103,23 +103,23 @@ int cam_rotate(t_minirt *data, t_keycode keycode, int *status) // 0
 	t_vec tmp;
 
 	*status = -1;
-	set_vec(&tmp, data->scene.camera.lookat.x, data->scene.camera.lookat.y, data->scene.camera.lookat.z);
+	set_vec(&tmp, data->scene.camera.dir.x, data->scene.camera.dir.y, data->scene.camera.dir.z);
 	if (keycode == W)
 	{
-		data->scene.camera.lookat.x = tmp.z * sin(ROTATE) + tmp.x * cos(ROTATE);
-		data->scene.camera.lookat.z = tmp.z * cos(ROTATE) - tmp.x * sin(ROTATE);
+		data->scene.camera.dir.x = tmp.z * sin(ROTATE) + tmp.x * cos(ROTATE);
+		data->scene.camera.dir.z = tmp.z * cos(ROTATE) - tmp.x * sin(ROTATE);
 		rt_render(data);
 	}
 	else if (keycode == A)
 	{
-		data->scene.camera.lookat.y = tmp.y * cos(ROTATE) - tmp.z * sin(ROTATE);
-		data->scene.camera.lookat.z = tmp.y * sin(ROTATE) + tmp.z * cos(ROTATE);
+		data->scene.camera.dir.y = tmp.y * cos(ROTATE) - tmp.z * sin(ROTATE);
+		data->scene.camera.dir.z = tmp.y * sin(ROTATE) + tmp.z * cos(ROTATE);
 		rt_render(data);
 	}
 	if (keycode == D)
 	{
-		data->scene.camera.lookat.x = tmp.x * cos(ROTATE) - tmp.y * sin(ROTATE);
-		data->scene.camera.lookat.y = tmp.x * sin(ROTATE) + tmp.y * cos(ROTATE);
+		data->scene.camera.dir.x = tmp.x * cos(ROTATE) - tmp.y * sin(ROTATE);
+		data->scene.camera.dir.y = tmp.x * sin(ROTATE) + tmp.y * cos(ROTATE);
 		rt_render(data);
 	}
 	return (1);

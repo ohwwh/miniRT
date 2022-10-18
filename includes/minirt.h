@@ -71,19 +71,17 @@ typedef struct	s_mlx
 typedef struct t_camera
 {
 	t_vec	origin;
-	t_vec	lookat;
+	t_vec	dir;
 	double	fov;
 	double	ratio;
-	double	height;
-	double 	width;
+	double	viewport_height;
+	double 	viewport_width;
 	t_vec 	forward;
 	t_vec	vup;
 	t_vec	up;
 	t_vec	right;
 	int		count;
-	t_vec lower_left_corner;
-	t_vec horizontal;
-	t_vec vertical;
+
 }	t_camera;
 
 typedef struct s_amb
@@ -195,7 +193,7 @@ t_vec  vcross(t_vec vec1, t_vec vec2);
 t_vec      unit_vec(t_vec vec);
 t_vec  vmin(t_vec vec1, t_vec vec2);
 
-void set_camera_param(t_camera *cam);
+void set_camera(t_camera *cam);
 t_ray       ray_primary(t_camera *cam, double u, double v);
 
 t_vec get_raycolor(t_minirt *data);

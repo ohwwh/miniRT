@@ -4,7 +4,7 @@
 
 /*typedef struct s_camera {
 	t_point origin;
-	t_point lookat;
+	t_point dir;
 	t_vec vup;
 	double fov;
 	double ratio;
@@ -17,6 +17,6 @@
 
 } t_camera;*/
 
-//t_camera create_camera(t_point lookfrom, t_point lookat, t_vec vup, double vfov, double aspect_ratio);
+//t_camera create_camera(t_point lookfrom, t_point dir, t_vec vup, double vfov, double aspect_ratio);
 
 #endif
