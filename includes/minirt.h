@@ -135,6 +135,16 @@ typedef struct	s_minirt
 	double		v;
 }               t_minirt;
 
+typedef struct s_discriminant
+{
+	double  Dsc;
+	double  a;
+    double  b;
+    double  c;
+    double  t1;
+    double  t2;
+}	t_discriminant;
+
 int		check_file(int ac, char **av);
 void 	err_handler(char *msg);
 
