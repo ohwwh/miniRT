@@ -17,8 +17,8 @@
 # define STEP 5
 # define MAX_DEPTH 50
 
-# define HEIGHT 320
-# define WIDTH 640
+# define HEIGHT 600
+# define WIDTH 900
 
 # define CY 1
 # define PL 2

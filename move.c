@@ -1,5 +1,28 @@
 #include "minirt.h"
 
+int	ft_close(t_minirt *data)
+{
+	t_light *light;
+	t_objs *obj;
+
+	mlx_clear_window(data->mlx.mlx, data->mlx.mlx_win);
+	mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
+	while (data->scene.light)
+	{
+		light = data->scene.light;
+		data->scene.light = data->scene.light->next;
+		free(light);
+	}
+	while (data->scene.objs)
+	{
+		obj = data->scene.objs;
+		data->scene.objs = data->scene.objs->next;
+		free(obj);
+	}
+	// system("leaks miniRT");
+	exit(0);
+}
+
 t_vec rotate(t_vec axis, t_minirt* vars, int dir)
 {
 	double c = (1 - cos(dir * 0.1));
