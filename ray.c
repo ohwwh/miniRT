@@ -1,5 +1,15 @@
 #include "minirt.h"
 
+t_point ray_end(t_ray* ray, double t)
+{
+	t_point ret;
+	
+	ret.x = ray->origin.x + t * ray->dir.x;
+	ret.y = ray->origin.y + t * ray->dir.y;
+	ret.z = ray->origin.z + t * ray->dir.z;
+	return (ret);
+}
+
 void set_camera(t_camera *cam)
 {
     double theta;

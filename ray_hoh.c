@@ -8,7 +8,7 @@ t_ray ray(t_point origin, t_vec dir)
 	return (ret);
 }
 
-t_point ray_end(t_ray* ray, double t)
+/*t_point ray_end(t_ray* ray, double t)
 {
 	t_point ret;
 	
@@ -16,7 +16,7 @@ t_point ray_end(t_ray* ray, double t)
 	ret.y = ray->origin.y + t * ray->dir.y;
 	ret.z = ray->origin.z + t * ray->dir.z;
 	return (ret);
-}
+}*/
 
 double reflectance(double cos, double ref_ratio)
 {

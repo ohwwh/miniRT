@@ -215,10 +215,10 @@ t_hit_record find_hitpoint(t_ray *ray, t_objs *objs);
 //t_hit_record hit_sphere(t_hit_record saved, t_ray *ray, t_objs *sp);
 //t_hit_record hit_cylinder(t_hit_record saved, t_ray *ray, t_objs *cy);
 //t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy);
-int hit_plane(t_objs *pl, t_ray *ray, t_hit_record* rec);
-int hit_sphere(t_objs* s, t_ray* r, t_hit_record* rec);
-int hit_cylinder(t_objs *cy, t_ray *ray, t_hit_record *rec);
-int hit_caps(t_objs *cy, t_ray *ray, t_hit_record *rec);
+void hit_plane(t_objs *pl, t_ray *ray, t_hit_record* rec);
+void hit_sphere(t_objs* s, t_ray* r, t_hit_record* rec);
+void hit_cylinder(t_objs *cy, t_ray *ray, t_hit_record *rec);
+void hit_caps(t_objs *cy, t_ray *ray, t_hit_record *rec);
 t_point ray_end(t_ray* ray, double t);
 void set_face_normal(t_hit_record* rec, t_ray *ray, t_vec outward_normal);
 
