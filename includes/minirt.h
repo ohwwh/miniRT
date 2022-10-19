@@ -155,6 +155,9 @@ typedef struct	s_minirt
 	int is_trace;
 	double		u;
 	double		v;
+
+	int x;
+	int y;
 }	t_minirt;
 
 typedef struct s_discriminant
@@ -243,6 +246,7 @@ t_vec	reflect(t_vec v, t_vec n);
 
 
 void path_render(t_minirt vars);
+int		convert_rgb(int r, int g, int b);
 
 
 int 	rgb_to_int(t_color c);
@@ -252,3 +256,4 @@ void	ft_mlx_init(t_minirt *vars);
 void	ft_mlx_new(t_minirt *vars, int x, int y, char *name);
 
 double get_light_size(t_objs object);
+double clamp(double x);
