@@ -1,14 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minirt.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
+/*   Updated: 2022/10/19 18:43:40 by hako             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef MINIRT_H
+# define MINIRT_H 
+
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
 # include <fcntl.h>
 # include <math.h>
 
-#include "../mlx/mlx.h"
-#include "../libft/libft.h"
+# include "../mlx/mlx.h"
+# include "../libft/libft.h"
 
-#include "camera.h"
-#include "random.h"
+# include "camera.h"
+# include "random.h"
 
 # define PI 3.14159265358979323846
 # define EPS 0.0001
@@ -27,7 +42,7 @@
 typedef enum s_bool{
 	FALSE = 0,
 	TRUE
-} t_bool;
+}	t_bool;
 
 typedef enum s_keycode{
 	ESC = 53,
@@ -46,14 +61,14 @@ typedef enum s_keycode{
 	LEFT = 123,
 	DOWN = 125,
 	RIGHT = 124
-} t_keycode;
+}	t_keycode;
 
-typedef struct	s_mlx
+typedef struct s_mlx
 {
 	void	*mlx;
 	void	*mlx_win;
-	int 	window_height;
-	int 	window_width;
+	int		window_height;
+	int		window_width;
 	void	*img;
 	char	*addr;
 	int		bits_per_pixel;
@@ -88,7 +103,7 @@ typedef struct s_amb
 {
 	t_vec	col;
 	double	ratio;
-	int 	count;
+	int		count;
 }	t_amb;
 
 typedef struct s_objs
@@ -102,7 +117,7 @@ typedef struct s_objs
 	struct s_objs	*next;
 	int				mat;
 	double			refraction;
-	double 			specular;
+	double			specular;
 }	t_objs;
 
 typedef struct s_light
@@ -117,57 +132,56 @@ typedef struct s_light
 typedef struct s_scene
 {
 	t_camera	camera;
-	t_light	*light;
-	t_amb	amb;
-	t_objs	*objs;
-	int anti;
-	int changed;
+	t_light		*light;
+	t_amb		amb;
+	t_objs		*objs;
+	int			anti;
+	int			changed;
 }	t_scene;
 
 typedef struct s_ray
 {
-	t_vec origin;
-	t_vec dir;
-	t_vec color;
-} t_ray;
+	t_vec	origin;
+	t_vec	dir;
+	t_vec	color;
+}	t_ray;
 
 typedef struct s_hit_hit_record
 {
-    t_vec       p; // 교점
-    t_vec       normal; // 법선
-    double      tmin;
-    double      tmax;
-    double      t;
-    t_bool      front_face; // 객체가 카메라 앞에 있는지
+	t_vec		p;
+	t_vec		normal;
+	double		tmin;
+	double		tmax;
+	double		t;
+	t_bool		front_face;
 	t_vec		color;
 	int			mat;
 	int			refraction;
 	int			specular;
 	int			type;
-} t_hit_record;
+}	t_hit_record;
 
-typedef struct	s_minirt
+typedef struct s_minirt
 {
 	t_mlx		mlx;
 	t_scene		scene;
 	t_ray		ray;
-	int is_move;
-	int is_trace;
+	int			is_move;
+	int			is_trace;
 	double		u;
 	double		v;
-
-	int x;
-	int y;
+	int			x;
+	int			y;
 }	t_minirt;
 
 typedef struct s_discriminant
 {
-	double  Dsc;
-	double  a;
-    double  b;
-    double  c;
-    double  t1;
-    double  t2;
+	double	dsc;
+	double	a;
+	double	b;
+	double	c;
+	double	t1;
+	double	t2;
 }	t_discriminant;
 
 int		check_file(int ac, char **av);
@@ -257,3 +271,5 @@ void	ft_mlx_new(t_minirt *vars, int x, int y, char *name);
 
 double get_light_size(t_objs object);
 double clamp(double x);
+
+#endif

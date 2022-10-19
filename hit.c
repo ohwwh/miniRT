@@ -108,13 +108,13 @@ void hit_sphere(t_objs* s, t_ray* r, t_hit_record* rec)
 	d.a = vdot((r->dir), (r->dir));
 	d.b = vdot(oc, (r->dir));
 	d.c = vdot(oc, oc) - s->radius * s->radius;
-	d.Dsc = d.b * d.b - d.a * d.c;
-	if (d.Dsc < 0)
+	d.dsc = d.b * d.b - d.a * d.c;
+	if (d.dsc < 0)
 			return ;
-	root = (-d.b - sqrt(d.Dsc)) / d.a;
+	root = (-d.b - sqrt(d.dsc)) / d.a;
 	if (root < EPS || (rec->t != -1 && rec->t < root))
 	{
-		root = (-d.b + sqrt(d.Dsc)) / d.a;
+		root = (-d.b + sqrt(d.dsc)) / d.a;
 		if (root < EPS || (rec->t != -1 && rec->t < root))
 			return ;
 	}
@@ -148,13 +148,13 @@ void hit_cylinder(t_objs *cy, t_ray *ray, t_hit_record *rec)
 	d.c = vdot(oc, oc)
 		- (vdot(oc, normalized) * vdot(oc, normalized))
 		- (cy->radius) * (cy->radius);
-	d.Dsc = d.b * d.b - 4 * d.a * d.c;
-	if (d.Dsc < EPS)
+	d.dsc = d.b * d.b - 4 * d.a * d.c;
+	if (d.dsc < EPS)
 		return ;
 	else
     {
-        d.t1 = (-d.b + sqrt(d.Dsc)) / (2 * d.a);
-	    d.t2 = (-d.b - sqrt(d.Dsc)) / (2 * d.a);
+        d.t1 = (-d.b + sqrt(d.dsc)) / (2 * d.a);
+	    d.t2 = (-d.b - sqrt(d.dsc)) / (2 * d.a);
 		if (d.t1 < EPS)
 			return ;
 		else
