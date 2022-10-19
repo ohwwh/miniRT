@@ -17,8 +17,8 @@
 # define STEP 5
 # define MAX_DEPTH 50
 
-# define HEIGHT 600
-# define WIDTH 900
+# define HEIGHT 320
+# define WIDTH 640
 
 # define CY 1
 # define PL 2
@@ -156,6 +156,16 @@ typedef struct	s_minirt
 	double		v;
 }	t_minirt;
 
+typedef struct s_discriminant
+{
+	double  Dsc;
+	double  a;
+    double  b;
+    double  c;
+    double  t1;
+    double  t2;
+}	t_discriminant;
+
 int		check_file(int ac, char **av);
 void 	err_handler(char *msg);
 
@@ -206,7 +216,13 @@ t_hit_record hit_sphere(t_hit_record saved, t_ray *ray, t_objs *sp);
 t_hit_record hit_cylinder(t_hit_record saved, t_ray *ray, t_objs *cy);
 t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy);
 
-int	keybind(int keycode, t_minirt *data);
+int	keypress(int keycode, t_minirt* vars);
+int	keyrelease(int keycode, t_minirt* vars);
+int scroll(int mousecode, int x, int y, t_minirt* vars);
+int key_hook_move(t_minirt* vars);
+void key_press_move(t_minirt* vars, int keycode);
+void key_press_rotate(t_minirt* vars, int keycode);
+void key_press_mode_change(t_minirt* vars, int keycode);
 int	ft_close(t_minirt *data);
 
 
@@ -219,32 +235,3 @@ void	put_color(t_mlx *data, int x, int y, int color);
 void 	ft_pixel_put(t_minirt *vars, int x, int y, int color);
 void	ft_mlx_init(t_minirt *vars);
 void	ft_mlx_new(t_minirt *vars, int x, int y, char *name);
-
-
-int front_face(t_ray *r, t_hit_record* rec);
-int find_hitpoint_hoh(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* rec);
-int hit_sphere_hoh(t_objs* s, t_ray* r, t_hit_record* rec);
-int hit_cylinder_hoh(t_objs *cy, t_ray *ray, t_hit_record *rec);
-int hit_caps_hoh(t_objs *cy, t_ray *ray, t_hit_record *rec);
-int hit_plane_hoh(t_objs *pl, t_ray *ray, t_hit_record* rec);
-int hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record* rec);
-int hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record* rec);
-int hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record* rec);
-
-
-
-void set_refraction(t_objs* obj, double ref);
-double get_light_size(t_objs object);
-t_objs create_sphere(t_point c, double r, t_color color, int mat);
-t_objs create_cylinder(t_point c, double r, double h, t_vec dir, t_color color, int mat);
-t_objs create_plane(t_point c, t_vec dir, t_color color, int mat);
-t_objs create_rectangle_xy(t_vec x, t_vec y, double k, t_color color, int mat);
-t_objs create_rectangle_yz(t_vec y, t_vec z, double k, t_color color, int mat);
-t_objs create_rectangle_xz(t_vec x, t_vec z, double k, t_color color, int mat);
-
-
-t_ray 	ray(t_point org, t_vec dir);
-t_point 	ray_end(t_ray* ray, double t);
-t_vec reflect(t_vec v, t_vec n);
-t_color ray_color_2(t_ray r, t_objs* world, t_light* light);
-t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth);

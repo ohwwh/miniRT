@@ -51,9 +51,6 @@ void	rt_render(t_minirt *data)
 	set_camera(&data->scene.camera);
 	define_color(data);
 	mlx_put_image_to_window(data->mlx.mlx, data->mlx.mlx_win, data->mlx.img, 0, 0);
-	mlx_key_hook(data->mlx.mlx_win, keybind, data);
-	mlx_hook(data->mlx.mlx_win,  17, 0L, ft_close, data);
-	mlx_loop(data->mlx.mlx);
 }
 
 /*void path_render(t_minirt vars)

@@ -29,5 +29,11 @@ int	main(int ac, char **av)
 	parse(&data.scene, fd);
 	rt_render(&data);
 	//path_render(data);
+	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
+	mlx_hook(data.mlx.mlx_win, 3, 0, &keyrelease, &data);
+	mlx_hook(data.mlx.mlx_win, 4, 0, &scroll, &data);
+	mlx_hook(data.mlx.mlx_win,  17, 0L, ft_close, &data);
+	mlx_loop_hook(data.mlx.mlx, &key_hook_move, &data);
+	mlx_loop(data.mlx.mlx);
 	return (0);
 }
