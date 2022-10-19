@@ -144,21 +144,155 @@ int key_hook_move(t_minirt* vars)
 	return (1);
 }
 
-int	keypress(int keycode, t_minirt* vars)
+int	cam_key(t_minirt *vars, int keycode)
 {
-	//printf("keycode=%d\n", keycode);
-	if (keycode == 13 || keycode == 0 || keycode == 1 || keycode == 2)
+	if (keycode == W || keycode == A || keycode == S || keycode == D)
 		key_press_move(vars, keycode);
-	else if (keycode == 126 || keycode == 123 || keycode == 124 || keycode == 125)
+	else if (keycode == UP || keycode == LEFT || keycode == RIGHT || keycode == DOWN)
 		key_press_rotate(vars, keycode);
 	else if (keycode == 15)
 		key_press_mode_change(vars, keycode);
+	return (1);
+}
+
+int transpose_obj(t_minirt *data, t_keycode keycode, int type, int *status) // object sphere
+{	
+	t_objs *tmp;
+
+	*status = -1;
+	tmp = data->scene.objs;
+	if (keycode == W)
+	{
+		while (tmp)
+		{
+			if (tmp->type == type)
+				tmp->center.y += STEP;
+			tmp = tmp->next;
+		}
+		rt_render(data);
+	}
+	else if (keycode == A)
+	{
+		while (tmp)
+		{
+			if (tmp->type == type)
+				tmp->center.x += STEP;
+			tmp = tmp->next;
+		}
+		rt_render(data);
+	}
+	if (keycode == D)
+	{
+		while (tmp)
+		{
+			if (tmp->type == type)
+				tmp->center.z += STEP;
+			tmp = tmp->next;
+		}
+		rt_render(data);
+	}
+	return (0);
+}
+
+int transpose_light(t_minirt *data, t_keycode keycode, int *status)
+{
+	t_light *light = data->scene.light;
+
+	*status = -1;
+	if (keycode == W)
+		light->src.y += STEP;
+	else if (keycode == A)
+		light->src.x += STEP;
+	else if (keycode == D)
+		light->src.z += STEP;
+	rt_render(data);
+	return (0);
+}
+
+int rotate_obj(t_minirt *data, t_keycode keycode, int type, int *status)
+{
+	t_objs *tmp;
+	t_vec ori;
+
+	*status = -1;
+	tmp = data->scene.objs;
+	if (keycode == W) // y축 중심 회전
+	{
+		while (tmp)
+		{
+			if (tmp->type == type)
+			{
+				printf("y axis\n");
+				set_vec(&ori, tmp->dir.x, tmp->dir.y, tmp->dir.z);
+				tmp->dir.x = ori.z * sin(ROTATE) + ori.x * cos(ROTATE);
+				tmp->dir.z = ori.z * cos(ROTATE) - ori.x * sin(ROTATE);
+			}
+			tmp = tmp->next;
+		}
+		rt_render(data);
+	}
+	else if (keycode == A) // x축 중심 회전
+	{
+		while (tmp)
+		{
+			if (tmp->type == type)
+			{
+				printf("x axis\n");
+				set_vec(&ori, tmp->dir.x, tmp->dir.y, tmp->dir.z);
+				tmp->dir.y = ori.y * cos(ROTATE) - ori.z * sin(ROTATE);
+				tmp->dir.z = ori.y * sin(ROTATE) + ori.z * cos(ROTATE);
+			}
+			tmp = tmp->next;
+		}
+		rt_render(data);
+	}
+	if (keycode == D) // z축 중심 회전
+	{
+		while (tmp)
+		{
+			if (tmp->type == type)
+			{
+				printf("z axis\n");
+				set_vec(&ori, tmp->dir.x, tmp->dir.y, tmp->dir.z);
+				tmp->dir.x = ori.x * cos(ROTATE) - ori.y * sin(ROTATE);
+				tmp->dir.y = ori.x * sin(ROTATE) + ori.y * cos(ROTATE);
+			}
+			tmp = tmp->next;
+		}
+		rt_render(data);
+	}
+	return (0);
+}
+
+int	keypress(int keycode, t_minirt* vars)
+{
+	static int status = -1;
+
+	if (keycode == ESC)
+		ft_close(vars);
+	if ((status == -1 || status == ONE) && ((18 <= keycode && keycode <= 23) || keycode == 29))
+		status = keycode;
+	else if (status != -1)
+	{
+		if (status == TWO)
+			transpose_obj(vars, keycode, SP, &status);
+		else if (status == THREE)
+			transpose_obj(vars, keycode, CY, &status);
+		else if (status == FOUR)
+			transpose_light(vars, keycode, &status);
+		else if (status == FIVE)
+			rotate_obj(vars, keycode, CY, &status);
+		else if (status == SIX)
+			rotate_obj(vars, keycode, PL, &status);
+		else if (status == ONE)
+			cam_key(vars, keycode);
+	}
 	return (0);
 }
 
 int	keyrelease(int keycode, t_minirt* vars)
 {
-	//printf("key release=%d\n", keycode);
+	// printf("key release=%d\n", keycode);
 	if (keycode == 13)
 		vars->is_move = -1;
 	else if (keycode == 0)
