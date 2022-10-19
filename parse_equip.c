@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_equip.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/19 18:52:19 by hako              #+#    #+#             */
+/*   Updated: 2022/10/19 18:52:58 by hako             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 t_light	*alloc_light(t_scene *sc)
@@ -16,8 +28,8 @@ void	parse_ambient(t_scene *sc, char **tokens)
 {
 	if (!tokens || !tokens[1] || !tokens[2] || tokens[3])
 		err_handler("invalid ambiant!");
-	if (sc->amb.count != 0){
-		//printf("%d\n", sc->amb.count);
+	if (sc->amb.count != 0)
+	{
 		err_handler("too many ambiant");
 	}
 	sc->amb.count++;
@@ -40,8 +52,6 @@ void	parse_camera(t_scene *sc, char **tokens)
 		err_handler("invalid orientation camera");
 	if (sc->camera.dir.x < -1 || sc->camera.dir.y < -1 || sc->camera.dir.z < -1)
 		err_handler("invalid orientation camera");
-	// if (sc->camera.dir.x == 0 && sc->camera.dir.y == 0 && sc->camera.dir.z == 0)
-	// 	err_handler("invalid orientation camera");
 	sc->camera.fov = ft_atod(tokens[3]);
 	if (sc->camera.fov < 0 || sc->camera.fov > 180)
 		err_handler("FOV  in range [0,180]");
