@@ -27,7 +27,7 @@ int	check_file(int ac, char **av)
 
 void err_handler(char *msg)
 {
-	system("leaks miniRT");
+	// system("leaks miniRT");
     printf("Error\n%s", msg);
 	exit(1);
 }

@@ -1,6 +1,6 @@
 #include "minirt.h"
 
-int transpose(t_minirt *data, t_keycode keycode, int type, int *status) // object sphere
+int transpose_obj(t_minirt *data, t_keycode keycode, int type, int *status) // object sphere
 {	
 	t_objs *tmp;
 
@@ -125,7 +125,7 @@ int cam_rotate(t_minirt *data, t_keycode keycode, int *status) // 0
 	return (1);
 }
 
-int rotate(t_minirt *data, t_keycode keycode, int type, int *status)
+int rotate_obj(t_minirt *data, t_keycode keycode, int type, int *status)
 {
 	t_objs *tmp;
 	t_vec ori;
@@ -191,20 +191,16 @@ int	keybind(int keycode, t_minirt *data)
 		status = keycode;
 	else if (status != -1)
 	{
-		if (status == ONE)
-			cam_transpose(data, keycode, &status);
-		else if (status == ZERO)
-			cam_rotate(data, keycode, &status);
-		else if (status == TWO)
-			transpose(data, keycode, SP, &status);
+		if (status == TWO)
+			transpose_obj(data, keycode, SP, &status);
 		else if (status == THREE)
-			transpose(data, keycode, CY, &status);
+			transpose_obj(data, keycode, CY, &status);
 		else if (status == FOUR)
 			transpose_light(data, keycode, &status);
 		else if (status == FIVE)
-			rotate(data, keycode, CY, &status);
+			rotate_obj(data, keycode, CY, &status);
 		else if (status == SIX)
-			rotate(data, keycode, PL, &status);
+			rotate_obj(data, keycode, PL, &status);
 	}
 	return (0);
 }
