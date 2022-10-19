@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   random.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/19 18:37:34 by hako              #+#    #+#             */
+/*   Updated: 2022/10/19 18:37:42 by hako             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef RANDOM_H
-#define RANDOM_H
-#include <math.h>
-#include "vector.h"
+# define RANDOM_H
+# include <math.h>
+# include "vector.h"
 
 typedef struct s_onb {
 	t_vec u;

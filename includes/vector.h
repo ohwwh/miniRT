@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/19 18:37:52 by hako              #+#    #+#             */
+/*   Updated: 2022/10/19 18:37:53 by hako             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef VECTOR_H
-#define VECTOR_H
-#include "math.h"
-#include <stdio.h>
-#include <stdlib.h>
+# define VECTOR_H
+# include "math.h"
+# include <stdio.h>
+# include <stdlib.h>
 
 typedef struct s_vec {
 	double x;

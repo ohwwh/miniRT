@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/19 18:49:45 by hako              #+#    #+#             */
+/*   Updated: 2022/10/19 18:50:04 by hako             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 int	check_file(int ac, char **av)
@@ -25,17 +37,17 @@ int	check_file(int ac, char **av)
 	return (0);
 }
 
-void err_handler(char *msg)
+void	err_handler(char *msg)
 {
-	// system("leaks miniRT");
-    printf("Error\n%s", msg);
+	printf("Error\n%s", msg);
 	exit(1);
 }
 
-t_bool is_valid_color(char *s)
+t_bool	is_valid_color(char *s)
 {
-	int i = 0;
+	int		i;
 
+	i = 0;
 	while (s[i])
 	{
 		if (!((s[i] >= '0' && s[i] <= '9') || s[i] == '+' || s[i] == '-'))
@@ -53,7 +65,8 @@ t_vec	get_color(char *s)
 	params = ft_split(s, ',');
 	if (!params || !params[1] || !params[2] || params[3])
 		err_handler("invalid color!");
-	if (!(is_valid_color(params[0]) && is_valid_color(params[1]) && is_valid_color(params[2])))
+	if (!(is_valid_color(params[0]) && is_valid_color(params[1])
+			&& is_valid_color(params[2])))
 		err_handler("invalid color!");
 	cord = (t_vec){ft_atoi(params[0]), ft_atoi(params[1]), ft_atoi(params[2])};
 	if (cord.x > 255 || cord.y > 255 || cord.z > 255)
@@ -109,14 +122,14 @@ void	parse_line(char *id, char **tokens, t_scene *sc)
 void	parse(t_scene *sc, int fd)
 {
 	char	**tokens;
-	char 	*str;
+	char	*str;
 	char	*trimed_str;
 
 	while (1)
 	{
 		str = get_next_line(fd);
 		if (!str)
-			break;
+			break ;
 		trimed_str = ft_strtrim(str, "\n");
 		free(str);
 		tokens = ft_split(trimed_str, ' ');

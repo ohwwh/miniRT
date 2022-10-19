@@ -69,10 +69,10 @@ int	main(int ac, char **av)
 	fd = open(av[1], O_RDONLY);
 	init_rt(&data);
 	parse(&data.scene, fd);
-	//rt_render(&data);
+	rt_render(&data);
 	data.scene.light->count = 0;
-	set_camera(&data.scene.camera);
-	path_render(data);
+	// set_camera(&data.scene.camera);
+	// path_render(data);
 	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
 	mlx_hook(data.mlx.mlx_win, 3, 0, &keyrelease, &data);
 	mlx_hook(data.mlx.mlx_win, 4, 0, &scroll, &data);
