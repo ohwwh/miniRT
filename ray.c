@@ -1,6 +1,16 @@
 #include "minirt.h"
 
-void set_camera(t_camera *cam)
+t_point ray_end(t_ray* ray, double t)
+{
+	t_point ret;
+	
+	ret.x = ray->origin.x + t * ray->dir.x;
+	ret.y = ray->origin.y + t * ray->dir.y;
+	ret.z = ray->origin.z + t * ray->dir.z;
+	return (ret);
+}
+
+/*void set_camera(t_camera *cam)
 {
     double theta;
     double h;
@@ -15,7 +25,7 @@ void set_camera(t_camera *cam)
 	cam->right = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), create_vec(0.0, -1.0, 0.0)));
 	cam->up = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), cam->right));
 
-}
+}*/
 
 t_hit_record find_hitpoint(t_ray *ray, t_objs *objs)
 {

@@ -61,6 +61,7 @@ t_vec	get_color(char *s)
 	if (cord.x < 0 || cord.y < 0 || cord.z < 0)
 		err_handler("invalid color");
 	free_split(params);
+	cord = vec_division(cord, 255);
 	return (cord);
 }
 

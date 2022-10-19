@@ -296,6 +296,8 @@ int scroll(int mousecode, int x, int y, t_minirt* vars)
 		printf("cannot zoom here\n");
 	else if (mousecode == 4 || mousecode == 5)
 		vars->is_move = mousecode;
+	else if (mousecode == 1)
+		printf("%d , %d\n", vars->x, vars->y);
 	return (0);
 }
 
