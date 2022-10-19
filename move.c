@@ -155,42 +155,33 @@ int	cam_key(t_minirt *vars, int keycode)
 	return (1);
 }
 
+void transpose_obj_step(t_minirt *data, int pos, int type)
+{
+	t_objs *tmp;
+	t_vec 	steps[3];
+
+	set_vec(&steps[0], STEP, 0, 0);
+	set_vec(&steps[1], 0, STEP, 0);
+	set_vec(&steps[2], 0, 0, STEP);
+	tmp = data->scene.objs;
+	while (tmp)
+	{
+		if (tmp->type == type)
+			tmp->center = vec_sum(tmp->center, steps[pos]);
+			tmp = tmp->next;
+	}
+	rt_render(data);
+}
+
 int transpose_obj(t_minirt *data, t_keycode keycode, int type, int *status) // object sphere
 {	
-	t_objs *tmp;
-
 	*status = -1;
-	tmp = data->scene.objs;
 	if (keycode == W)
-	{
-		while (tmp)
-		{
-			if (tmp->type == type)
-				tmp->center.y += STEP;
-			tmp = tmp->next;
-		}
-		rt_render(data);
-	}
+		transpose_obj_step(data, 1, type);
 	else if (keycode == A)
-	{
-		while (tmp)
-		{
-			if (tmp->type == type)
-				tmp->center.x += STEP;
-			tmp = tmp->next;
-		}
-		rt_render(data);
-	}
-	if (keycode == D)
-	{
-		while (tmp)
-		{
-			if (tmp->type == type)
-				tmp->center.z += STEP;
-			tmp = tmp->next;
-		}
-		rt_render(data);
-	}
+		transpose_obj_step(data, 0, type);
+	else if (keycode == D)
+		transpose_obj_step(data, 2, type);
 	return (0);
 }
 
@@ -209,6 +200,32 @@ int transpose_light(t_minirt *data, t_keycode keycode, int *status)
 	return (0);
 }
 
+void rotate_obj_step(t_minirt *data, int pos1, int pos2, int type)
+{
+	t_objs *tmp;
+	double 	pos[3];
+	double	r_pos[3];
+
+	tmp = data->scene.objs;
+	while (tmp)
+	{
+		if (tmp->type == type)
+		{
+			r_pos[0] = tmp->dir.x;
+			r_pos[1] = tmp->dir.y;
+			r_pos[2] = tmp->dir.z;
+			pos[0] = tmp->dir.x;
+			pos[1] = tmp->dir.y;
+			pos[2] = tmp->dir.z;
+			r_pos[pos1] = pos[pos1] * cos(ROTATE) - pos[pos2] * sin(ROTATE);
+			r_pos[pos2] = pos[pos1] * sin(ROTATE) + pos[pos2] * cos(ROTATE);
+			set_vec(&tmp->dir, r_pos[0], r_pos[1], r_pos[2]);
+		}
+		tmp = tmp->next;
+	}
+	rt_render(data);
+}
+
 int rotate_obj(t_minirt *data, t_keycode keycode, int type, int *status)
 {
 	t_objs *tmp;
@@ -217,50 +234,11 @@ int rotate_obj(t_minirt *data, t_keycode keycode, int type, int *status)
 	*status = -1;
 	tmp = data->scene.objs;
 	if (keycode == W) // y축 중심 회전
-	{
-		while (tmp)
-		{
-			if (tmp->type == type)
-			{
-				printf("y axis\n");
-				set_vec(&ori, tmp->dir.x, tmp->dir.y, tmp->dir.z);
-				tmp->dir.x = ori.z * sin(ROTATE) + ori.x * cos(ROTATE);
-				tmp->dir.z = ori.z * cos(ROTATE) - ori.x * sin(ROTATE);
-			}
-			tmp = tmp->next;
-		}
-		rt_render(data);
-	}
+		rotate_obj_step(data, 2, 0, type);
 	else if (keycode == A) // x축 중심 회전
-	{
-		while (tmp)
-		{
-			if (tmp->type == type)
-			{
-				printf("x axis\n");
-				set_vec(&ori, tmp->dir.x, tmp->dir.y, tmp->dir.z);
-				tmp->dir.y = ori.y * cos(ROTATE) - ori.z * sin(ROTATE);
-				tmp->dir.z = ori.y * sin(ROTATE) + ori.z * cos(ROTATE);
-			}
-			tmp = tmp->next;
-		}
-		rt_render(data);
-	}
+		rotate_obj_step(data, 1, 2, type);
 	if (keycode == D) // z축 중심 회전
-	{
-		while (tmp)
-		{
-			if (tmp->type == type)
-			{
-				printf("z axis\n");
-				set_vec(&ori, tmp->dir.x, tmp->dir.y, tmp->dir.z);
-				tmp->dir.x = ori.x * cos(ROTATE) - ori.y * sin(ROTATE);
-				tmp->dir.y = ori.x * sin(ROTATE) + ori.y * cos(ROTATE);
-			}
-			tmp = tmp->next;
-		}
-		rt_render(data);
-	}
+		rotate_obj_step(data, 0, 1, type);
 	return (0);
 }
 
