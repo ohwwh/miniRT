@@ -31,10 +31,10 @@ t_vec diffuse(t_hit_record hr, t_light *light, double d)
 	return (diff);
 }
 
-t_vec	reflect(t_vec v, t_vec n)
+/*t_vec	reflect(t_vec v, t_vec n)
 {
     return (vec_sub(v, vec_scalar_mul(n, vdot(v, n) * 2)));
-}
+}*/
 
 t_vec specular(t_hit_record hr, t_light *light, t_ray ray)
 {

@@ -1,4 +1,4 @@
-#include "miniRT.h"
+#include "minirt.h"
 #define EPS 0.001
 
 void set_face_normal(t_hit_record* rec, t_ray *ray, t_vec outward_normal)

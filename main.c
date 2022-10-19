@@ -15,6 +15,46 @@ void	init_rt(t_minirt *data)
 	data->is_trace = 0;
 	data->scene.anti = 1;
 	data->scene.changed = 0;
+	//생성 실패 시 에러처리 해야 함
+}
+
+void path_render(t_minirt vars)
+{
+	double u;
+	double v;
+	t_vec dir;
+	t_ray init_ray;
+	t_color color;
+	
+	for (int y = HEIGHT - 1; y >= 0; --y)
+	{
+		if (vars.is_trace == 1)
+		{
+			printf("\rScanlines remaining: %d", y);
+			fflush(stdout);
+		}
+		for (int x = 0; x < WIDTH; ++x)
+		{
+			color = create_vec(0, 0, 0);
+			for (int s = 0; s < vars.scene.anti; s ++)
+			{
+				u = (((double)x + random_double(0, 1, vars.scene.anti)) * 2 / WIDTH) - 1;
+				v = (((double)y + random_double(0, 1, vars.scene.anti)) * 2 / HEIGHT) - 1;
+				init_ray = ray_primary(&(vars.scene.camera), u, v);
+				if (x == 0 && y == 0)
+						x = x;
+				if (vars.is_trace == 1)
+					color = vec_sum(color, ray_color(init_ray, vars.scene.objs, vars.scene.light, MAX_DEPTH));
+					//여러 개의 광원이 있을 때는?
+					//광원을 어떻게 구분해서 인자로 넣을 건지?
+				else
+					color = vec_sum(color, ray_color_2(init_ray, vars.scene.objs, vars.scene.light));
+			}
+			color = vec_division(color, vars.scene.anti);
+			put_color(&vars.mlx, x, HEIGHT - 1 - y, rgb_to_int(color));
+		}
+	}
+	mlx_put_image_to_window(vars.mlx.mlx, vars.mlx.mlx_win, vars.mlx.img, 0, 0); // 무슨 차이지....
 }
 
 int	main(int ac, char **av)
@@ -28,12 +68,13 @@ int	main(int ac, char **av)
 	init_rt(&data);
 	parse(&data.scene, fd);
 	rt_render(&data);
+	data.scene.light->count = 0;
 	//path_render(data);
-	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
+	/*mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
 	mlx_hook(data.mlx.mlx_win, 3, 0, &keyrelease, &data);
 	mlx_hook(data.mlx.mlx_win, 4, 0, &scroll, &data);
 	mlx_hook(data.mlx.mlx_win,  17, 0L, ft_close, &data);
-	mlx_loop_hook(data.mlx.mlx, &key_hook_move, &data);
+	mlx_loop_hook(data.mlx.mlx, &key_hook_move, &data);*/
 	mlx_loop(data.mlx.mlx);
 	return (0);
 }

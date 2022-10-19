@@ -10,7 +10,7 @@ t_point ray_end(t_ray* ray, double t)
 	return (ret);
 }
 
-void set_camera(t_camera *cam)
+/*void set_camera(t_camera *cam)
 {
     double theta;
     double h;
@@ -25,7 +25,7 @@ void set_camera(t_camera *cam)
 	cam->right = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), create_vec(0.0, -1.0, 0.0)));
 	cam->up = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), cam->right));
 
-}
+}*/
 
 t_hit_record find_hitpoint(t_ray *ray, t_objs *objs)
 {

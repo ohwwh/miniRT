@@ -68,7 +68,7 @@ typedef struct	s_mlx
 	double	z;
 }	t_vec;*/
 
-typedef struct t_camera
+/*typedef struct t_camera
 {
 	t_vec	origin;
 	t_vec	dir;
@@ -82,7 +82,7 @@ typedef struct t_camera
 	t_vec	right;
 	int		count;
 
-}	t_camera;
+}	t_camera;*/
 
 typedef struct s_amb
 {
@@ -101,8 +101,8 @@ typedef struct s_objs
 	t_vec			color;
 	struct s_objs	*next;
 	int				mat;
-	int				refraction;
-	int 			specular;
+	double			refraction;
+	double 			specular;
 }	t_objs;
 
 typedef struct s_light
@@ -110,6 +110,7 @@ typedef struct s_light
 	t_vec			src;
 	double			ratio;
 	t_objs			*object;
+	int				count;
 	struct s_light	*next;
 }	t_light;
 
@@ -203,14 +204,18 @@ t_vec  vcross(t_vec vec1, t_vec vec2);
 t_vec      unit_vec(t_vec vec);
 t_vec  vmin(t_vec vec1, t_vec vec2);
 
-void set_camera(t_camera *cam);
 t_ray       ray_primary(t_camera *cam, double u, double v);
 
 t_vec get_raycolor(t_minirt *data);
 t_vec calcul_ratio(t_vec col1, t_vec col2, double ratio);
 t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb, t_ray ray);
 
+
+t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth);
+t_color ray_color_2(t_ray r, t_objs* world, t_light* light);
+
 t_hit_record find_hitpoint(t_ray *ray, t_objs *objs);
+int find_hitpoint_path(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* rec);
 //t_hit_record hit_plane(t_hit_record saved, t_ray *ray, t_objs *pl);
 //t_hit_record hit_sphere(t_hit_record saved, t_ray *ray, t_objs *sp);
 //t_hit_record hit_cylinder(t_hit_record saved, t_ray *ray, t_objs *cy);
@@ -219,6 +224,9 @@ void hit_plane(t_objs *pl, t_ray *ray, t_hit_record* rec);
 void hit_sphere(t_objs* s, t_ray* r, t_hit_record* rec);
 void hit_cylinder(t_objs *cy, t_ray *ray, t_hit_record *rec);
 void hit_caps(t_objs *cy, t_ray *ray, t_hit_record *rec);
+void hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record* rec);
+void hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record* rec);
+void hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record* rec);
 t_point ray_end(t_ray* ray, double t);
 void set_face_normal(t_hit_record* rec, t_ray *ray, t_vec outward_normal);
 
@@ -231,6 +239,7 @@ void key_press_rotate(t_minirt* vars, int keycode);
 void key_press_mode_change(t_minirt* vars, int keycode);
 int	ft_close(t_minirt *data);
 
+t_vec	reflect(t_vec v, t_vec n);
 
 
 void path_render(t_minirt vars);
@@ -241,3 +250,5 @@ void	put_color(t_mlx *data, int x, int y, int color);
 void 	ft_pixel_put(t_minirt *vars, int x, int y, int color);
 void	ft_mlx_init(t_minirt *vars);
 void	ft_mlx_new(t_minirt *vars, int x, int y, char *name);
+
+double get_light_size(t_objs object);
