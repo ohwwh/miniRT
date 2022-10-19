@@ -1,5 +1,4 @@
 #include "miniRT.h"
-#define EPS 0.0001
 
 t_ray ray(t_point origin, t_vec dir)
 {
@@ -122,9 +121,9 @@ double sphere_light_pdf_value(t_hit_record* rec, t_ray* scattered, t_objs* light
 	if (!light)
 		return (0);
 	rec_new.t = -1.0;
-	rec_new.tmin = 0.001;
-	rec_new.tmax = INFINITY;
-	hit_sphere_hoh(light, scattered, &rec_new);
+	//rec_new.tmin = 0.001;
+	//rec_new.tmax = INFINITY;
+	hit_sphere(light, scattered, &rec_new);
 	if (rec_new.t < 0.001)
 		return 0;
 	cos_max = sqrt(1 - (light->radius * light->radius / 
@@ -145,8 +144,8 @@ double rectangle_light_pdf_value(t_hit_record *rec, t_ray* scattered, t_objs* li
 	if (!light)
 		return (0);
 	rec_new.t = -1.0;
-	rec_new.tmin = 0.001;
-	rec_new.tmax = INFINITY;
+	//rec_new.tmin = 0.001;
+	//rec_new.tmax = INFINITY;
 	if (light->type == 4)
 		hit_rectangle_xy(light, scattered, &rec_new);
 	else if (light->type == 5)
@@ -171,8 +170,8 @@ double light_pdf_value(t_ray* ray_path, t_objs* light)
 	if (!light)
 		return (0);
 	rec.t = -1.0;
-	rec.tmin = 0.001;
-	rec.tmax = INFINITY;
+	//rec.tmin = 0.001;
+	//rec.tmax = INFINITY;
 
 	if (light->type == 4)
 		hit_rectangle_xy(light, ray_path, &rec);
@@ -181,7 +180,7 @@ double light_pdf_value(t_ray* ray_path, t_objs* light)
 	else if (light->type == 6)
 		hit_rectangle_xz(light, ray_path, &rec);
 	else if (light->type == 3)
-		hit_sphere_hoh(light, ray_path, &rec);
+		hit_sphere(light, ray_path, &rec);
 	if (rec.t < 0.001)
 		return 0;
 	double area = (light->center.y - light->center.x) * (light->dir.y - light->dir.x);
@@ -265,8 +264,10 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 	double size;
 	double pdf;
 	t_light *temp;
+	int idx;
 
 	pdf = 0.0;
+	light_pdf_val = 0.0;
 	w_sum = 0.0;
 	temp = light;
 	uvw = create_onb(rec->normal);
@@ -278,60 +279,39 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 	else
 		t = 0.5;
 
-
-	while (temp)
-	{
-		//size = get_light_size(*(temp->object));
-		size = 1;
-		w_sum += size;
-		if (random_double(0,1,7) < t) //광원 샘플링
-		{
-			if (temp->object->type == 3)
-				generate_light_sample_sphere(rec, scattered, temp->object);
-			else
-				generate_light_sample_rect(rec, scattered, temp->object);
-		}
-		else //난반사 샘플링
-			generate_scattered(rec, scattered, &uvw);
-		if (temp->object->type == 3)
-			light_pdf_val = sphere_light_pdf_value(rec, scattered, temp->object);
-		else
-			light_pdf_val = rectangle_light_pdf_value(rec, scattered, temp->object);
-		pdf += size * (t * light_pdf_val + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));
+	idx = rand() % light->count;
+	while (idx --)
 		temp = temp->next;
+	if (temp->object->mat != -1 || !get_light_size(*(temp->object)))
+	{
+		generate_scattered(rec, scattered, &uvw);
+		return (cosine_pdf_value(&(rec->normal), &(uvw.w)));
 	}
-
-	
-	/*size = get_light_size(*(temp->object));
+	//size = get_light_size(*(temp->object));
+	size = 1;
 	w_sum += size;
 	if (random_double(0,1,7) < t) //광원 샘플링
 	{
-		while (temp)
-		{
-			if (temp->object->type == 3)
-				generate_light_sample_sphere(rec, scattered, temp->object);
-			else
-				generate_light_sample_rect(rec, scattered, temp->object);
-			if (temp->object->type == 3)
-				light_pdf_val = sphere_light_pdf_value(rec, scattered, temp->object);
-			else
-				light_pdf_val = rectangle_light_pdf_value(rec, scattered, temp->object);
-		}
+		if (temp->object->type == 3)
+			generate_light_sample_sphere(rec, scattered, temp->object);
+		else
+			generate_light_sample_rect(rec, scattered, temp->object);
 	}
-	else
-	{
-
-	} //난반사 샘플링
+	else //난반사 샘플링
 		generate_scattered(rec, scattered, &uvw);
-	if (temp->object->type == 3)
-		light_pdf_val = sphere_light_pdf_value(rec, scattered, temp->object);
-	else
-		light_pdf_val = rectangle_light_pdf_value(rec, scattered, temp->object);
-	pdf += size * (t * light_pdf_val + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));
-	temp = temp->next;*/
-	
 
-	return (pdf / w_sum);
+	temp = light;
+	while (temp)
+	{
+		if (temp->object->type == 3)
+			light_pdf_val += sphere_light_pdf_value(rec, scattered, temp->object);
+		else
+			light_pdf_val += rectangle_light_pdf_value(rec, scattered, temp->object);
+		temp = temp->next;
+	}
+	pdf = (t * light_pdf_val / light->count + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));
+
+	return (pdf);
 }
 
 double scattering_pdf(t_ray* scattered, t_hit_record* rec)
@@ -432,10 +412,10 @@ t_color ray_color_2(t_ray r, t_objs* world, t_light* light)
 	t_hit_record rec;
 	double t;
 
-	rec.t = 0.0;
+	rec.t = -1.0;
 	rec.tmin = 0.001;
-	rec.tmax = INFINITY;
-	find_hitpoint_hoh(&r, world, light, &rec);
+	//rec.tmax = INFINITY;
+	find_hitpoint_path(&r, world, light, &rec);
 	if (rec.t != -1)
 		return (rec.color);
 	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
@@ -450,16 +430,15 @@ t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth)
 	double pdf;
 	t_hit_record rec;
 	t_color color;
-	t_vec target;
 	t_ray scattered;
 
 	rec.t = -1.0;
 	rec.tmin = 0.001;
-	rec.tmax = INFINITY;
+	//rec.tmax = INFINITY;
 
 	if (depth <= 0)
         return (create_vec(0,0,0));
-	find_hitpoint_hoh(&r, world, light, &rec);
+	find_hitpoint_path(&r, world, light, &rec);
 	if (rec.t >= 0.0)
 	{
 		pdf = scatter(&r, &rec, &scattered, light);
@@ -470,91 +449,10 @@ t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth)
 		}
 		else
 			color = rec.color;
-		if (0)
-		{
-			/*//target = vec_sum(vec_sum(rec.p, rec.normal), rand_sphere()); //wihtout lambertian
-			target = vec_sum(rec.p, rand_hemi_sphere(rec.normal)); //with lambertian
-			//lambertian 반사 구현할 때, 0으로 나누는 경우가 생김. 원문에서 bullet으로 검색해서 예외 처리 할 것
-			color = vec_mul(color, ray_color(ray(rec.p, vec_sub(target, rec.p)), world, depth - 1));*/
-			/*target = vec_sum(rec.normal, rand_sphere()); 
-			color = vec_mul(color, ray_color(ray(rec.p, target), world, depth - 1)); // material 클래스 추가 이후 부터 갑자기 바뀌었다. 왜 램버시안 반사를 없앴지??*/
-			
-
-			/*target = vec_sum(vec_sum(rec.p, rec.normal), unit_vec(rand_sphere()));
-			t_ray scattered = ray(rec.p, unit_vec(target));
-			double pdf = vdot(rec.normal, scattered.dir) / 3.1415926535897932385;
-			double scat_pdf;
-			double cos;
-			cos = vdot(rec.normal, unit_vec(scattered.dir));
-			if (cos < 0)
-				scat_pdf = 0;
-			else
-				scat_pdf = cos / 3.1415926535897932385;
-			color = vec_mul(vec_scalar_mul(color, scat_pdf), 
-			vec_division(ray_color(ray(rec.p, vec_sub(target, rec.p)), world, depth - 1), pdf));
-			//unit_sphere를 이용한 난반사 구현*/
-			
-
-
-			/*target = rand_hemi_sphere(rec.normal);
-			t_ray scattered = ray(rec.p, unit_vec(target));
-			double pdf = 0.5 / 3.1415926535897932385;
-			double scat_pdf;
-			double cos;
-			cos = vdot(rec.normal, unit_vec(scattered.dir));
-			if (cos < 0)
-				scat_pdf = 0;
-			else
-				scat_pdf = cos / 3.1415926535897932385;
-			color = vec_mul(vec_scalar_mul(color, scat_pdf), 
-			vec_division(ray_color(scattered, world, depth - 1), pdf));
-			//hemisphere를 이용한 난반사 구현(lambertian)*/
-
-			/*double pdf;
-			pdf = scatter(&r, &rec, &scattered);
-			color = vec_mul(vec_scalar_mul(rec.color, scattering_pdf(&scattered, &rec)), 
-			vec_division(ray_color(scattered, world, depth - 1), pdf));*/
-
-			/*t_vec on_light = create_vec(random_double(0,4,7), 8, random_double(-3,-1,7));
-			t_vec to_light = vec_sub(on_light, rec.p);
-			double distance_squared = pow(vec_len(to_light), 2);
-			to_light = unit_vec(to_light);
-
-			if (vdot(to_light, rec.normal) < 0)
-				return (create_vec(0,0,0));
-
-			double light_area = (2)*(2);
-			double light_cosine = fabs(to_light.y);
-			if (light_cosine < 0.000001)
-				return (create_vec(0,0,0));
-
-			double pdf = distance_squared / (light_cosine * light_area);
-			t_ray scattered = ray(rec.p, to_light);
-			double scat_pdf;
-			double cos;
-			cos = vdot(rec.normal, unit_vec(scattered.dir));
-			if (cos < 0)
-				scat_pdf = 0;
-			else
-				scat_pdf = cos / 3.1415926535897932385;
-			color = vec_mul(vec_scalar_mul(color, scat_pdf), 
-			vec_division(ray_color(scattered, world, depth - 1), pdf));
-			//light sampling*/
-		}
-		/*else if (rec.mat == 1) //metal 재질인 경우
-		{
-			scattered = ray(rec.p, reflect(unit_vec(r.dir), rec.normal));
-			if (vdot(scattered.dir, rec.normal) > 0)
-				color = vec_mul(rec.color, ray_color(ray(rec.p, scattered.dir), world, depth - 1));
-			else
-				color = create_vec(0, 0, 0);
-		}
-		else if (rec.mat == -1) //light인 경우
-			return (rec.color);*/
 		return (color);
 	}
 	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
 	return (vec_scalar_mul(
-		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), 0.5)
+		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), 0.01)
 	);
 }

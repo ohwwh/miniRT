@@ -1,6 +1,6 @@
 #include "minirt.h"
 
-t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy)
+/*t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy)
 {
 	t_objs top_cap;
 	t_hit_record hr;
@@ -74,4 +74,4 @@ t_hit_record hit_cylinder(t_hit_record saved, t_ray *ray, t_objs *cy)
 		saved = hr;
 	}
     return (saved);
-}
+}*/

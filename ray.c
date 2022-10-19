@@ -28,16 +28,20 @@ t_hit_record find_hitpoint(t_ray *ray, t_objs *objs)
     {
         if (tmp->type == SP)
         {
-            saved = hit_sphere(saved, ray, tmp);
+            hit_sphere(tmp, ray, &saved);
+            //saved = hit_sphere(saved, ray, tmp);
         }
         else if (tmp->type == PL)
         {
-            saved = hit_plane(saved, ray, tmp);
+            hit_plane(tmp, ray, &saved);
+            //saved = hit_plane(saved, ray, tmp);
         }
         else if (tmp->type == CY)
         {
-            saved = hit_cylinder(saved, ray, tmp);
-	        saved = hit_caps(saved, ray, tmp);
+            hit_cylinder(tmp, ray, &saved);
+            hit_caps(tmp, ray, &saved);
+            //saved = hit_cylinder(saved, ray, tmp);
+	        //saved = hit_caps(saved, ray, tmp);
         }
         tmp = tmp->next;
     }
