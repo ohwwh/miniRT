@@ -1,6 +1,6 @@
 #include "minirt.h"
 
-t_hit_record hit_plane(t_hit_record saved, t_ray *ray, t_objs *pl)
+/*t_hit_record hit_plane(t_hit_record saved, t_ray *ray, t_objs *pl)
 {
     t_hit_record hr;
     t_vec	x;
@@ -35,4 +35,4 @@ t_hit_record hit_plane(t_hit_record saved, t_ray *ray, t_objs *pl)
 		saved = hr;
 	}
     return (saved);
-}
+}*/

@@ -26,12 +26,12 @@ int find_hitpoint_light(t_ray* ray, t_light *light, t_hit_record* rec)
             hit_cylinder(temp->object, ray, rec);
 			hit_caps(temp->object, ray, rec);
         }
-		else if (temp->object->type == 4)
+		/*else if (temp->object->type == 4)
 			hit_rectangle_xy(temp->object, ray, rec);
 		else if (temp->object->type == 5)
 			hit_rectangle_yz(temp->object, ray, rec);
 		else if (temp->object->type == 6)
-			hit_rectangle_xz(temp->object, ray, rec);
+			hit_rectangle_xz(temp->object, ray, rec);*/
         temp = temp->next;
     }
 	return (1);
@@ -56,12 +56,12 @@ int find_hitpoint_path(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* r
             hit_cylinder(tmp, ray, rec);
 			hit_caps(tmp, ray, rec);
         }
-		else if (tmp->type == 4)
+		/*else if (tmp->type == 4)
 			hit_rectangle_xy(tmp, ray, rec);
 		else if (tmp->type == 5)
 			hit_rectangle_yz(tmp, ray, rec);
 		else if (tmp->type == 6)
-			hit_rectangle_xz(tmp, ray, rec);
+			hit_rectangle_xz(tmp, ray, rec);*/
         tmp = tmp->next;
     }
 	find_hitpoint_light(ray, light, rec);
@@ -234,8 +234,6 @@ int hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record* rec)
     if (x < rect->center.x || x > rect->center.y
 	|| y < rect->dir.x || y > rect->dir.y)
         return (0);
-    rec->u = (x - rect->center.x) / (rect->center.y - rect->center.x);
-    rec->v = (y - rect->dir.x) / (rect->dir.y - rect->dir.x);
     rec->t = t;
 	rec->tmax = t;
 	rec->mat = rect->mat;
@@ -257,8 +255,6 @@ int hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record* rec)
     if (y < rect->center.x || y > rect->center.y
 	|| z < rect->dir.x || z > rect->dir.y)
         return (0);
-    rec->u = (y - rect->center.x) / (rect->center.y - rect->center.x);
-    rec->v = (z - rect->dir.x) / (rect->dir.y - rect->dir.x);
     rec->t = t;
 	rec->tmax = t;
 	rec->mat = rect->mat;
@@ -280,8 +276,6 @@ int hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record* rec)
     if (x < rect->center.x || x > rect->center.y
 	|| z < rect->dir.x || z > rect->dir.y)
         return (0);
-    rec->u = (x - rect->center.x) / (rect->center.y - rect->center.x);
-    rec->v = (z - rect->dir.x) / (rect->dir.y - rect->dir.x);
     rec->t = t;
 	rec->tmax = t;
 	rec->mat = rect->mat;
