@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_objs.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/10/19 18:53:04 by hako              #+#    #+#             */
+/*   Updated: 2022/10/19 18:53:13 by hako             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 void	parse_sphere(t_scene *sc, char **tokens)
@@ -27,7 +39,6 @@ void	parse_cylinder(t_scene *sc, char **tokens)
 	obj = (t_objs *)malloc(sizeof(t_objs));
 	obj->next = sc->objs;
 	sc->objs = obj;
-
 	obj->type = CY;
 	obj->center = get_vec(tokens[1]);
 	obj->dir = get_vec(tokens[2]);
@@ -51,7 +62,6 @@ void	parse_plane(t_scene *sc, char **tokens)
 	obj = (t_objs *)malloc(sizeof(t_objs));
 	obj->next = sc->objs;
 	sc->objs = obj;
-	
 	obj->type = PL;
 	obj->center = get_vec(tokens[1]);
 	obj->dir = get_vec(tokens[2]);
