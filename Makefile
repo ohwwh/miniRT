@@ -6,7 +6,7 @@ FRAMEW = -Lmlx -lmlx -framework OpenGL -framework Appkit
 
 SRCS = main.c parse.c parse_objs.c utils.c parse_equip.c \
 		render.c vector.c ray.c sphere.c color.c plane.c \
-		key.c cylinder.c \
+		move.c cylinder.c hit.c random.c camera.c ray_hoh.c objects.c ft_mlx.c\
 		tests.c
 INCS = ./includes/
 OBJS = $(SRCS:.c=.o)
@@ -18,7 +18,7 @@ $(NAME):		$(OBJS)
 				make -C ./mlx
 				cp ./libft/libft.a libft.a
 				cp ./mlx/libmlx.a ./libmlx.a
-				$(CC) -fsanitize=address -g3 $(OBJS) libft.a -I$(INCS) -o $(NAME) $(FRAMEW)
+				$(CC) -g3 $(OBJS) libft.a -I$(INCS) -o $(NAME) $(FRAMEW)
 
 %.o:			%.c
 				$(CC) -I $(INCS) -c $< -o $@

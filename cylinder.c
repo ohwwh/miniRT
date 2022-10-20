@@ -1,27 +1,16 @@
 #include "minirt.h"
 
-t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy)
+/*t_hit_record hit_caps(t_hit_record saved, t_ray *ray, t_objs *cy)
 {
 	t_objs top_cap;
 	t_hit_record hr;
 
-	top_cap.center.x = cy->dir.x;
-	top_cap.center.y = cy->dir.y;
-	top_cap.center.z = cy->dir.z;
-
+	set_vec(&top_cap.center, cy->dir.x, cy->dir.y, cy->dir.z);
 	top_cap.center = unit_vec(top_cap.center);
-
-	top_cap.center.x = cy->height * top_cap.center.x + cy->center.x;
-	top_cap.center.y = cy->height * top_cap.center.y + cy->center.y;
-	top_cap.center.z = cy->height * top_cap.center.z + cy->center.z;
-	
-	top_cap.dir.x = cy->dir.x;
-	top_cap.dir.y = cy->dir.y;
-	top_cap.dir.z = cy->dir.z;
-
-	top_cap.color.x = cy->color.x;
-	top_cap.color.y = cy->color.y;
-	top_cap.color.z = cy->color.z;
+	top_cap.center = vec_scalar_mul(top_cap.center, cy->height);
+	top_cap.center = vec_sum(top_cap.center, cy->center);
+	set_vec(&top_cap.dir, cy->dir.x, cy->dir.y, cy->dir.z);
+	set_vec(&top_cap.color, cy->color.x, cy->color.y, cy->color.z);
 
 	hr = hit_plane(saved, ray, &top_cap);
 	if (powf(hr.p.x - top_cap.center.x, 2.) + powf(hr.p.y - top_cap.center.y, 2.) + powf(hr.p.z - top_cap.center.z, 2.) <= powf(cy->radius, 2.))
@@ -37,42 +26,37 @@ t_hit_record hit_cylinder(t_hit_record saved, t_ray *ray, t_objs *cy)
     t_hit_record hr;
 	double	m;
 	t_vec	oc;
-    double  D; // 판별식
     t_vec   normalized;
-    double  a;
-    double  b;
-    double  c;
-    double  t1;
-    double  t2;
+    t_discriminant d;
     double  h1, h2;
 
 	// hr.t 구하기 //
     normalized = unit_vec(cy->dir);
 	oc = vec_sub(ray->origin, cy->center);
-	a = vdot(ray->dir, ray->dir) - (vdot(ray->dir, normalized)
+	d.a = vdot(ray->dir, ray->dir) - (vdot(ray->dir, normalized)
 			* vdot(ray->dir, normalized));
-	b = 2 * (vdot(ray->dir, oc) - (vdot(ray->dir, normalized)
+	d.b = 2 * (vdot(ray->dir, oc) - (vdot(ray->dir, normalized)
 				* vdot(oc, normalized)));
-	c = vdot(oc, oc)
+	d.c = vdot(oc, oc)
 		- (vdot(oc, normalized) * vdot(oc, normalized))
 		- (cy->radius) * (cy->radius);
-	D = b * b - 4 * a * c;
-	if (D < EPS)
+	d.Dsc = d.b * d.b - 4 * d.a * d.c;
+	if (d.Dsc < EPS)
 		hr.t = -1.0;
 	else
     {
-        t1 = (-b + sqrt(D)) / (2 * a);
-	    t2 = (-b - sqrt(D)) / (2 * a);
-	    if (t1 < EPS)
+        d.t1 = (-d.b + sqrt(d.Dsc)) / (2 * d.a);
+	    d.t2 = (-d.b - sqrt(d.Dsc)) / (2 * d.a);
+	    if (d.t1 < EPS)
 		    hr.t = -1.0;
 		else
 		{
-	    	h1 = vdot(ray->dir, normalized) * t1 + vdot(oc, normalized);
-	    	h2 = vdot(ray->dir, normalized) * t2 + vdot(oc, normalized);
+	    	h1 = vdot(ray->dir, normalized) * d.t1 + vdot(oc, normalized);
+	    	h2 = vdot(ray->dir, normalized) * d.t2 + vdot(oc, normalized);
 	    	if (h2 >= EPS && h2 <= cy->height)
-		    	hr.t = t2;
+		    	hr.t = d.t2;
 	    	else if (h1 >= EPS && h1 <= cy->height)
-		    	hr.t = t1;
+		    	hr.t = d.t1;
 	    	else
             	hr.t = -1.0;
 		}
@@ -90,4 +74,4 @@ t_hit_record hit_cylinder(t_hit_record saved, t_ray *ray, t_objs *cy)
 		saved = hr;
 	}
     return (saved);
-}
+}*/

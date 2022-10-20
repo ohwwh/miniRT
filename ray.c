@@ -1,16 +1,31 @@
 #include "minirt.h"
 
-void set_camera_param(t_cam *cam)
+t_point ray_end(t_ray* ray, double t)
 {
-	cam->aspect_r = (double) WIDTH / (double) HEIGHT;
-	cam->theta = cam->fov * PI / 180.0;
-	cam->height = tan(cam->theta / 2);
-	cam->width = cam->aspect_r * cam->height;
-	cam->forward = cam->dir;
+	t_point ret;
+	
+	ret.x = ray->origin.x + t * ray->dir.x;
+	ret.y = ray->origin.y + t * ray->dir.y;
+	ret.z = ray->origin.z + t * ray->dir.z;
+	return (ret);
+}
+
+/*void set_camera(t_camera *cam)
+{
+    double theta;
+    double h;
+
+	cam->ratio = (double) WIDTH / (double) HEIGHT;
+	theta = cam->fov * PI / 180.0;
+	cam->viewport_height = tan(theta / 2);
+	cam->viewport_width = cam->ratio * cam->viewport_height;
+    cam->forward = cam->dir;
 	cam->forward.x += EPS;
+    cam->vup = create_vec(0,1,0);
 	cam->right = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), create_vec(0.0, -1.0, 0.0)));
 	cam->up = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), cam->right));
-}
+
+}*/
 
 t_hit_record find_hitpoint(t_ray *ray, t_objs *objs)
 {
@@ -23,16 +38,20 @@ t_hit_record find_hitpoint(t_ray *ray, t_objs *objs)
     {
         if (tmp->type == SP)
         {
-            saved = hit_sphere(saved, ray, tmp);
+            hit_sphere(tmp, ray, &saved);
+            //saved = hit_sphere(saved, ray, tmp);
         }
         else if (tmp->type == PL)
         {
-            saved = hit_plane(saved, ray, tmp);
+            hit_plane(tmp, ray, &saved);
+            //saved = hit_plane(saved, ray, tmp);
         }
         else if (tmp->type == CY)
         {
-            saved = hit_cylinder(saved, ray, tmp);
-	        saved = hit_caps(saved, ray, tmp);
+            hit_cylinder(tmp, ray, &saved);
+            hit_caps(tmp, ray, &saved);
+            //saved = hit_cylinder(saved, ray, tmp);
+	        //saved = hit_caps(saved, ray, tmp);
         }
         tmp = tmp->next;
     }
@@ -66,13 +85,13 @@ t_vec get_raycolor(t_minirt *data)
 	return (vec_scalar_mul(data->scene.amb.col, data->scene.amb.ratio));
 }
 
-t_ray       ray_primary(t_cam *cam, double u, double v)
+t_ray       ray_primary(t_camera *cam, double u, double v)
 {
     t_ray   ray;
 
-    ray.origin = cam->cen;
-    ray.dir = vec_sum(vec_sum(vec_scalar_mul(cam->up, v * cam->height),
-				vec_scalar_mul(cam->right, u * cam->width)), cam->forward);
+    ray.origin = cam->origin;
+    ray.dir = vec_sum(vec_sum(vec_scalar_mul(cam->up, v * cam->viewport_height),
+				vec_scalar_mul(cam->right, u *  cam->viewport_width)), cam->forward);
     ray.dir = unit_vec(ray.dir);
     return (ray);
 }
