@@ -41,7 +41,7 @@ double decimal_part(const char *str) {
 	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
     	i++;
   	if (str[i] != '\0')
-    	err_handler("wrong double format");
+    	err_handler("wrong argument");
   	return (nb);
 }
 
