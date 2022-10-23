@@ -1,6 +1,19 @@
 #include "minirt.h"
 
-
+int create_light_object(t_light* light)
+{
+	while (light)
+	{
+		light->object.center = light->src;
+		light->object.color = create_vec(45, 45, 45);
+		light->object.type = SP;
+		light->object.mat = -1;
+		light->object.radius = 10;
+		light->object.next = 0;
+		light = light->next;
+	}
+	return (1);
+}
 
 t_ray ray(t_point origin, t_vec dir)
 {
@@ -273,7 +286,7 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 	w_sum = 0.0;
 	temp = light;
 	uvw = create_onb(rec->normal);
-	if (!light || !get_light_size(light->object))
+	if (!light || !light->count || !get_light_size(light->object))
 	{
 		generate_scattered(rec, scattered, &uvw);
 		return (cosine_pdf_value(&(rec->normal), &(uvw.w)));
@@ -462,6 +475,6 @@ t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth)
 	}
 	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
 	return (vec_scalar_mul(
-		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), 1)
+		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), 0.1)
 	);
 }

@@ -23,6 +23,7 @@ typedef struct t_camera
 {
 	t_vec	origin;
 	t_vec	dir;
+	double	distance;
 	double	fov;
 	double	ratio;
 	double	viewport_height;

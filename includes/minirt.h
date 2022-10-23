@@ -168,6 +168,7 @@ typedef struct s_minirt
 	t_ray		ray;
 	int			is_move;
 	int			is_trace;
+	int			mode;
 	double		u;
 	double		v;
 	int			x;
@@ -200,6 +201,7 @@ t_light	*alloc_light(t_scene *sc);
 void	parse_ambient(t_scene *sc, char **tokens);
 void	parse_camera(t_scene *sc, char **tokens);
 void	parse_light(t_scene *sc, char **tokens);
+int 	create_light_object(t_light* light);
 
 double	ft_atod(const char *str);
 void	free_split(char **s);
@@ -247,7 +249,7 @@ void hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record* rec);
 t_point ray_end(t_ray* ray, double t);
 void set_face_normal(t_hit_record* rec, t_ray *ray, t_vec outward_normal);
 
-int	keypress(int keycode, t_minirt* vars);
+//int	keypress(int keycode, t_minirt* vars);
 int	keyrelease(int keycode, t_minirt* vars);
 int scroll(int mousecode, int x, int y, t_minirt* vars);
 int key_hook_move(t_minirt* vars);

@@ -1,5 +1,7 @@
 #include "minirt.h"
 
+void transpose_obj_step(t_minirt *data, int type);
+
 int	ft_close(t_minirt *data)
 {
 	t_light *light;
@@ -68,7 +70,7 @@ void camera_move(t_minirt* vars)
 	}
 	else
 		return ;
-	delta = vec_division(vec_scalar_mul(dir, d), 1);
+	delta = vec_scalar_mul(vec_scalar_mul(dir, d), vars->scene.camera.distance / 10);
 	t_vec new_org = vec_sum(vars->scene.camera.origin, delta);
 	vars->scene.camera.origin = new_org;
 }
@@ -128,61 +130,63 @@ int key_hook_move(t_minirt* vars)
 {
 	if (vars->scene.changed == 1)
 	{
-		//path_render(*vars);
-		rt_render(vars);
+		if (vars->is_trace == 1 || vars->is_trace == 0)
+			path_render(*vars);
+		else if (vars->is_trace == 2)
+			rt_render(vars);
 		vars->scene.changed = 0;
 	}
 	if (vars->is_trace == 0 && vars->is_move != -1)
 	{
-		camera_move(vars);
-		camera_rotate(vars);
-		camera_zoom(vars);
-		set_camera(&vars->scene.camera);
-		//path_render(*vars);
-		rt_render(vars);
+		if (vars->mode == 0)
+		{
+			camera_move(vars);
+			camera_rotate(vars);
+			camera_zoom(vars);
+			set_camera(&vars->scene.camera);
+		}
+		else if (vars->mode != 0)
+		{
+			transpose_obj_step(vars, vars->mode);
+		}
+		path_render(*vars);
 	}
 	return (1);
 }
 
-int	cam_key(t_minirt *vars, int keycode)
+void transpose_obj_step(t_minirt *data, int type)
 {
-	if (keycode == W || keycode == A || keycode == S || keycode == D)
-		key_press_move(vars, keycode);
-	else if (keycode == UP || keycode == LEFT || keycode == RIGHT || keycode == DOWN)
-		key_press_rotate(vars, keycode);
-	else if (keycode == 15)
-		key_press_mode_change(vars, keycode);
-	return (1);
-}
-
-void transpose_obj_step(t_minirt *data, int pos, int type)
-{
+	t_vec dir;
+	t_vec delta;
 	t_objs *tmp;
-	t_vec 	steps[3];
+	double d;
 
-	set_vec(&steps[0], STEP, 0, 0);
-	set_vec(&steps[1], 0, STEP, 0);
-	set_vec(&steps[2], 0, 0, STEP);
+	if (data->is_move == 13 || data->is_move == 1)
+	{
+		dir = data->scene.camera.up;
+		if (data->is_move == 13)
+			d = 1;
+		else
+			d = -1;
+	}
+	else if (data->is_move == 0 || data->is_move == 2)
+	{
+		dir = data->scene.camera.right;
+		if (data->is_move == 2)
+			d = 1;
+		else
+			d = -1;
+	}
+	else
+		return ;
+	delta = vec_scalar_mul(vec_scalar_mul(dir, d), 1);
 	tmp = data->scene.objs;
 	while (tmp)
 	{
 		if (tmp->type == type)
-			tmp->center = vec_sum(tmp->center, steps[pos]);
-			tmp = tmp->next;
+			tmp->center = vec_sum(tmp->center, delta);
+		tmp = tmp->next;
 	}
-	rt_render(data);
-}
-
-int transpose_obj(t_minirt *data, t_keycode keycode, int type, int *status) // object sphere
-{	
-	*status = -1;
-	if (keycode == W)
-		transpose_obj_step(data, 1, type);
-	else if (keycode == A)
-		transpose_obj_step(data, 0, type);
-	else if (keycode == D)
-		transpose_obj_step(data, 2, type);
-	return (0);
 }
 
 int transpose_light(t_minirt *data, t_keycode keycode, int *status)
@@ -244,27 +248,12 @@ int rotate_obj(t_minirt *data, t_keycode keycode, int type, int *status)
 
 int	keypress(int keycode, t_minirt* vars)
 {
-	static int status = -1;
-
-	if (keycode == ESC)
-		ft_close(vars);
-	if ((status == -1 || status == ONE) && ((18 <= keycode && keycode <= 23) || keycode == 29))
-		status = keycode;
-	else if (status != -1)
-	{
-		if (status == TWO)
-			transpose_obj(vars, keycode, SP, &status);
-		else if (status == THREE)
-			transpose_obj(vars, keycode, CY, &status);
-		else if (status == FOUR)
-			transpose_light(vars, keycode, &status);
-		else if (status == FIVE)
-			rotate_obj(vars, keycode, CY, &status);
-		else if (status == SIX)
-			rotate_obj(vars, keycode, PL, &status);
-		else if (status == ONE)
-			cam_key(vars, keycode);
-	}
+	if (keycode == W || keycode == A || keycode == S || keycode == D)
+		key_press_move(vars, keycode);
+	else if (keycode == UP || keycode == LEFT || keycode == RIGHT || keycode == DOWN)
+		key_press_rotate(vars, keycode);
+	else if (keycode == 15 || keycode == 35 || keycode == 18 || keycode == 19)
+		key_press_mode_change(vars, keycode);
 	return (0);
 }
 
@@ -321,8 +310,25 @@ void key_press_mode_change(t_minirt* vars, int keycode)
 {
 	if (vars->is_trace == 0)
 	{
-		vars->is_trace = 1;
-		vars->scene.anti = 10;
+		if(keycode == 18 || keycode == 19)
+		{
+			if (vars->mode == 0)
+			{
+				if (keycode == 18)
+					vars->mode = SP;
+				else if (keycode == 19)
+					vars->mode = CY;
+			}
+			else if (vars->mode != 0)
+				vars->mode = 0;
+			return ;
+		}
+
+		if (keycode == 15)
+			vars->is_trace = 1;
+		else if (keycode == 35)
+			vars->is_trace = 2;
+		vars->scene.anti = 1;
 		vars->scene.changed = 1;
 	}
 	else
