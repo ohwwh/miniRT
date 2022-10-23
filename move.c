@@ -1,6 +1,6 @@
 #include "minirt.h"
 
-void transpose_obj_step(t_minirt *data, int type);
+void object_move(t_minirt *data, int type);
 
 int	ft_close(t_minirt *data)
 {
@@ -147,14 +147,26 @@ int key_hook_move(t_minirt* vars)
 		}
 		else if (vars->mode != 0)
 		{
-			transpose_obj_step(vars, vars->mode);
+			object_move(vars, vars->mode);
 		}
 		path_render(*vars);
 	}
 	return (1);
 }
 
-void transpose_obj_step(t_minirt *data, int type)
+void light_move(t_minirt *vars, t_vec delta)
+{
+	t_light *tmp;
+
+	tmp = vars->scene.light;
+	while (tmp)
+	{
+		tmp->object.center = vec_sum(tmp->object.center, delta);
+		tmp = tmp->next;
+	}
+}
+
+void object_move(t_minirt *data, int type)
 {
 	t_vec dir;
 	t_vec delta;
@@ -180,6 +192,8 @@ void transpose_obj_step(t_minirt *data, int type)
 	else
 		return ;
 	delta = vec_scalar_mul(vec_scalar_mul(dir, d), 1);
+	if (data->scene.objs->type == -1)
+		return (light_move(data, delta));
 	tmp = data->scene.objs;
 	while (tmp)
 	{
