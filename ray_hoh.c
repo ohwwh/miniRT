@@ -1,5 +1,7 @@
 #include "minirt.h"
 
+
+
 t_ray ray(t_point origin, t_vec dir)
 {
 	t_ray ret;
@@ -271,7 +273,7 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 	w_sum = 0.0;
 	temp = light;
 	uvw = create_onb(rec->normal);
-	if (!light || !get_light_size(*(light->object)))
+	if (!light || !get_light_size(light->object))
 	{
 		generate_scattered(rec, scattered, &uvw);
 		return (cosine_pdf_value(&(rec->normal), &(uvw.w)));
@@ -282,20 +284,20 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 	idx = rand() % light->count;
 	while (idx --)
 		temp = temp->next;
-	if (temp->object->mat != -1 || !get_light_size(*(temp->object)))
+	if (temp->object.mat != -1 || !get_light_size(temp->object))
 	{
 		generate_scattered(rec, scattered, &uvw);
 		return (cosine_pdf_value(&(rec->normal), &(uvw.w)));
 	}
-	//size = get_light_size(*(temp->object));
+	//size = get_light_size(temp->object);
 	size = 1;
 	w_sum += size;
 	if (random_double(0,1,7) < t) //광원 샘플링
 	{
-		if (temp->object->type == 3)
-			generate_light_sample_sphere(rec, scattered, temp->object);
+		if (temp->object.type == 3)
+			generate_light_sample_sphere(rec, scattered, &temp->object);
 		else
-			generate_light_sample_rect(rec, scattered, temp->object);
+			generate_light_sample_rect(rec, scattered, &temp->object);
 	}
 	else //난반사 샘플링
 		generate_scattered(rec, scattered, &uvw);
@@ -303,10 +305,10 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 	temp = light;
 	while (temp)
 	{
-		if (temp->object->type == 3)
-			light_pdf_val += sphere_light_pdf_value(rec, scattered, temp->object);
+		if (temp->object.type == 3)
+			light_pdf_val += sphere_light_pdf_value(rec, scattered, &temp->object);
 		else
-			light_pdf_val += rectangle_light_pdf_value(rec, scattered, temp->object);
+			light_pdf_val += rectangle_light_pdf_value(rec, scattered, &temp->object);
 		temp = temp->next;
 	}
 	pdf = (t * light_pdf_val / light->count + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));

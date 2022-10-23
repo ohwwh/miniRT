@@ -14,8 +14,8 @@
 # define CAMERA_H
 
 # include "vector.h"
-# define WIDTH 900
-# define HEIGHT 600
+# define WIDTH 640
+# define HEIGHT 320
 # define PI 3.14159265358979323846
 # define EPS 0.0001
 

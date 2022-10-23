@@ -15,6 +15,9 @@ void	parse_sphere(t_scene *sc, char **tokens)
 	if (obj->radius <= 0)
 		err_handler("invalid radius sphere");
 	obj->color = get_color(tokens[3]);
+	obj->mat = 0;
+	obj->refraction = 1.5;
+	obj->specular = 0;
 }
 
 void	parse_cylinder(t_scene *sc, char **tokens)
@@ -40,6 +43,9 @@ void	parse_cylinder(t_scene *sc, char **tokens)
 	if (obj->radius <= 0 || obj->height <= 0)
 		err_handler("invalid radius cy");
 	obj->color = get_color(tokens[5]);
+	obj->mat = 0;
+	obj->refraction = 1.5;
+	obj->specular = 0;
 }
 
 void	parse_plane(t_scene *sc, char **tokens)
@@ -60,4 +66,7 @@ void	parse_plane(t_scene *sc, char **tokens)
 	if (obj->dir.x < -1 || obj->dir.y < -1 || obj->dir.z < -1)
 		err_handler("invalid orientation plane");
 	obj->color = get_color(tokens[3]);
+	obj->mat = 0;
+	obj->refraction = 1.5;
+	obj->specular = 0;
 }

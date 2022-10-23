@@ -32,8 +32,8 @@
 # define STEP 5
 # define MAX_DEPTH 50
 
-# define HEIGHT 600
-# define WIDTH 900
+# define HEIGHT 320
+# define WIDTH 640
 
 # define CY 1
 # define PL 2
@@ -124,7 +124,7 @@ typedef struct s_light
 {
 	t_vec			src;
 	double			ratio;
-	t_objs			*object;
+	t_objs			object;
 	int				count;
 	struct s_light	*next;
 }	t_light;

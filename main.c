@@ -13,7 +13,7 @@ void	init_rt(t_minirt *data)
 	data->scene.light = NULL;
 	data->is_move = -1;
 	data->is_trace = 1;
-	data->scene.anti = 1;
+	data->scene.anti = 100;
 	data->scene.changed = 0;
 	//생성 실패 시 에러처리 해야 함
 }
@@ -69,10 +69,10 @@ int	main(int ac, char **av)
 	fd = open(av[1], O_RDONLY);
 	init_rt(&data);
 	parse(&data.scene, fd);
-	rt_render(&data);
-	data.scene.light->count = 0;
-	// set_camera(&data.scene.camera);
-	// path_render(data);
+	//rt_render(&data);
+	data.scene.light = 0;
+	set_camera(&data.scene.camera);
+	path_render(data);
 	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
 	mlx_hook(data.mlx.mlx_win, 3, 0, &keyrelease, &data);
 	mlx_hook(data.mlx.mlx_win, 4, 0, &scroll, &data);

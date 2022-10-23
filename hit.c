@@ -17,21 +17,21 @@ int find_hitpoint_light(t_ray* ray, t_light *light, t_hit_record* rec)
 	temp = light;
 	while (temp)
     {
-        if (temp->object->type == SP)
-            hit_sphere(temp->object, ray, rec);
-        else if (temp->object->type == PL)
-			hit_plane(temp->object, ray, rec);
-        else if (temp->object->type == CY)
+        if (temp->object.type == SP)
+            hit_sphere(&temp->object, ray, rec);
+        else if (temp->object.type == PL)
+			hit_plane(&temp->object, ray, rec);
+        else if (temp->object.type == CY)
         {
-            hit_cylinder(temp->object, ray, rec);
-			hit_caps(temp->object, ray, rec);
+            hit_cylinder(&temp->object, ray, rec);
+			hit_caps(&temp->object, ray, rec);
         }
-/*		else if (temp->object->type == 4)
-			hit_rectangle_xy(temp->object, ray, rec);
-		else if (temp->object->type == 5)
-			hit_rectangle_yz(temp->object, ray, rec);
-		else if (temp->object->type == 6)
-			hit_rectangle_xz(temp->object, ray, rec);*/
+/*		else if (temp->object.type == 4)
+			hit_rectangle_xy(&temp->object, ray, rec);
+		else if (temp->object.type == 5)
+			hit_rectangle_yz(&temp->object, ray, rec);
+		else if (temp->object.type == 6)
+			hit_rectangle_xz(&temp->object, ray, rec);*/
         temp = temp->next;
     }
 	return (1);
@@ -64,7 +64,7 @@ int find_hitpoint_path(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* r
 			hit_rectangle_xz(tmp, ray, rec);*/
         tmp = tmp->next;
     }
-	if (!light && light->count != 0)
+	if (light && light->count != 0)
 		find_hitpoint_light(ray, light, rec);
     return (1);
 }

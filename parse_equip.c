@@ -9,6 +9,7 @@ t_light	*alloc_light(t_scene *sc)
 		err_handler("allocation failed\n");
 	new_light->next = sc->light;
 	sc->light = new_light;
+
 	return (new_light);
 }
 
