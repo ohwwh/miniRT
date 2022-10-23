@@ -206,7 +206,7 @@ int transpose_light(t_minirt *data, t_keycode keycode, int *status)
 
 void rotate_obj_step(t_minirt *data, int pos1, int pos2, int type)
 {
-	t_objs *tmp;
+	/*t_objs *tmp;
 	double 	pos[3];
 	double	r_pos[3];
 
@@ -227,7 +227,38 @@ void rotate_obj_step(t_minirt *data, int pos1, int pos2, int type)
 		}
 		tmp = tmp->next;
 	}
-	rt_render(data);
+	rt_render(data);*/
+
+	t_objs *tmp;
+	t_vec axis;
+	t_vec delta;
+	double d;
+
+	if (data->is_move == 126 || data->is_move == 125)
+	{
+		axis = data->scene.camera.right;
+		if (data->is_move == 126)
+			d = -1;
+		else
+			d = 1;
+	}
+	else if (data->is_move == 123 || data->is_move == 124)
+	{
+		axis = data->scene.camera.up;
+		if (data->is_move == 124)
+			d = 1;
+		else
+			d = -1;
+	}
+	else
+		return ;
+	tmp = data->scene.objs;
+	while (tmp)
+	{
+		if (tmp->type == type && tmp->type != SP)
+			tmp->dir = rotate(axis, data, d);
+		tmp = tmp->next;
+	}
 }
 
 int rotate_obj(t_minirt *data, t_keycode keycode, int type, int *status)
