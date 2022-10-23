@@ -4,22 +4,29 @@ int create_light_object(t_scene *sc)
 {
 	t_light *temp;
 	t_objs	*tmp;
+	double max;
 
+	max = -1;
 	temp = sc->light;
 	tmp = sc->objs;
 	while (tmp)
 	{
 		if (tmp->type != PL)
-			break ;
+		{
+			if (max < tmp->radius)
+				max = tmp->radius;
+		}
 		tmp = tmp->next;
 	}
+	if (max < 0.0)
+		max = 10;
 	while (temp)
 	{
 		temp->object.center = temp->src;
 		temp->object.color = create_vec(45, 45, 45);
 		temp->object.type = SP;
 		temp->object.mat = -1;
-		temp->object.radius = tmp->radius;
+		temp->object.radius = max;
 		temp->object.next = 0;
 		temp = temp->next;
 	}
