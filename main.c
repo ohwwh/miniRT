@@ -19,41 +19,52 @@ void	init_rt(t_minirt *data)
 	//생성 실패 시 에러처리 해야 함
 }
 
-void path_render(t_minirt vars)
+void sampling(t_minirt *vars, int x, int y)
 {
 	double u;
 	double v;
-	t_vec dir;
 	t_ray init_ray;
-	t_color color;
+
+	u = (((double)x + random_double(0, 1, vars->scene.anti)) * 2 / WIDTH) - 1;
+	v = (((double)y + random_double(0, 1, vars->scene.anti)) * 2 / HEIGHT) - 1;
+	init_ray = ray_primary(&(vars->scene.camera), u, v);
+	if (x == 230 && y == 300)
+		x = x;
+	if (vars->is_trace == 1)
+		vars->ray.color = vec_sum(vars->ray.color, ray_color(init_ray, &vars->scene, MAX_DEPTH));
+	else
+		vars->ray.color = vec_sum(vars->ray.color, ray_color_raw(init_ray, &vars->scene));
+}
+
+void path_render(t_minirt *vars)
+{
+	int	x;
+	int	y;
+	int	s;
 	
-	for (int y = HEIGHT - 1; y >= 0; --y)
+	y = HEIGHT - 1;
+	s = 0;
+	while (y >= 0)
 	{
-		if (vars.is_trace == 1)
+		x = 0;
+		if (vars->is_trace == 1)
 		{
 			printf("\rScanlines remaining: %d", y);
 			fflush(stdout);
 		}
-		for (int x = 0; x < WIDTH; ++x)
+		while (x < WIDTH)
 		{
-			color = create_vec(0, 0, 0);
-			for (int s = 0; s < vars.scene.anti; s ++)
-			{
-				u = (((double)x + random_double(0, 1, vars.scene.anti)) * 2 / WIDTH) - 1;
-				v = (((double)y + random_double(0, 1, vars.scene.anti)) * 2 / HEIGHT) - 1;
-				init_ray = ray_primary(&(vars.scene.camera), u, v);
-				if (x == 230 && y == 300)
-					x = x;
-				if (vars.is_trace == 1)
-					color = vec_sum(color, ray_color(init_ray, &vars.scene, MAX_DEPTH));
-				else
-					color = vec_sum(color, ray_color_raw(init_ray, &vars.scene));
-			}
-			color = vec_division(color, vars.scene.anti);
-			put_color(&vars.mlx, x, HEIGHT - 1 - y, rgb_to_int(color));
+			vars->ray.color = create_vec(0, 0, 0);
+			s = 0;
+			while (s ++ < vars->scene.anti)
+				sampling(vars, x, y);
+			vars->ray.color = vec_division(vars->ray.color, vars->scene.anti);
+			put_color(&vars->mlx, x, HEIGHT - 1 - y, rgb_to_int(vars->ray.color));
+			x ++;
 		}
+		y --;
 	}
-	mlx_put_image_to_window(vars.mlx.mlx, vars.mlx.mlx_win, vars.mlx.img, 0, 0); // 무슨 차이지....
+	mlx_put_image_to_window(vars->mlx.mlx, vars->mlx.mlx_win, vars->mlx.img, 0, 0); // 무슨 차이지....
 }
 
 int	main(int ac, char **av)
@@ -72,7 +83,7 @@ int	main(int ac, char **av)
 
 	create_light_object(&data.scene);
 	set_camera(&data.scene.camera);
-	path_render(data);
+	path_render(&data);
 	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
 	mlx_hook(data.mlx.mlx_win, 3, 0, &keyrelease, &data);
 	mlx_hook(data.mlx.mlx_win, 4, 0, &scroll, &data);

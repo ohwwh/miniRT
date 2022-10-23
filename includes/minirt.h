@@ -261,7 +261,7 @@ int	ft_close(t_minirt *data);
 t_vec	reflect(t_vec v, t_vec n);
 
 
-void path_render(t_minirt vars);
+void path_render(t_minirt *vars);
 int		convert_rgb(int r, int g, int b);
 
 

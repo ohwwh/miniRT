@@ -473,9 +473,6 @@ t_color ray_color(t_ray r, t_scene* sc, int depth)
 	t_ray scattered;
 
 	rec.t = -1.0;
-	rec.tmin = 0.001;
-	//rec.tmax = INFINITY;
-
 	if (depth <= 0)
         return (create_vec(0,0,0));
 	find_hitpoint_path(&r, sc->objs, sc->light, &rec);
