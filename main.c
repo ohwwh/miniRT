@@ -70,8 +70,11 @@ int	main(int ac, char **av)
 	fd = open(av[1], O_RDONLY);
 	init_rt(&data);
 	parse(&data.scene, fd);
-	//rt_render(&data);
-	create_light_object(data.scene.light);
+
+	data.scene.camera.distance = vec_len(vec_sub(data.scene.camera.origin, 
+	data.scene.objs->center));
+
+	create_light_object(&data.scene);
 	set_camera(&data.scene.camera);
 	path_render(data);
 	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);

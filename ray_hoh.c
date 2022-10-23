@@ -1,16 +1,27 @@
 #include "minirt.h"
 
-int create_light_object(t_light* light)
+int create_light_object(t_scene *sc)
 {
-	while (light)
+	t_light *temp;
+	t_objs	*tmp;
+
+	temp = sc->light;
+	tmp = sc->objs;
+	while (tmp)
 	{
-		light->object.center = light->src;
-		light->object.color = create_vec(15, 15, 15);
-		light->object.type = SP;
-		light->object.mat = -1;
-		light->object.radius = 10;
-		light->object.next = 0;
-		light = light->next;
+		if (tmp->type != PL)
+			break ;
+		tmp = tmp->next;
+	}
+	while (temp)
+	{
+		temp->object.center = temp->src;
+		temp->object.color = create_vec(45, 45, 45);
+		temp->object.type = SP;
+		temp->object.mat = -1;
+		temp->object.radius = tmp->radius;
+		temp->object.next = 0;
+		temp = temp->next;
 	}
 	return (1);
 }

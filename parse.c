@@ -142,6 +142,5 @@ void	parse(t_scene *sc, int fd)
 		}
 		free_split(tokens);
 	}
-	sc->camera.distance = vec_len(vec_sub(sc->camera.origin, sc->objs->center));
 	close(fd);
 }
