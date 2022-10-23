@@ -8,19 +8,6 @@ void	put_color(t_mlx *data, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-/*int		convert_rgb(int r, int g, int b)
-{
-	return (((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff));
-}*/
-
-/*t_ray ray(t_point origin, t_vec dir)
-{
-	t_ray ret;
-	ret.origin = origin;
-	ret.dir = dir;
-	return (ret);
-}*/
-
 void	define_color(t_minirt *data)
 {
 	int y = HEIGHT - 1;

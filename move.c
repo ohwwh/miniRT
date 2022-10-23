@@ -131,7 +131,7 @@ int key_hook_move(t_minirt* vars)
 	if (vars->scene.changed == 1)
 	{
 		if (vars->is_trace == 1 || vars->is_trace == 0)
-			path_render(*vars);
+			path_render(vars);
 		else if (vars->is_trace == 2)
 			rt_render(vars);
 		vars->scene.changed = 0;
@@ -149,7 +149,7 @@ int key_hook_move(t_minirt* vars)
 		{
 			object_move(vars, vars->mode);
 		}
-		path_render(*vars);
+		path_render(vars);
 	}
 	return (1);
 }
@@ -373,7 +373,7 @@ void key_press_mode_change(t_minirt* vars, int keycode)
 			vars->is_trace = 1;
 		else if (keycode == 35)
 			vars->is_trace = 2;
-		vars->scene.anti = 10;
+		vars->scene.anti = 100;
 		vars->scene.changed = 1;
 	}
 	else

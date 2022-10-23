@@ -11,7 +11,7 @@
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             //"program": "/Users/ohw/OHW/42Seoul/so_long/남의 것/so_long/so_long_bonus",
-            "args": ["example.rt"
+            "args": ["example3.rt"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

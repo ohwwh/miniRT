@@ -4,29 +4,29 @@ int create_light_object(t_scene *sc)
 {
 	t_light *temp;
 	t_objs	*tmp;
-	double max;
+	double min;
 
-	max = -1;
+	min = INFINITY;
 	temp = sc->light;
 	tmp = sc->objs;
 	while (tmp)
 	{
 		if (tmp->type != PL)
 		{
-			if (max < tmp->radius)
-				max = tmp->radius;
+			if (min > tmp->radius)
+				min = tmp->radius;
 		}
 		tmp = tmp->next;
 	}
-	if (max < 0.0)
-		max = 10;
+	if (min == INFINITY)
+		min = 10;
 	while (temp)
 	{
 		temp->object.center = temp->src;
-		temp->object.color = create_vec(45, 45, 45);
+		temp->object.color = create_vec(15, 15, 15);
 		temp->object.type = SP;
 		temp->object.mat = -1;
-		temp->object.radius = max;
+		temp->object.radius = min * 3;
 		temp->object.next = 0;
 		temp = temp->next;
 	}
@@ -41,15 +41,6 @@ t_ray ray(t_point origin, t_vec dir)
 	return (ret);
 }
 
-/*t_point ray_end(t_ray* ray, double t)
-{
-	t_point ret;
-	
-	ret.x = ray->origin.x + t * ray->dir.x;
-	ret.y = ray->origin.y + t * ray->dir.y;
-	ret.z = ray->origin.z + t * ray->dir.z;
-	return (ret);
-}*/
 
 double reflectance(double cos, double ref_ratio)
 {
@@ -77,7 +68,7 @@ t_vec random_to_sphere(double radius, double distance_squared)
 	double r2 = random_double(0,1,7);
 	double z = 1 + r2 * (sqrt(1 - radius*radius/distance_squared)-1);
 
-	double phi = 2 * 3.1415926535897932385*r1;
+	double phi = 2 * PI *r1;
 	double x = cos(phi)*sqrt(1-z*z);
 	double y = sin(phi)*sqrt(1-z*z);
 
@@ -93,7 +84,7 @@ double cosine_pdf_value(const t_vec* dir, const t_vec* w)
     if (cos < 0.0)
         pdf = 0;
     else
-        pdf = cos / 3.1415926535897932385;
+        pdf = cos / PI;
 	return (pdf);
 }
 
@@ -154,14 +145,12 @@ double sphere_light_pdf_value(t_hit_record* rec, t_ray* scattered, t_objs* light
 	if (!light)
 		return (0);
 	rec_new.t = -1.0;
-	//rec_new.tmin = 0.001;
-	//rec_new.tmax = INFINITY;
 	hit_sphere(light, scattered, &rec_new);
 	if (rec_new.t < 0.001)
 		return 0;
 	cos_max = sqrt(1 - (light->radius * light->radius / 
 	powf(vec_len(vec_sub(light->center, scattered->origin)), 2)));
-	angle = 2 * 3.1415926535897932385 * (1 - cos_max);
+	angle = 2 * PI * (1 - cos_max);
 
 	return (1 / angle);
 }
@@ -171,14 +160,11 @@ double rectangle_light_pdf_value(t_hit_record *rec, t_ray* scattered, t_objs* li
 	t_hit_record rec_new;
 	const double length_squared = powf(vec_len(scattered->dir), 2);
 	double area;
-	double distance_squared;
 	double cosine;
 
 	if (!light)
 		return (0);
 	rec_new.t = -1.0;
-	//rec_new.tmin = 0.001;
-	//rec_new.tmax = INFINITY;
 	if (light->type == 4)
 		hit_rectangle_xy(light, scattered, &rec_new);
 	else if (light->type == 5)
@@ -188,24 +174,19 @@ double rectangle_light_pdf_value(t_hit_record *rec, t_ray* scattered, t_objs* li
 	if (rec_new.t < 0.001)
 		return 0;
 	area = (light->center.y - light->center.x) * (light->dir.y - light->dir.x);
-	distance_squared = rec_new.t * rec_new.t * length_squared;
 	cosine = fabs(vdot(scattered->dir, rec_new.normal) / sqrt(length_squared));
 
-	return distance_squared / (cosine * area);
+	return ((rec_new.t * rec_new.t * length_squared) / (cosine * area));
 }
 
 double light_pdf_value(t_ray* ray_path, t_objs* light)
 {
-	// 일단 xy사각 광원만
 	t_hit_record rec;
 	const double length_squared = powf(vec_len(ray_path->dir), 2);
 
 	if (!light)
 		return (0);
 	rec.t = -1.0;
-	//rec.tmin = 0.001;
-	//rec.tmax = INFINITY;
-
 	if (light->type == 4)
 		hit_rectangle_xy(light, ray_path, &rec);
 	else if (light->type == 5)
@@ -287,21 +268,22 @@ double mixture_pdf_value_before(t_hit_record* rec, t_ray* scattered, t_objs* lig
 	return (t * light_pdf_value(scattered, light) + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));
 }
 
+/*void generate_ray(t_hit_record* rec, t_ray* scattered, t_light *temp)
+{
+	const double t = 0.5;
+
+	
+}*/
+
 double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 {
 	double t;
 	double light_pdf_val;
 	t_onb uvw;
-	double weight;
-	double w_sum;
-	double size;
-	double pdf;
 	t_light *temp;
 	int idx;
 
-	pdf = 0.0;
 	light_pdf_val = 0.0;
-	w_sum = 0.0;
 	temp = light;
 	uvw = create_onb(rec->normal);
 	if (!light || !light->count || !get_light_size(light->object))
@@ -320,9 +302,6 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 		generate_scattered(rec, scattered, &uvw);
 		return (cosine_pdf_value(&(rec->normal), &(uvw.w)));
 	}
-	//size = get_light_size(temp->object);
-	size = 1;
-	w_sum += size;
 	if (random_double(0,1,7) < t) //광원 샘플링
 	{
 		if (temp->object.type == 3)
@@ -342,9 +321,7 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 			light_pdf_val += rectangle_light_pdf_value(rec, scattered, &temp->object);
 		temp = temp->next;
 	}
-	pdf = (t * light_pdf_val / light->count + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));
-
-	return (pdf);
+	return (t * light_pdf_val / light->count + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));
 }
 
 double scattering_pdf(t_ray* scattered, t_hit_record* rec)
@@ -358,15 +335,64 @@ double scattering_pdf(t_ray* scattered, t_hit_record* rec)
     if (cos < 0)
         scat_pdf = 0;
     else
-        scat_pdf = cos / 3.1415926535897932385;
+        scat_pdf = cos / PI;
 	return (scat_pdf);
+}
+
+double scatter_refraction(t_ray* r, t_hit_record* rec, t_ray* scattered)
+{
+	//t_vec attenuation;
+	t_vec dir;
+	double ref_ratio;
+	const double cos = fmin(vdot(vec_scalar_mul(unit_vec(r->dir), -1), rec->normal), 1.0);
+	const double sin = sqrt(1.0 - cos * cos);
+
+	if (rec->refraction == 0)
+		printf("refraction is not set\n");
+	//attenuation = create_vec(1, 1, 1);
+	
+	if (rec->front_face)
+		ref_ratio = 1.0 / rec->refraction;
+	else
+		ref_ratio = rec->refraction;
+
+	if (ref_ratio * sin > 1.0 || 
+	reflectance(cos, ref_ratio) > random_double(0,1,7))
+		dir = reflect(unit_vec(r->dir), rec->normal);
+	else
+		dir = refract(unit_vec(r->dir), rec->normal, ref_ratio, cos);
+	*scattered = ray(rec->p, dir);
+	return (1);
+}
+
+double scatter_reflect(t_ray* r, t_hit_record* rec, t_ray* scattered)
+{
+	*scattered = ray(rec->p, reflect(unit_vec(r->dir), rec->normal));
+	if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
+		rec->color = create_vec(0, 0, 0);
+	return (1);
+}
+
+double scatter_diffuse(t_ray* r, t_hit_record* rec, t_ray* scattered, t_light* light)
+{
+	double pdf;
+
+	if (random_double(0,1,7) > rec->specular)
+		pdf = mixture_pdf_value(rec, scattered, light);
+	else
+	{
+		*scattered = ray(rec->p, reflect(unit_vec(r->dir), rec->normal));
+		if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
+			rec->color = create_vec(0, 0, 0);
+		return (1);
+	}
+	return (pdf);
 }
 
 double scatter(t_ray* r, t_hit_record* rec, t_ray* scattered, t_light* light)
 {
 	t_onb uvw;
 	t_vec dir;
-	//t_cosine_pdf pdf;
 	double pdf;
 
 	if (rec->mat == 0)
@@ -392,7 +418,7 @@ double scatter(t_ray* r, t_hit_record* rec, t_ray* scattered, t_light* light)
 		*scattered = ray(rec->p, ray_path);
 		pdf = light_pdf_value(scattered, light);*/
 
-		if (random_double(0,1,7) > rec->specular)
+		/*if (random_double(0,1,7) > rec->specular)
 			pdf = mixture_pdf_value(rec, scattered, light);
 		else
 		{
@@ -401,19 +427,14 @@ double scatter(t_ray* r, t_hit_record* rec, t_ray* scattered, t_light* light)
 				rec->color = create_vec(0, 0, 0);
 			return (1);
 		}
-		//pdf = mixture_pdf_value(rec, scattered, light);
-		return (pdf);
+		return (pdf);*/
+		return (scatter_diffuse(r, rec, scattered, light));
 	}
 	else if (rec->mat == 1)
-	{
-		*scattered = ray(rec->p, reflect(unit_vec(r->dir), rec->normal));
-		if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
-			rec->color = create_vec(0, 0, 0);
-		return (1);
-	}
+		return (scatter_reflect(r, rec, scatter));
 	else if (rec->mat == 2)
 	{
-		if (rec->refraction == 0)
+		/*if (rec->refraction == 0)
 			printf("refraction is not set\n");
 		t_vec attenuation = create_vec(1, 1, 1);
 		t_vec dir;
@@ -432,12 +453,11 @@ double scatter(t_ray* r, t_hit_record* rec, t_ray* scattered, t_light* light)
 		else
 			dir = refract(unit_vec(r->dir), rec->normal, ref_ratio, cos);
 		*scattered = ray(rec->p, dir);
-		return (1);
+		return (1);*/
+		return (scatter_refraction(r, rec, scattered));
 	}
 	else if (rec->mat == -1)
-	{
 		return (1);
-	}
 }
 
 t_color ray_color_raw(t_ray r, t_scene* sc)
@@ -446,8 +466,6 @@ t_color ray_color_raw(t_ray r, t_scene* sc)
 	double t;
 
 	rec.t = -1.0;
-	rec.tmin = 0.001;
-	//rec.tmax = INFINITY;
 	/*find_hitpoint_path(&r, world, light, &rec);
 	if (rec.t != -1)
 		return (rec.color);
@@ -457,11 +475,15 @@ t_color ray_color_raw(t_ray r, t_scene* sc)
 	);*/
 
 	t_hit_record hr;
+
+	hr.t = -1.0;
 	hr = find_hitpoint(&r, sc->objs);
 	if (hr.t > EPS)
 		return (hr.color);
-	else
-		return (create_vec(0,0,0));
+	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
+	return (vec_scalar_mul(
+		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), 1)
+	);
 }
 
 t_color ray_color(t_ray r, t_scene* sc, int depth)

@@ -5,9 +5,9 @@ void set_face_normal(t_hit_record* rec, t_ray *ray, t_vec outward_normal)
 {
 	rec->front_face = vdot(ray->dir, outward_normal) < 0.0;
 	if (rec->front_face != 0)
-		rec->normal = outward_normal;
+		rec->normal = unit_vec(outward_normal);
 	else
-		rec->normal = vec_scalar_mul(outward_normal, -1);
+		rec->normal = vec_scalar_mul(unit_vec(outward_normal), -1);
 }
 
 int find_hitpoint_light(t_ray* ray, t_light *light, t_hit_record* rec)

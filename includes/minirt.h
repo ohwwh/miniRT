@@ -156,8 +156,8 @@ typedef struct s_hit_hit_record
 	t_bool		front_face;
 	t_vec		color;
 	int			mat;
-	int			refraction;
-	int			specular;
+	double		refraction;
+	double		specular;
 	int			type;
 }	t_hit_record;
 

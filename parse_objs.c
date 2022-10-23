@@ -1,8 +1,8 @@
 #include "minirt.h"
 
-void	parse_sphere(t_scene *sc, char **tokens)
+void parse_sphere(t_scene *sc, char **tokens)
 {
-	t_objs	*obj;
+	t_objs *obj;
 
 	obj = (t_objs *)malloc(sizeof(t_objs));
 	obj->next = sc->objs;
@@ -17,15 +17,14 @@ void	parse_sphere(t_scene *sc, char **tokens)
 	obj->color = get_color(tokens[3]);
 	obj->mat = 0;
 	obj->refraction = 1.5;
-	obj->specular = 0.5;
+	obj->specular = 0.0;
 }
 
-void	parse_cylinder(t_scene *sc, char **tokens)
+void parse_cylinder(t_scene *sc, char **tokens)
 {
-	t_objs	*obj;
+	t_objs *obj;
 
-	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || !tokens[4]
-		|| !tokens[5])
+	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5])
 		err_handler("invalid cylinder");
 	obj = (t_objs *)malloc(sizeof(t_objs));
 	obj->next = sc->objs;
@@ -48,16 +47,16 @@ void	parse_cylinder(t_scene *sc, char **tokens)
 	obj->specular = 0.5;
 }
 
-void	parse_plane(t_scene *sc, char **tokens)
+void parse_plane(t_scene *sc, char **tokens)
 {
-	t_objs	*obj;
+	t_objs *obj;
 
 	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		err_handler("invalid plane!");
 	obj = (t_objs *)malloc(sizeof(t_objs));
 	obj->next = sc->objs;
 	sc->objs = obj;
-	
+
 	obj->type = PL;
 	obj->center = get_vec(tokens[1]);
 	obj->dir = get_vec(tokens[2]);
