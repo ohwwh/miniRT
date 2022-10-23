@@ -5,7 +5,7 @@ int create_light_object(t_light* light)
 	while (light)
 	{
 		light->object.center = light->src;
-		light->object.color = create_vec(45, 45, 45);
+		light->object.color = create_vec(15, 15, 15);
 		light->object.type = SP;
 		light->object.mat = -1;
 		light->object.radius = 10;
