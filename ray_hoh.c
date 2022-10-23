@@ -440,7 +440,7 @@ double scatter(t_ray* r, t_hit_record* rec, t_ray* scattered, t_light* light)
 	}
 }
 
-t_color ray_color_2(t_ray r, t_objs* world, t_light* light)
+t_color ray_color_raw(t_ray r, t_scene* sc)
 {
 	t_hit_record rec;
 	double t;
@@ -457,14 +457,14 @@ t_color ray_color_2(t_ray r, t_objs* world, t_light* light)
 	);*/
 
 	t_hit_record hr;
-	hr = find_hitpoint(&r, world);
+	hr = find_hitpoint(&r, sc->objs);
 	if (hr.t > EPS)
 		return (hr.color);
 	else
 		return (create_vec(0,0,0));
 }
 
-t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth)
+t_color ray_color(t_ray r, t_scene* sc, int depth)
 {
 	double t;
 	double pdf;
@@ -478,14 +478,14 @@ t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth)
 
 	if (depth <= 0)
         return (create_vec(0,0,0));
-	find_hitpoint_path(&r, world, light, &rec);
+	find_hitpoint_path(&r, sc->objs, sc->light, &rec);
 	if (rec.t >= 0.0)
 	{
-		pdf = scatter(&r, &rec, &scattered, light);
+		pdf = scatter(&r, &rec, &scattered, sc->light);
 		if (rec.mat != -1)
 		{
 			color = vec_mul(vec_scalar_mul(rec.color, scattering_pdf(&scattered, &rec)), 
-			vec_division(ray_color(scattered, world, light, depth - 1), pdf));
+			vec_division(ray_color(scattered, sc, depth - 1), pdf));
 		}
 		else
 			color = rec.color;
@@ -493,6 +493,6 @@ t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth)
 	}
 	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
 	return (vec_scalar_mul(
-		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), 0.1)
+		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), sc->amb.ratio)
 	);
 }

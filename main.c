@@ -45,16 +45,12 @@ void path_render(t_minirt vars)
 				if (x == 230 && y == 300)
 					x = x;
 				if (vars.is_trace == 1)
-					color = vec_sum(color, ray_color(init_ray, vars.scene.objs, vars.scene.light, MAX_DEPTH));
-					//여러 개의 광원이 있을 때는?
-					//광원을 어떻게 구분해서 인자로 넣을 건지?
+					color = vec_sum(color, ray_color(init_ray, &vars.scene, MAX_DEPTH));
 				else
-					color = vec_sum(color, ray_color_2(init_ray, vars.scene.objs, vars.scene.light));
+					color = vec_sum(color, ray_color_raw(init_ray, &vars.scene));
 			}
 			color = vec_division(color, vars.scene.anti);
 			put_color(&vars.mlx, x, HEIGHT - 1 - y, rgb_to_int(color));
-			//put_color(&vars.mlx, x, HEIGHT - 1 - y,
-			//	convert_rgb(color.x, color.y, color.z));
 		}
 	}
 	mlx_put_image_to_window(vars.mlx.mlx, vars.mlx.mlx_win, vars.mlx.img, 0, 0); // 무슨 차이지....

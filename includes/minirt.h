@@ -230,8 +230,8 @@ t_vec calcul_ratio(t_vec col1, t_vec col2, double ratio);
 t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb, t_ray ray);
 
 
-t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth);
-t_color ray_color_2(t_ray r, t_objs* world, t_light* light);
+t_color ray_color(t_ray r, t_scene* sc, int depth);
+t_color ray_color_raw(t_ray r, t_scene* sc);
 
 t_hit_record find_hitpoint(t_ray *ray, t_objs *objs);
 int find_hitpoint_path(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* rec);
