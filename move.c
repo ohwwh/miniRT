@@ -334,7 +334,7 @@ void key_press_mode_change(t_minirt* vars, int keycode)
 	else
 	{
 		vars->is_trace = 0;
-		vars->scene.anti = 1;
+		vars->scene.anti = 100;
 		vars->scene.changed = 1;
 	}
 }
