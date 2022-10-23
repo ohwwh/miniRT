@@ -56,7 +56,7 @@ int find_hitpoint_path(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* r
             hit_cylinder(tmp, ray, rec);
 			hit_caps(tmp, ray, rec);
         }
-/*		else if (tmp->type == 4)
+		/*else if (tmp->type == 4)
 			hit_rectangle_xy(tmp, ray, rec);
 		else if (tmp->type == 5)
 			hit_rectangle_yz(tmp, ray, rec);

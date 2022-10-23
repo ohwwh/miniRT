@@ -17,7 +17,7 @@ void parse_sphere(t_scene *sc, char **tokens)
 	obj->color = get_color(tokens[3]);
 	obj->mat = 0;
 	obj->refraction = 1.5;
-	obj->specular = 0.0;
+	obj->specular = 0;
 }
 
 void parse_cylinder(t_scene *sc, char **tokens)
@@ -44,7 +44,7 @@ void parse_cylinder(t_scene *sc, char **tokens)
 	obj->color = get_color(tokens[5]);
 	obj->mat = 0;
 	obj->refraction = 1.5;
-	obj->specular = 0.5;
+	obj->specular = 0.6;
 }
 
 void parse_plane(t_scene *sc, char **tokens)

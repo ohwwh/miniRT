@@ -512,6 +512,6 @@ t_color ray_color(t_ray r, t_scene* sc, int depth)
 	}
 	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
 	return (vec_scalar_mul(
-		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), sc->amb.ratio)
+		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), sc->amb.ratio * 0.1)
 	);
 }
