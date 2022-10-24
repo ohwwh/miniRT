@@ -28,7 +28,7 @@ void sampling(t_minirt *vars, int x, int y)
 	u = (((double)x + random_double(0, 1, vars->scene.anti)) * 2 / WIDTH) - 1;
 	v = (((double)y + random_double(0, 1, vars->scene.anti)) * 2 / HEIGHT) - 1;
 	init_ray = ray_primary(&(vars->scene.camera), u, v);
-	if (x == 320 && y == 160)
+	if (x == 174 && y == 232)
 		x = x;
 	if (vars->is_trace == 1)
 		vars->ray.color = vec_sum(vars->ray.color, ray_color(init_ray, &vars->scene, MAX_DEPTH));
@@ -44,7 +44,7 @@ void path_render(t_minirt *vars)
 	
 	y = HEIGHT - 1;
 	s = 0;
-	while (y >= 0)
+	while (y -- >= 0)
 	{
 		x = 0;
 		if (vars->is_trace == 1)
@@ -52,7 +52,7 @@ void path_render(t_minirt *vars)
 			printf("\rScanlines remaining: %d", y);
 			fflush(stdout);
 		}
-		while (x < WIDTH)
+		while (x ++ < WIDTH)
 		{
 			vars->ray.color = create_vec(0, 0, 0);
 			s = 0;
@@ -62,10 +62,10 @@ void path_render(t_minirt *vars)
 			while (s ++ < vars->scene.anti)
 				sampling(vars, x, y);
 			vars->ray.color = vec_division(vars->ray.color, vars->scene.anti);
-			put_color(&vars->mlx, x, HEIGHT - 1 - y, rgb_to_int(vars->ray.color));
-			x ++;
+			put_color(&vars->mlx, x - 1, HEIGHT - y, rgb_to_int(vars->ray.color));
+			//x ++;
 		}
-		y --;
+		//y --;
 	}
 	mlx_put_image_to_window(vars->mlx.mlx, vars->mlx.mlx_win, vars->mlx.img, 0, 0); // 무슨 차이지....
 }
