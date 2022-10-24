@@ -87,13 +87,12 @@ t_vec	reflect(t_vec v, t_vec n)
 
 t_vec	random_to_sphere(double radius, double distance_squared)
 {
-	double	r1 = random_double(0, 1, 7);
-	double	r2 = random_double(0, 1, 7);
-	double	z = 1 + r2 * (sqrt(1 - radius * radius / distance_squared) - 1);
-
-	double	phi = 2 * PI * r1;
-	double	x = cos(phi) * sqrt(1 - z * z);
-	double	y = sin(phi) * sqrt(1 -z * z);
+	const double	z = 1
+		+ (random_double(0, 1, 7)
+			* (sqrt(1 - radius * radius / distance_squared) - 1));
+	const double	phi = 2 * PI * random_double(0, 1, 7);
+	const double	x = cos(phi) * sqrt(1 - z * z);
+	const double	y = sin(phi) * sqrt(1 - z * z);
 
 	return (create_vec(x, y, z));
 }
@@ -115,7 +114,7 @@ void	generate_scattered(t_hit_record *rec, t_ray *scattered, t_onb *uvw)
 {
 	t_vec	ray_path;
 
-	ray_path = local(uvw, random_cosine_direction()); //ray를 쏜 곳으로부터, 코사인 분포를 따르는 랜덤 벡터를 생성
+	ray_path = local(uvw, random_cosine_direction());
 	*scattered = ray(rec->p, ray_path);
 }
 
@@ -130,7 +129,7 @@ void	generate_light_sample_rect(
 		random_point = create_vec(
 				random_double(light->center.x, light->center.y, 7),
 				random_double(light->dir.x, light->dir.y, 7),
-				light->radius); // 광원의 크기 안에서 포인트를 랜덤 생성
+				light->radius);
 	}
 	else if (light->type == 5)
 	{
@@ -144,7 +143,7 @@ void	generate_light_sample_rect(
 				random_double(light->center.x, light->center.y, 7),
 				light->radius, random_double(light->dir.x, light->dir.y, 7));
 	}
-	ray_path = vec_sub(random_point, rec->p); // ray를 쏜 곳(시선)으로부터 위에서 생성한 광원 속 랜덤 지점의 벡터
+	ray_path = vec_sub(random_point, rec->p);
 	*scattered = ray(rec->p, ray_path);
 }
 
@@ -156,12 +155,11 @@ void	generate_light_sample_sphere(
 	t_vec	ray_path;
 	double	distance_squared;
 
-	ray_path = vec_sub(light->center, rec->p); //반사지점에서 광원의 중심까지의 벡터
-	distance_squared = powf(vec_len(ray_path), 2); //위의 벡터 거리의 제곱
-	uvw = create_onb(ray_path); //위의 벡터 거리를 이용한 onb 생성
+	ray_path = vec_sub(light->center, rec->p);
+	distance_squared = powf(vec_len(ray_path), 2);
+	uvw = create_onb(ray_path);
 	ray_path = local(&uvw, random_to_sphere(light->radius, distance_squared));
 	*scattered = ray(rec->p, ray_path);
-	//반사 지점부터 광원의 랜덤지점까지의 벡터 생성
 }
 
 double	sphere_light_pdf(
@@ -233,14 +231,14 @@ void	generate_random_importance(
 {
 	const double	t = 0.5;
 
-	if (random_double(0, 1, 7) < t) //광원 샘플링
+	if (random_double(0, 1, 7) < t)
 	{
 		if (temp->object.type == 3)
 			generate_light_sample_sphere(rec, scattered, &temp->object);
 		else
 			generate_light_sample_rect(rec, scattered, &temp->object);
 	}
-	else //난반사 샘플링
+	else
 		generate_scattered(rec, scattered, uvw);
 }
 
@@ -310,7 +308,7 @@ double	scatter_reflect(t_ray *r, t_hit_record *rec, t_ray *scattered)
 	fuzziness = vec_scalar_mul(rand_sphere(), rec->fuzzy);
 	*scattered = ray(rec->p,
 			vec_sum(reflect(unit_vec(r->dir), rec->normal), fuzziness));
-	if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
+	if (vdot(scattered->dir, rec->normal) <= 0)
 		rec->color = create_vec(0, 0, 0);
 	return (1);
 }
@@ -325,7 +323,7 @@ double	scatter_diffuse(
 	else
 	{
 		*scattered = ray(rec->p, reflect(unit_vec(r->dir), rec->normal));
-		if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
+		if (vdot(scattered->dir, rec->normal) <= 0)
 			rec->color = create_vec(0, 0, 0);
 		return (1);
 	}
