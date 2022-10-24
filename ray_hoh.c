@@ -367,7 +367,10 @@ double scatter_refraction(t_ray* r, t_hit_record* rec, t_ray* scattered)
 
 double scatter_reflect(t_ray* r, t_hit_record* rec, t_ray* scattered)
 {
-	*scattered = ray(rec->p, reflect(unit_vec(r->dir), rec->normal));
+	t_vec fuzziness;
+
+	fuzziness = vec_scalar_mul(rand_sphere(), rec->fuzzy);
+	*scattered = ray(rec->p, vec_sum(reflect(unit_vec(r->dir), rec->normal), fuzziness));
 	if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
 		rec->color = create_vec(0, 0, 0);
 	return (1);
