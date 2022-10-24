@@ -325,6 +325,8 @@ int	keypress(int keycode, t_minirt* vars)
 		key_press_rotate(vars, keycode);
 	else if (keycode == 15 || keycode == 35 || keycode == 18 || keycode == 19)
 		key_press_mode_change(vars, keycode);
+	else if (keycode == ESC)
+		ft_close(vars);
 	return (0);
 }
 
