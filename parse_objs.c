@@ -6,15 +6,15 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:53:04 by hako              #+#    #+#             */
-/*   Updated: 2022/10/19 18:53:13 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 17:24:42 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void parse_sphere(t_scene *sc, char **tokens)
+void	parse_sphere(t_scene *sc, char **tokens)
 {
-	t_objs *obj;
+	t_objs	*obj;
 
 	obj = (t_objs *)malloc(sizeof(t_objs));
 	obj->next = sc->objs;
@@ -33,11 +33,12 @@ void parse_sphere(t_scene *sc, char **tokens)
 	obj->fuzzy = 0;
 }
 
-void parse_cylinder(t_scene *sc, char **tokens)
+void	parse_cylinder(t_scene *sc, char **tokens)
 {
-	t_objs *obj;
+	t_objs	*obj;
 
-	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5])
+	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3]
+		|| !tokens[4] || !tokens[5])
 		err_handler("invalid cylinder");
 	obj = (t_objs *)malloc(sizeof(t_objs));
 	obj->next = sc->objs;
@@ -60,9 +61,9 @@ void parse_cylinder(t_scene *sc, char **tokens)
 	obj->fuzzy = 0;
 }
 
-void parse_plane(t_scene *sc, char **tokens)
+void	parse_plane(t_scene *sc, char **tokens)
 {
-	t_objs *obj;
+	t_objs	*obj;
 
 	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		err_handler("invalid plane!");
