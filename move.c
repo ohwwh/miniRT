@@ -212,11 +212,23 @@ void object_move(t_minirt *data, int type)
 		return (non_light_move(data, type, delta));
 }
 
+void non_light_rotate(t_minirt *data, t_vec axis, double d, int type)
+{
+	t_objs *tmp;
+
+	tmp = data->scene.objs;
+	while (tmp)
+	{
+		if (tmp->type == type && tmp->type != PL)
+			tmp->dir = rotate(axis, tmp->dir, d);
+		tmp = tmp->next;
+	}
+}
+
 void object_rotate(t_minirt *data, int type)
 {
 	t_objs *tmp;
 	t_vec axis;
-	t_vec delta;
 	double d;
 
 	if (data->is_move == 126 || data->is_move == 125)
@@ -237,13 +249,7 @@ void object_rotate(t_minirt *data, int type)
 	}
 	else
 		return ;
-	tmp = data->scene.objs;
-	while (tmp)
-	{
-		if (tmp->type == type && tmp->type != PL)
-			tmp->dir = rotate(axis, tmp->dir, d);
-		tmp = tmp->next;
-	}
+	non_light_rotate(data, axis, d, type);
 }
 
 
@@ -253,7 +259,8 @@ int	keypress(int keycode, t_minirt* vars)
 		key_press_move(vars, keycode);
 	else if (keycode == UP || keycode == LEFT || keycode == RIGHT || keycode == DOWN)
 		key_press_rotate(vars, keycode);
-	else if (keycode == 15 || keycode == 35 || keycode == 18 || keycode == 19 || keycode == 20)
+	else if (keycode == 15 || keycode == 35
+		|| keycode == 18 || keycode == 19 || keycode == 20)
 		key_press_mode_change(vars, keycode);
 	return (0);
 }
@@ -282,11 +289,11 @@ int	keyrelease(int keycode, t_minirt* vars)
 
 int scroll(int mousecode, int x, int y, t_minirt* vars)
 {
-	if (vars->is_trace == 1)
+	if (vars->is_trace != 0)
 		printf("cannot zoom here\n");
 	else if (mousecode == 4 || mousecode == 5)
 		vars->is_move = mousecode;
-	else if (mousecode == 1)
+	else if (mousecode != 0)
 		printf("%d , %d\n", vars->x, vars->y);
 	return (0);
 }
