@@ -196,6 +196,25 @@ double rectangle_light_pdf_value(t_hit_record *rec, t_ray* scattered, t_objs* li
 	
 }*/
 
+double get_pdf(t_hit_record* rec, t_ray *scattered, t_light* light, t_onb* uvw)
+{
+	t_light *temp;
+	double light_pdf_val;
+	const double t = 0.5;
+
+	light_pdf_val = 0.0;
+	temp = light;
+	while (temp)
+	{
+		if (temp->object.type == 3)
+			light_pdf_val += sphere_light_pdf_value(rec, scattered, &temp->object);
+		else
+			light_pdf_val += rectangle_light_pdf_value(rec, scattered, &temp->object);
+		temp = temp->next;
+	}
+	return (t * light_pdf_val / light->count + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw->w)));
+}
+
 double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 {
 	double t;
@@ -215,8 +234,7 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 		generate_scattered(rec, scattered, &uvw);
 		return (cosine_pdf_value(&(rec->normal), &(uvw.w)));
 	}
-	else
-		t = 0.5;
+	t = 0.5;
 	if (random_double(0,1,7) < t) //광원 샘플링
 	{
 		if (temp->object.type == 3)
@@ -226,8 +244,8 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 	}
 	else //난반사 샘플링
 		generate_scattered(rec, scattered, &uvw);
-
-	temp = light;
+	return (get_pdf(rec, scattered, light, &uvw));
+	/*temp = light;
 	while (temp)
 	{
 		if (temp->object.type == 3)
@@ -236,7 +254,7 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 			light_pdf_val += rectangle_light_pdf_value(rec, scattered, &temp->object);
 		temp = temp->next;
 	}
-	return (t * light_pdf_val / light->count + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));
+	return (t * light_pdf_val / light->count + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));*/
 }
 
 double scattering_pdf(t_ray* scattered, t_hit_record* rec)
