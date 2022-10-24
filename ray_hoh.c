@@ -88,13 +88,13 @@ t_vec random_to_sphere(double radius, double distance_squared)
 double cosine_pdf_value(const t_vec* dir, const t_vec* w)
 {
 	double pdf;
-    double cos;
+	double cos;
 
 	cos = vdot(unit_vec(*dir), *w);
-    if (cos < 0.0)
-        pdf = 0;
-    else
-        pdf = cos / PI;
+	if (cos < 0.0)
+		pdf = 0;
+	else
+		pdf = cos / PI;
 	return (pdf);
 }
 
@@ -189,95 +189,6 @@ double rectangle_light_pdf_value(t_hit_record *rec, t_ray* scattered, t_objs* li
 	return ((rec_new.t * rec_new.t * length_squared) / (cosine * area));
 }
 
-double light_pdf_value(t_ray* ray_path, t_objs* light)
-{
-	t_hit_record rec;
-	const double length_squared = powf(vec_len(ray_path->dir), 2);
-
-	if (!light)
-		return (0);
-	rec.t = -1.0;
-	if (light->type == 4)
-		hit_rectangle_xy(light, ray_path, &rec);
-	else if (light->type == 5)
-		hit_rectangle_yz(light, ray_path, &rec);
-	else if (light->type == 6)
-		hit_rectangle_xz(light, ray_path, &rec);
-	else if (light->type == 3)
-		hit_sphere(light, ray_path, &rec);
-	if (rec.t < 0.001)
-		return 0;
-	double area = (light->center.y - light->center.x) * (light->dir.y - light->dir.x);
-	double distance_squared = rec.t * rec.t * length_squared;
-	double cosine = fabs(vdot(ray_path->dir, rec.normal) / sqrt(length_squared));
-
-
-	double cos_max = sqrt(1 - (light->radius * light->radius / 
-	powf(vec_len(vec_sub(light->center, ray_path->origin)), 2)));
-	double angle = 2 * 3.1415926535897932385 * (1 - cos_max);
-
-	if (light->type == 3)
-		return (1 / angle);
-	else
-		return distance_squared / (cosine * area);
-}
-
-double mixture_pdf_value_before(t_hit_record* rec, t_ray* scattered, t_objs* light)
-{
-	t_onb uvw;
-	t_onb uvw_sphere;
-	t_point random_point;
-	double distance_squared;
-	double t;
-	t_vec ray_path; //원본 코드의 generate가 최종적으로 만드는 것
-
-	if (!light)
-		t = 0;
-	else
-		t = 0.5;
-	uvw = create_onb(rec->normal);
-	if (random_double(0,1,7) < t) //광원 샘플링, 부동소수점 오차 보정
-	{
-		if (light->type == 3)
-		{
-			ray_path = vec_sub(light->center, rec->p); //반사지점에서 광원의 중심까지의 벡터
-			distance_squared = powf(vec_len(ray_path), 2); //위의 벡터 거리의 제곱
-			uvw_sphere = create_onb(ray_path); //위의 벡터 거리를 이용한 onb 생성
-			ray_path = local(&uvw_sphere, random_to_sphere(light->radius, distance_squared)); 
-			//반사 지점부터 광원의 랜덤지점까지의 벡터 생성
-		}
-		else
-		{
-			if (light->type == 4)
-			{
-				random_point = create_vec(random_double(light->center.x, light->center.y, 7),
-				random_double(light->dir.x, light->dir.y, 7), light->radius); // 광원의 크기 안에서 포인트를 랜덤 생성
-			}
-			else if (light->type == 5)
-			{
-				random_point = create_vec(light->radius, random_double(light->center.x, light->center.y, 7),
-				random_double(light->dir.x, light->dir.y, 7));
-			}
-			else if (light->type == 6)
-			{
-				random_point = create_vec(random_double(light->center.x, light->center.y, 7),
-				light->radius, random_double(light->dir.x, light->dir.y, 7)); 
-			}
-			ray_path = vec_sub(random_point, rec->p); // ray를 쏜 곳(시선)으로부터 위에서 생성한 광원 속 랜덤 지점의 벡터
-		}
-		
-		*scattered = ray(rec->p, ray_path);
-
-	}
-	else //난반사 샘플링
-	{
-		ray_path = local(&uvw, random_cosine_direction()); //ray를 쏜 곳으로부터, 코사인 분포를 따르는 랜덤 벡터를 생성
-		*scattered = ray(rec->p, ray_path);
-	}
-	
-	return (t * light_pdf_value(scattered, light) + (1 - t) * cosine_pdf_value(&(rec->normal), &(uvw.w)));
-}
-
 /*void generate_ray(t_hit_record* rec, t_ray* scattered, t_light *temp)
 {
 	const double t = 0.5;
@@ -296,22 +207,16 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 	light_pdf_val = 0.0;
 	temp = light;
 	uvw = create_onb(rec->normal);
-	if (!light || !light->count || !get_light_size(light->object))
+	idx = rand() % light->count;
+	while (temp && light->count && idx --)
+		temp = temp->next;
+	if (!light || !light->count || temp->object.mat != -1 || !get_light_size(temp->object))
 	{
 		generate_scattered(rec, scattered, &uvw);
 		return (cosine_pdf_value(&(rec->normal), &(uvw.w)));
 	}
 	else
 		t = 0.5;
-
-	idx = rand() % light->count;
-	while (idx --)
-		temp = temp->next;
-	if (temp->object.mat != -1 || !get_light_size(temp->object))
-	{
-		generate_scattered(rec, scattered, &uvw);
-		return (cosine_pdf_value(&(rec->normal), &(uvw.w)));
-	}
 	if (random_double(0,1,7) < t) //광원 샘플링
 	{
 		if (temp->object.type == 3)
@@ -336,16 +241,16 @@ double mixture_pdf_value(t_hit_record* rec, t_ray* scattered, t_light* light)
 
 double scattering_pdf(t_ray* scattered, t_hit_record* rec)
 {
-    double scat_pdf;
-    double cos;
+	double scat_pdf;
+	double cos;
 
 	if (rec->mat != 0)
 		return (1);
-    cos = vdot(rec->normal, unit_vec(scattered->dir));
-    if (cos < 0)
-        scat_pdf = 0;
-    else
-        scat_pdf = cos / PI;
+	cos = vdot(rec->normal, unit_vec(scattered->dir));
+	if (cos < 0)
+		scat_pdf = 0;
+	else
+		scat_pdf = cos / PI;
 	return (scat_pdf);
 }
 
@@ -438,9 +343,9 @@ t_color ray_color(t_ray r, t_scene* sc, int depth)
 
 	rec.t = -1.0;
 	if (depth <= 0)
-        return (create_vec(0,0,0));
+		return (create_vec(0,0,0));
 	find_hitpoint_path(&r, sc->objs, sc->light, &rec);
-	if (rec.t >= 0.0)
+	if (rec.t >= EPS)
 	{
 		pdf = scatter(&r, &rec, &scattered, sc->light);
 		if (rec.mat != -1)
