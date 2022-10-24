@@ -409,48 +409,15 @@ double scatter(t_ray* r, t_hit_record* rec, t_ray* scattered, t_light* light)
 	else if (rec->mat == 1)
 		return (scatter_reflect(r, rec, scattered));
 	else if (rec->mat == 2)
-	{
-		/*if (rec->refraction == 0)
-			printf("refraction is not set\n");
-		t_vec attenuation = create_vec(1, 1, 1);
-		t_vec dir;
-		double ref_ratio;
-		double cos = fmin(vdot(vec_scalar_mul(unit_vec(r->dir), -1), rec->normal), 1.0);
-		double sin = sqrt(1.0 - cos * cos);
-		
-		if (rec->front_face)
-			ref_ratio = 1.0 / rec->refraction;
-		else
-			ref_ratio = rec->refraction;
-
-		if (ref_ratio * sin > 1.0 || 
-		reflectance(cos, ref_ratio) > random_double(0,1,7))
-			dir = reflect(unit_vec(r->dir), rec->normal);
-		else
-			dir = refract(unit_vec(r->dir), rec->normal, ref_ratio, cos);
-		*scattered = ray(rec->p, dir);
-		return (1);*/
 		return (scatter_refraction(r, rec, scattered));
-	}
 	else if (rec->mat == -1)
 		return (1);
 }
 
 t_color ray_color_raw(t_ray r, t_scene* sc)
 {
-	t_hit_record rec;
-	double t;
-
-	rec.t = -1.0;
-	/*find_hitpoint_path(&r, world, light, &rec);
-	if (rec.t != -1)
-		return (rec.color);
-	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
-	return (vec_scalar_mul(
-		create_vec((1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), 1)
-	);*/
-
 	t_hit_record hr;
+	double t;
 
 	hr.t = -1.0;
 	hr = find_hitpoint(&r, sc->objs);
@@ -467,7 +434,6 @@ t_color ray_color(t_ray r, t_scene* sc, int depth)
 	double t;
 	double pdf;
 	t_hit_record rec;
-	t_color color;
 	t_ray scattered;
 
 	rec.t = -1.0;
@@ -479,12 +445,12 @@ t_color ray_color(t_ray r, t_scene* sc, int depth)
 		pdf = scatter(&r, &rec, &scattered, sc->light);
 		if (rec.mat != -1)
 		{
-			color = vec_mul(vec_scalar_mul(rec.color, scattering_pdf(&scattered, &rec)), 
+			r.color = vec_mul(vec_scalar_mul(rec.color, scattering_pdf(&scattered, &rec)), 
 			vec_division(ray_color(scattered, sc, depth - 1), pdf));
 		}
 		else
-			color = rec.color;
-		return (color);
+			r.color = rec.color;
+		return (r.color);
 	}
 	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
 	return (vec_scalar_mul(
