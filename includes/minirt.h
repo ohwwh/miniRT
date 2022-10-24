@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 19:22:48 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/25 00:55:48 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,6 +195,10 @@ void			err_handler(char *msg);
 t_bool			is_valid_color(char *s);
 t_vec			make_vec(double x, double y, double z);
 
+void			set_init_distance(t_minirt *data);
+void			init_rt(t_minirt *data);
+int				create_light_object(t_scene *sc);
+
 t_vec			get_color(char *s);
 t_vec			get_vec(char *s);
 void			parse_line(char *id, char **tockens, t_scene *sc);
@@ -230,7 +234,9 @@ t_vec			vcross(t_vec vec1, t_vec vec2);
 t_vec			unit_vec(t_vec vec);
 t_vec			vmin(t_vec vec1, t_vec vec2);
 
+t_ray			ray(t_point origin, t_vec dir);
 t_ray			ray_primary(t_camera *cam, double u, double v);
+t_point			ray_end(t_ray *ray, double t);
 
 t_vec			get_raycolor(t_minirt *data);
 t_vec			add_color(t_vec col1, t_vec col2);
@@ -245,6 +251,26 @@ int				shadow(t_scene *sc, t_hit_record hr, t_light *light);
 t_color			ray_color(t_ray r, t_scene *sc, int depth);
 t_color			ray_color_raw(t_ray r, t_scene *sc);
 
+double			scattering_pdf(t_ray *scattered, t_hit_record *rec);
+double			scatter(t_ray *r, t_hit_record *rec,
+					t_ray *scattered, t_light *light);
+
+void			generate_scattered(t_hit_record *rec,
+					t_ray *scattered, t_onb *uvw);
+void			generate_light_sample_sphere(
+					t_hit_record *rec, t_ray *scattered, t_objs *light);
+void			generate_random_importance(t_hit_record *rec,
+					t_ray *scattered, t_light *temp, t_onb *uvw);
+
+t_vec			random_to_sphere(double radius, double distance_squared);
+double			cosine_pdf(const t_vec *dir, const t_vec *w);
+double			sphere_light_pdf(t_hit_record *rec,
+					t_ray *scattered, t_objs *light);
+double			get_pdf(t_hit_record *rec,
+					t_ray *scattered, t_light *light, t_onb *uvw);
+double			mixture_pdf_value(t_hit_record *rec,
+					t_ray *scattered, t_light *light);
+
 t_hit_record	find_hitpoint(t_ray *ray, t_objs *objs);
 int				find_hitpoint_path(t_ray *ray, t_objs *objs,
 					t_light *light, t_hit_record *rec);
@@ -255,7 +281,6 @@ void			hit_caps(t_objs *cy, t_ray *ray, t_hit_record *rec);
 void			hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record *rec);
 void			hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record *rec);
 void			hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record *rec);
-t_point			ray_end(t_ray *ray, double t);
 void			set_face_normal(t_hit_record *rec,
 					t_ray *ray, t_vec outward_normal);
 
@@ -270,12 +295,21 @@ void			key_press_rotate(t_minirt *vars, int keycode);
 void			key_press_mode_change(t_minirt *vars, int keycode);
 int				ft_close(t_minirt *data);
 
+void			object_move(t_minirt *data, int type);
+void			object_rotate(t_minirt *data, int type);
+void			camera_move(t_minirt *vars);
+void			camera_rotate(t_minirt *vars);
+void			camera_zoom(t_minirt *vars);
+
+double			reflectance(double cos, double ref_ratio);
 t_vec			reflect(t_vec v, t_vec n);
+t_vec			refract(t_vec v, t_vec n, double e, double cos);
 
 void			path_render(t_minirt *vars);
 int				convert_rgb(int r, int g, int b);
 
 int				rgb_to_int(t_color c);
+t_color			get_sky_color(t_ray r);
 void			put_color(t_mlx *data, int x, int y, int color);
 void			ft_pixel_put(t_minirt *vars, int x, int y, int color);
 void			ft_mlx_init(t_minirt *vars);

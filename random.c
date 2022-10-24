@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   random.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:29:28 by hako              #+#    #+#             */
-/*   Updated: 2022/10/21 20:29:29 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/25 01:00:33 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,6 @@ t_vec	rand_sphere(void)
 			continue ;
 		return (ret);
 	}
-}
-
-t_vec	rand_hemi_sphere(t_vec normal)
-{
-	t_vec	ret;
-
-	ret = rand_sphere();
-	if (vdot(ret, normal) > 0.0)
-		return (ret);
-	else
-		return (vec_scalar_mul(ret, -1));
 }
 
 t_vec	random_cosine_direction(void)
@@ -69,7 +58,7 @@ t_onb	create_onb(t_vec n)
 	return (ret);
 }
 
-t_vec local(t_onb *onb, t_vec a)
+t_vec	local(t_onb *onb, t_vec a)
 {
 	return (
 		vec_sum(

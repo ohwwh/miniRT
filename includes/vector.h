@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:52 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 17:46:34 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/25 00:56:02 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ t_vec	vcross(t_vec vec1, t_vec vec2);
 t_vec	unit_vec(t_vec vec);
 t_vec	vmin(t_vec vec1, t_vec vec2);
 int		near_zero(t_vec vec);
+t_vec	rotate(t_vec axis, t_vec vec, int dir);
 
 #endif

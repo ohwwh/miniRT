@@ -12,16 +12,6 @@
 
 #include "minirt.h"
 
-/*t_vec calcul_ratio(t_vec col1, t_vec col2, double ratio)
-{
-	t_vec	ret;
-
-	ret.x = col1.x * (col2.x / 255) * ratio;
-	ret.y = col1.y * (col2.y / 255) * ratio;
-	ret.z = col1.z * (col2.z / 255) * ratio;
-	return (ret);
-}*/
-
 t_vec	calcul_ratio(t_vec col1, t_vec col2, double ratio)
 {
 	t_vec	ret;
@@ -31,15 +21,6 @@ t_vec	calcul_ratio(t_vec col1, t_vec col2, double ratio)
 	ret.z = col1.z * (col2.z) * ratio;
 	return (ret);
 }
-
-/*t_vec	add_color(t_vec col1, t_vec col2)
-{
-	t_vec	res;
-
-	res = vec_sum(col1, col2);
-	res = vmin(res, create_vec(255, 255, 255));
-	return (res);
-}*/
 
 t_vec	add_color(t_vec col1, t_vec col2)
 {
@@ -61,11 +42,6 @@ t_vec	diffuse(t_hit_record hr, t_light *light, double d)
 	diff = calcul_ratio(hr.color, color, d * light->ratio);
 	return (diff);
 }
-
-/*t_vec	reflect(t_vec v, t_vec n)
-{
-    return (vec_sub(v, vec_scalar_mul(n, vdot(v, n) * 2)));
-}*/
 
 t_vec	specular(t_hit_record hr, t_light *light, t_ray ray)
 {
