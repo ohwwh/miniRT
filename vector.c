@@ -80,12 +80,12 @@ t_vec  vcross(t_vec vec1, t_vec vec2)
 t_vec      unit_vec(t_vec vec)
 {
     double len = vec_len(vec);
-    int *ptr;
+    //int *ptr;
     if (len == 0)
     {
-        *ptr = 0;
+        //*ptr = 0;
         printf("Error : the length of vector is 0\n");
-        exit(1);
+        return (create_vec(1, 0, 0));
     }
     vec.x /= len;
     vec.y /= len;
