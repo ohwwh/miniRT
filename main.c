@@ -28,7 +28,7 @@ void sampling(t_minirt *vars, int x, int y)
 	u = (((double)x + random_double(0, 1, vars->scene.anti)) * 2 / WIDTH) - 1;
 	v = (((double)y + random_double(0, 1, vars->scene.anti)) * 2 / HEIGHT) - 1;
 	init_ray = ray_primary(&(vars->scene.camera), u, v);
-	if (x == 174 && y == 232)
+	if (x == 0 && y == 0)
 		x = x;
 	if (vars->is_trace == 1)
 		vars->ray.color = vec_sum(vars->ray.color, ray_color(init_ray, &vars->scene, MAX_DEPTH));
@@ -55,8 +55,6 @@ void path_render(t_minirt *vars)
 		{
 			vars->ray.color = create_vec(0, 0, 0);
 			s = 0;
-			if (x == 320 && y == 10)
-				x = x;
 			while (s ++ < vars->scene.anti)
 				sampling(vars, x, y);
 			vars->ray.color = vec_division(vars->ray.color, vars->scene.anti);

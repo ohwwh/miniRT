@@ -34,6 +34,7 @@ int create_light_object(t_scene *sc)
 		tmp = tmp->next;
 	}
 	if (min == INFINITY)
+		min = 10;
 	set_light_attribute(sc, min);
 	return (1);
 }
@@ -46,19 +47,23 @@ t_ray ray(t_point origin, t_vec dir)
 	return (ret);
 }
 
-
 double reflectance(double cos, double ref_ratio)
 {
-	double r0 = (1 - ref_ratio) / (1 + ref_ratio);
+	double r0;
+
+	r0 = (1 - ref_ratio) / (1 + ref_ratio);
 	r0 = r0 * r0;
 	return (r0 + (1 - r0) * powf((1 - cos), 5));
 }
 
 t_vec refract(t_vec v, t_vec n, double e, double cos)
 {
-	t_vec perp = vec_scalar_mul(vec_sum(v, vec_scalar_mul(n, cos)), e);
+	t_vec perp;
+	t_vec parallel;
+
+	perp = vec_scalar_mul(vec_sum(v, vec_scalar_mul(n, cos)), e);
 	//e * (v + n * cos_theta)
-	t_vec parallel = vec_scalar_mul(n, -sqrt(fabs(1.0 - powf(vec_len(perp), 2))));
+	parallel = vec_scalar_mul(n, -sqrt(fabs(1.0 - powf(vec_len(perp), 2))));
 	return (vec_sum(perp, parallel));
 }
 

@@ -17,7 +17,7 @@ double get_light_size(t_objs object)
 	const double y = object.dir.y - object.dir.x;
 
 	if (object.type == 3)
-		return (rad * rad * 3.1415926535897932385);
+		return (rad * rad * PI);
 	else if (object.type == 4 || object.type == 5 || object.type == 6)
 		return (x * y);
 	else
