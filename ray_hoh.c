@@ -1,13 +1,28 @@
 #include "minirt.h"
 
+void set_light_attribute(t_scene *sc, double min)
+{
+	t_light *tmp;
+
+	tmp = sc->light;
+	while (tmp)
+	{
+		tmp->object.center = tmp->src;
+		tmp->object.color = create_vec(45, 45, 45);
+		tmp->object.type = SP;
+		tmp->object.mat = -1;
+		tmp->object.radius = min / 2;
+		tmp->object.next = 0;
+		tmp = tmp->next;
+	}
+}
+
 int create_light_object(t_scene *sc)
 {
-	t_light *temp;
 	t_objs	*tmp;
 	double min;
 
 	min = INFINITY;
-	temp = sc->light;
 	tmp = sc->objs;
 	while (tmp)
 	{
@@ -19,17 +34,7 @@ int create_light_object(t_scene *sc)
 		tmp = tmp->next;
 	}
 	if (min == INFINITY)
-		min = 10;
-	while (temp)
-	{
-		temp->object.center = temp->src;
-		temp->object.color = create_vec(45, 45, 45);
-		temp->object.type = SP;
-		temp->object.mat = -1;
-		temp->object.radius = min / 2;
-		temp->object.next = 0;
-		temp = temp->next;
-	}
+	set_light_attribute(sc, min);
 	return (1);
 }
 
