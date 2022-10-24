@@ -43,7 +43,6 @@ void path_render(t_minirt *vars)
 	int	s;
 	
 	y = HEIGHT - 1;
-	s = 0;
 	while (y -- >= 0)
 	{
 		x = 0;
@@ -58,14 +57,11 @@ void path_render(t_minirt *vars)
 			s = 0;
 			if (x == 320 && y == 10)
 				x = x;
-
 			while (s ++ < vars->scene.anti)
 				sampling(vars, x, y);
 			vars->ray.color = vec_division(vars->ray.color, vars->scene.anti);
-			put_color(&vars->mlx, x - 1, HEIGHT - y, rgb_to_int(vars->ray.color));
-			//x ++;
+			put_color(&vars->mlx, x - 1, HEIGHT - 2 - y, rgb_to_int(vars->ray.color));
 		}
-		//y --;
 	}
 	mlx_put_image_to_window(vars->mlx.mlx, vars->mlx.mlx_win, vars->mlx.img, 0, 0); // 무슨 차이지....
 }

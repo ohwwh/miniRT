@@ -27,21 +27,27 @@ int	ft_close(t_minirt *data)
 
 t_vec rotate(t_vec axis, t_minirt* vars, int dir)
 {
-	double c = (1 - cos(dir * 0.1));
-	double s = sin(dir * 0.1);
-	double x = axis.x;
-	double y = axis.y;
-	double z = axis.z;
-
-	double i = vars->scene.camera.forward.x;
-	double j = vars->scene.camera.forward.y;
-	double k = vars->scene.camera.forward.z;
+	//double c = (1 - cos(dir * 0.1));
+	//double s = sin(dir * 0.1);
+	//double x = axis.x;
+	//double y = axis.y;
+	//double z = axis.z;
 
 	t_vec new_dir;
+	const double i = vars->scene.camera.forward.x;
+	const double j = vars->scene.camera.forward.y;
+	const double k = vars->scene.camera.forward.z;
 
-	new_dir.x = -i*c*y*y-k*s*y+c*j*x*y-i*c*z*z+j*s*z+c*k*x*z+i;
-	new_dir.y = j-c*j*x*x+k*s*x+i*c*x*y-c*j*z*z-i*s*z+c*k*y*z;
-	new_dir.z = k-c*k*x*x-j*s*x-c*k*y*y+i*s*y+i*c*x*z+c*j*y*z;
+	new_dir.x = - i * (1 - cos(dir * 0.1)) * axis.y * axis.y 
+	- k * sin(dir * 0.1) * axis.y + (1 - cos(dir * 0.1)) * j * axis.x * axis.y 
+	- i * (1 - cos(dir * 0.1)) * axis.z * axis.z + j * sin(dir * 0.1) * axis.z
+	+ (1 - cos(dir * 0.1)) * k * axis.x * axis.z +i;
+	new_dir.y = j - (1 - cos(dir * 0.1)) * j * axis.x * axis.x 
+	+ k * sin(dir * 0.1) * axis.x + i * (1 - cos(dir * 0.1)) * axis.x * axis.y 
+	- (1 - cos(dir * 0.1)) * j * axis.z * axis.z - i * sin(dir * 0.1) * axis.z + (1 - cos(dir * 0.1)) * k * axis.y * axis.z;
+	new_dir.z = k - (1 - cos(dir * 0.1)) * k * axis.x * axis.x
+	- j * sin(dir * 0.1) * axis.x - (1 - cos(dir * 0.1)) * k * axis.y * axis.y + i * sin(dir * 0.1) * axis.y 
+	+ i * (1 - cos(dir * 0.1)) * axis.x * axis.z + (1 - cos(dir * 0.1)) * j * axis.y * axis.z;
 
 	return (new_dir);
 }
@@ -71,14 +77,13 @@ void camera_move(t_minirt* vars)
 	else
 		return ;
 	delta = vec_scalar_mul(vec_scalar_mul(dir, d), vars->scene.camera.distance / 10);
-	t_vec new_org = vec_sum(vars->scene.camera.origin, delta);
-	vars->scene.camera.origin = new_org;
+	vars->scene.camera.origin = vec_sum(vars->scene.camera.origin, delta);
 }
 
 void camera_rotate(t_minirt* vars)
 {
 	t_vec axis;
-	t_vec delta;
+	t_vec new_dir;
 	double d;
 
 	if (vars->is_move == 126 || vars->is_move == 125)
@@ -99,7 +104,7 @@ void camera_rotate(t_minirt* vars)
 	}
 	else
 		return ;
-	t_vec new_dir = rotate(axis, vars, d);
+	new_dir = rotate(axis, vars, d);
 	vars->scene.camera.forward = new_dir;
 	vars->scene.camera.dir = new_dir;
 }
@@ -162,6 +167,20 @@ void light_move(t_minirt *vars, t_vec delta)
 	while (tmp)
 	{
 		tmp->object.center = vec_sum(tmp->object.center, delta);
+		tmp->src = vec_sum(tmp->src, delta);
+		tmp = tmp->next;
+	}
+}
+
+void non_light_move(t_minirt *vars, int type, t_vec delta)
+{
+	t_objs *tmp;
+
+	tmp = vars->scene.objs;
+	while (tmp)
+	{
+		if (tmp->type == type)
+			tmp->center = vec_sum(tmp->center, delta);
 		tmp = tmp->next;
 	}
 }
@@ -194,13 +213,8 @@ void object_move(t_minirt *data, int type)
 	delta = vec_scalar_mul(vec_scalar_mul(dir, d), 1);
 	if (data->scene.objs->type == -1)
 		return (light_move(data, delta));
-	tmp = data->scene.objs;
-	while (tmp)
-	{
-		if (tmp->type == type)
-			tmp->center = vec_sum(tmp->center, delta);
-		tmp = tmp->next;
-	}
+	else
+		return (non_light_move(data, type, delta));
 }
 
 int transpose_light(t_minirt *data, t_keycode keycode, int *status)
