@@ -28,30 +28,20 @@ int	ft_close(t_minirt *data)
 
 t_vec rotate(t_vec axis, t_vec vec, int dir)
 {
-	//double c = (1 - cos(dir * 0.1));
-	//double s = sin(dir * 0.1);
-	//double x = axis.x;
-	//double y = axis.y;
-	//double z = axis.z;
+    t_vec           new_dir;
+	const double    c = (1 - cos(dir * 0.1));
+	const double    s = sin(dir * 0.1);
 
-	t_vec new_dir;
-	/*const double i = vars->scene.camera.forward.x;
-	const double j = vars->scene.camera.forward.y;
-	const double k = vars->scene.camera.forward.z;*/
-	const double i = vec.x;
-	const double j = vec.y;
-	const double k = vec.z;
-
-	new_dir.x = - i * (1 - cos(dir * 0.1)) * axis.y * axis.y 
-	- k * sin(dir * 0.1) * axis.y + (1 - cos(dir * 0.1)) * j * axis.x * axis.y 
-	- i * (1 - cos(dir * 0.1)) * axis.z * axis.z + j * sin(dir * 0.1) * axis.z
-	+ (1 - cos(dir * 0.1)) * k * axis.x * axis.z +i;
-	new_dir.y = j - (1 - cos(dir * 0.1)) * j * axis.x * axis.x 
-	+ k * sin(dir * 0.1) * axis.x + i * (1 - cos(dir * 0.1)) * axis.x * axis.y 
-	- (1 - cos(dir * 0.1)) * j * axis.z * axis.z - i * sin(dir * 0.1) * axis.z + (1 - cos(dir * 0.1)) * k * axis.y * axis.z;
-	new_dir.z = k - (1 - cos(dir * 0.1)) * k * axis.x * axis.x
-	- j * sin(dir * 0.1) * axis.x - (1 - cos(dir * 0.1)) * k * axis.y * axis.y + i * sin(dir * 0.1) * axis.y 
-	+ i * (1 - cos(dir * 0.1)) * axis.x * axis.z + (1 - cos(dir * 0.1)) * j * axis.y * axis.z;
+	new_dir.x = - vec.x * c * axis.y * axis.y 
+	- vec.z * s * axis.y + c * vec.y * axis.x * axis.y 
+	- vec.x * c * axis.z * axis.z + vec.y * s * axis.z
+	+ c * vec.z * axis.x * axis.z + vec.x;
+	new_dir.y = vec.y - c * vec.y * axis.x * axis.x 
+	+ vec.z * s * axis.x + vec.x * c * axis.x * axis.y 
+	- c * vec.y * axis.z * axis.z - vec.x * s * axis.z + c * vec.z * axis.y * axis.z;
+	new_dir.z = vec.z - c * vec.z * axis.x * axis.x
+	- vec.y * s * axis.x - c * vec.z * axis.y * axis.y + vec.x * s * axis.y 
+	+ vec.x * c * axis.x * axis.z + c * vec.y * axis.y * axis.z;
 
 	return (new_dir);
 }
@@ -416,12 +406,13 @@ void key_press_mode_change(t_minirt* vars, int keycode)
 					vars->mode = SP;
 				else if (keycode == 19)
 					vars->mode = CY;
+				else if (keycode == 20)
+					vars->mode = -1;
 			}
 			else if (vars->mode != 0)
 				vars->mode = 0;
 			return ;
 		}
-
 		if (keycode == 15)
 			vars->is_trace = 1;
 		else if (keycode == 35)
