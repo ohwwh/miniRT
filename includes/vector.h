@@ -16,6 +16,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 
+# define PI 3.14159265358979323846
+
 typedef struct s_vec {
 	double	x;
 	double	y;

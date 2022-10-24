@@ -19,7 +19,7 @@ double	random_double(double min, double max, int anti)
 	return ((max - min) * ((double)rand() / (double)RAND_MAX) + min);
 }
 
-t_vec	rand_sphere()
+t_vec	rand_sphere(void)
 {
 	t_vec	ret;
 
@@ -33,7 +33,7 @@ t_vec	rand_sphere()
 	}
 }
 
-t_vec rand_hemi_sphere(t_vec normal)
+t_vec	rand_hemi_sphere(t_vec normal)
 {
 	t_vec	ret;
 
@@ -44,20 +44,17 @@ t_vec rand_hemi_sphere(t_vec normal)
 		return (vec_scalar_mul(ret, -1));
 }
 
-t_vec random_cosine_direction()
+t_vec	random_cosine_direction(void)
 {
-	double r1 = random_double(0, 1, 7);
-	double r2 = random_double(0, 1, 7);
-	double z = sqrt(1 - random_double(0, 1, 7));
+	const double	r1 = random_double(0, 1, 7);
+	const double	r2 = random_double(0, 1, 7);
+	const double	z = sqrt(1 - r2);
+	const double	phi = 2 * PI * r1;
 
-	double phi = 2 * PI * r1;
-	double x = cos(phi) * sqrt(r2);
-	double y = sin(phi) * sqrt(r2);
-
-	return (create_vec(x, y, z));
+	return (create_vec(cos(phi) * sqrt(r2), sin(phi) * sqrt(r2), sqrt(1 - r2)));
 }
 
-t_onb create_onb(t_vec n)
+t_onb	create_onb(t_vec n)
 {
 	t_onb	ret;
 	t_vec	a;
