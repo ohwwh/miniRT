@@ -6,7 +6,7 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:52:19 by hako              #+#    #+#             */
-/*   Updated: 2022/10/19 18:52:58 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 17:35:35 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ t_light	*alloc_light(t_scene *sc)
 		new_light->count = sc->light->count + 1;
 	new_light->next = sc->light;
 	sc->light = new_light;
-
 	return (new_light);
 }
 

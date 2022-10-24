@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "chrono": "c",
-        "vector": "c",
-        "camera.h": "c"
-    }
-}

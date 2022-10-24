@@ -6,16 +6,16 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:28:27 by hako              #+#    #+#             */
-/*   Updated: 2022/10/21 20:28:28 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 18:35:17 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_point ray_end(t_ray* ray, double t)
+t_point	ray_end(t_ray *ray, double t)
 {
-	t_point ret;
-	
+	t_point	ret;
+
 	ret.x = ray->origin.x + t * ray->dir.x;
 	ret.y = ray->origin.y + t * ray->dir.y;
 	ret.z = ray->origin.z + t * ray->dir.z;
@@ -39,35 +39,27 @@ t_point ray_end(t_ray* ray, double t)
 
 }*/
 
-t_hit_record find_hitpoint(t_ray *ray, t_objs *objs)
+t_hit_record	find_hitpoint(t_ray *ray, t_objs *objs)
 {
-    t_objs *tmp;
-    t_hit_record saved;
-    
-    tmp = objs;
-    saved.t = -1.0;
-    while (tmp)
-    {
-        if (tmp->type == SP)
-        {
-            hit_sphere(tmp, ray, &saved);
-            //saved = hit_sphere(saved, ray, tmp);
-        }
-        else if (tmp->type == PL)
-        {
-            hit_plane(tmp, ray, &saved);
-            //saved = hit_plane(saved, ray, tmp);
-        }
-        else if (tmp->type == CY)
-        {
-            hit_cylinder(tmp, ray, &saved);
-            hit_caps(tmp, ray, &saved);
-            //saved = hit_cylinder(saved, ray, tmp);
-	        //saved = hit_caps(saved, ray, tmp);
-        }
-        tmp = tmp->next;
-    }
-    return (saved);
+	t_objs			*tmp;
+	t_hit_record	saved;
+
+	tmp = objs;
+	saved.t = -1.0;
+	while (tmp)
+	{
+		if (tmp->type == SP)
+			hit_sphere(tmp, ray, &saved);
+		else if (tmp->type == PL)
+			hit_plane(tmp, ray, &saved);
+		else if (tmp->type == CY)
+		{
+			hit_cylinder(tmp, ray, &saved);
+			hit_caps(tmp, ray, &saved);
+		}
+		tmp = tmp->next;
+	}
+	return (saved);
 }
 
 int	is_inside(t_vec ray, t_vec norm)
@@ -77,33 +69,33 @@ int	is_inside(t_vec ray, t_vec norm)
 	return (0);
 }
 
-t_vec get_raycolor(t_minirt *data)
+t_vec	get_raycolor(t_minirt *data)
 {
-    t_hit_record hr;
-    t_vec amb;
-    t_vec color;
+	t_hit_record	hr;
+	t_vec			amb;
+	t_vec			color;
 
-    hr = find_hitpoint(&data->ray, data->scene.objs);
-    if (hr.t > EPS)
+	hr = find_hitpoint(&data->ray, data->scene.objs);
+	if (hr.t > EPS)
 	{
-        amb = calcul_ratio(hr.color, data->scene.amb.col, data->scene.amb.ratio);
-        if (is_inside(data->ray.dir, hr.normal)) // 카메라가 객체 안에 있는지 위치 파악
-        {
-            hr.normal = vec_scalar_mul(hr.normal, -1);
-        }
-        color = calcul_color(&data->scene, hr, amb, data->ray);
+		amb = calcul_ratio(hr.color,
+				data->scene.amb.col, data->scene.amb.ratio);
+		if (is_inside(data->ray.dir, hr.normal))
+			hr.normal = vec_scalar_mul(hr.normal, -1);
+		color = calcul_color(&data->scene, hr, amb, data->ray);
 		return (color);
 	}
 	return (vec_scalar_mul(data->scene.amb.col, data->scene.amb.ratio));
 }
 
-t_ray       ray_primary(t_camera *cam, double u, double v)
+t_ray	ray_primary(t_camera *cam, double u, double v)
 {
-    t_ray   ray;
+	t_ray	ray;
 
-    ray.origin = cam->origin;
-    ray.dir = vec_sum(vec_sum(vec_scalar_mul(cam->up, v * cam->viewport_height),
-				vec_scalar_mul(cam->right, u *  cam->viewport_width)), cam->forward);
-    ray.dir = unit_vec(ray.dir);
-    return (ray);
+	ray.origin = cam->origin;
+	ray.dir = vec_sum(vec_sum(vec_scalar_mul(cam->up, v * cam->viewport_height),
+				vec_scalar_mul(cam->right,
+					u * cam->viewport_width)), cam->forward);
+	ray.dir = unit_vec(ray.dir);
+	return (ray);
 }
