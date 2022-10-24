@@ -7,7 +7,7 @@ FRAMEW = -Lmlx -lmlx -framework OpenGL -framework Appkit
 SRCS = main.c parse.c parse_objs.c utils.c parse_equip.c \
 		render.c vector.c ray.c sphere.c color.c plane.c \
 		move.c cylinder.c hit.c random.c camera.c ray_hoh.c objects.c ft_mlx.c\
-		vector2.c vector3.c \
+		vector2.c vector3.c parse_utils.c \
 		tests.c
 INCS = ./includes/
 OBJS = $(SRCS:.c=.o)

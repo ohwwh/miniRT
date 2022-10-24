@@ -6,7 +6,7 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 17:45:20 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 17:55:46 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 # define ROTATE 0.1
 # define STEP 5
 # define MAX_DEPTH 50
+# define KSN 64 
+# define KS 0.5
 
 # define HEIGHT 320
 # define WIDTH 640
@@ -232,9 +234,14 @@ t_vec			vmin(t_vec vec1, t_vec vec2);
 t_ray			ray_primary(t_camera *cam, double u, double v);
 
 t_vec			get_raycolor(t_minirt *data);
+t_vec			add_color(t_vec col1, t_vec col2);
 t_vec			calcul_ratio(t_vec col1, t_vec col2, double ratio);
 t_vec			calcul_color(t_scene *sc, t_hit_record hr,
 					t_vec amb, t_ray ray);
+
+t_vec			diffuse(t_hit_record hr, t_light *light, double d);
+t_vec			specular(t_hit_record hr, t_light *light, t_ray ray);
+int				shadow(t_scene *sc, t_hit_record hr, t_light *light);
 
 t_color			ray_color(t_ray r, t_scene *sc, int depth);
 t_color			ray_color_raw(t_ray r, t_scene *sc);
