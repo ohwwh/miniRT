@@ -6,7 +6,7 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:36:33 by hako              #+#    #+#             */
-/*   Updated: 2022/10/19 18:38:54 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 18:13:21 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # define WIDTH 640
 # define HEIGHT 320
 # define PI 3.14159265358979323846
-# define EPS 0.0001
+# define EPS 0.001
 
 typedef struct t_camera
 {
