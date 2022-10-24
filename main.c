@@ -6,7 +6,7 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:28:58 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 17:29:31 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 18:47:51 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	sampling(t_minirt *vars, int x, int y)
 				ray_color_raw(init_ray, &vars->scene));
 }
 
-void	path_render(t_minirt *vars)
+void	path_render(t_minirt *v)
 {
 	int	x;
 	int	y;
@@ -59,23 +59,23 @@ void	path_render(t_minirt *vars)
 	while (y -- >= 0)
 	{
 		x = 0;
-		if (vars->is_trace == 1)
+		if (v->is_trace == 1)
 		{
 			printf("\rScanlines remaining: %d", y);
 			fflush(stdout);
 		}
 		while (x ++ < WIDTH)
 		{
-			vars->ray.color = create_vec(0, 0, 0);
+			v->ray.color = create_vec(0, 0, 0);
 			s = 0;
-			while (s ++ < vars->scene.anti)
-				sampling(vars, x, y);
-			vars->ray.color = vec_division(vars->ray.color, vars->scene.anti);
-			put_color(&vars->mlx, x - 1,
-				HEIGHT - 2 - y, rgb_to_int(vars->ray.color));
+			while (s ++ < v->scene.anti)
+				sampling(v, x, y);
+			v->ray.color = vec_division(v->ray.color, v->scene.anti);
+			put_color(&v->mlx, x - 1,
+				HEIGHT - 2 - y, rgb_to_int(v->ray.color));
 		}
 	}
-	mlx_put_image_to_window(vars->mlx.mlx, vars->mlx.mlx_win, vars->mlx.img, 0, 0); // 무슨 차이지....
+	mlx_put_image_to_window(v->mlx.mlx, v->mlx.mlx_win, v->mlx.img, 0, 0);
 }
 
 int	main(int ac, char **av)
@@ -88,7 +88,6 @@ int	main(int ac, char **av)
 	fd = open(av[1], O_RDONLY);
 	init_rt(&data);
 	parse(&data.scene, fd);
-
 	data.scene.camera.distance = vec_len(vec_sub(data.scene.camera.origin, 
 	data.scene.objs->center));
 	//data.scene.light->distance = vec_len(vec_sub(data.scene.light->object.center, 
