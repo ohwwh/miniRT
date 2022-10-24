@@ -23,7 +23,7 @@ void	set_light_attribute(t_scene *sc, double min)
 		tmp->object.color = create_vec(45, 45, 45);
 		tmp->object.type = SP;
 		tmp->object.mat = -1;
-		tmp->object.radius = min / 2;
+		tmp->object.radius = min / 4 * sc->light->distance;
 		tmp->object.next = 0;
 		tmp = tmp->next;
 	}

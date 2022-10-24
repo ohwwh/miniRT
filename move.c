@@ -12,8 +12,8 @@
 
 #include "minirt.h"
 
-void object_move(t_minirt *data, int type);
-void object_rotate(t_minirt *data, int type);
+void	object_move(t_minirt *data, int type);
+void	object_rotate(t_minirt *data, int type);
 
 int	ft_close(t_minirt *data)
 {
@@ -38,7 +38,7 @@ int	ft_close(t_minirt *data)
 	exit(0);
 }
 
-t_vec rotate(t_vec axis, t_vec vec, int dir)
+t_vec	rotate(t_vec axis, t_vec vec, int dir)
 {
     t_vec           new_dir;
 	const double    c = (1 - cos(dir * 0.1));
@@ -60,58 +60,57 @@ t_vec rotate(t_vec axis, t_vec vec, int dir)
 
 void	camera_move(t_minirt *vars)
 {
-	t_vec	dir;
-	t_vec	delta;
-	double	d;
+	t_vec	d;
+	double	dir;
 
 	if (vars->is_move == 13 || vars->is_move == 1)
 	{
-		dir = vars->scene.camera.forward;
+		d = vars->scene.camera.forward;
 		if (vars->is_move == 13)
-			d = 1;
+			dir = 1;
 		else
-			d = -1;
+			dir = -1;
 	}
 	else if (vars->is_move == 0 || vars->is_move == 2)
 	{
-		dir = vars->scene.camera.right;
+		d = vars->scene.camera.right;
 		if (vars->is_move == 2)
-			d = 1;
+			dir = 1;
 		else
-			d = -1;
+			dir = -1;
 	}
 	else
 		return ;
-	delta = vec_scalar_mul(vec_scalar_mul(dir, d),
+	d = vec_scalar_mul(vec_scalar_mul(d, dir),
 			vars->scene.camera.distance / 10);
-	vars->scene.camera.origin = vec_sum(vars->scene.camera.origin, delta);
+	vars->scene.camera.origin = vec_sum(vars->scene.camera.origin, d);
 }
 
 void	camera_rotate(t_minirt *vars)
 {
 	t_vec	axis;
 	t_vec	new_dir;
-	double	d;
+	double	dir;
 
 	if (vars->is_move == 126 || vars->is_move == 125)
 	{
 		axis = vars->scene.camera.right;
 		if (vars->is_move == 126)
-			d = -1;
+			dir = -1;
 		else
-			d = 1;
+			dir = 1;
 	}
 	else if (vars->is_move == 123 || vars->is_move == 124)
 	{
 		axis = vars->scene.camera.up;
 		if (vars->is_move == 124)
-			d = 1;
+			dir = 1;
 		else
-			d = -1;
+			dir = -1;
 	}
 	else
 		return ;
-	new_dir = rotate(axis, vars->scene.camera.forward, d);
+	new_dir = rotate(axis, vars->scene.camera.forward, dir);
 	vars->scene.camera.forward = new_dir;
 	vars->scene.camera.dir = new_dir;
 }
@@ -195,39 +194,36 @@ void	non_light_move(t_minirt *vars, int type, t_vec delta)
 
 void	object_move(t_minirt *data, int type)
 {
-	t_vec	dir;
-	t_vec	delta;
-	t_objs	*tmp;
-	double	d;
+	t_vec	d;
+	double	dir;
 
 	if (data->is_move == 13 || data->is_move == 1)
 	{
-		dir = data->scene.camera.up;
+		d = data->scene.camera.up;
 		if (data->is_move == 13)
-			d = 1;
+			dir = 1;
 		else
-			d = -1;
+			dir = -1;
 	}
 	else if (data->is_move == 0 || data->is_move == 2)
 	{
-		dir = data->scene.camera.right;
+		d = data->scene.camera.right;
 		if (data->is_move == 2)
-			d = 1;
+			dir = 1;
 		else
-			d = -1;
+			dir = -1;
 	}
 	else
 		return ;
-	delta = vec_scalar_mul(vec_scalar_mul(dir, d), 1);
+	d = vec_scalar_mul(vec_scalar_mul(d, dir), 1);
 	if (type == -1)
-		return (light_move(data, delta));
-	else
-		return (non_light_move(data, type, delta));
+		return (light_move(data, d));
+	return (non_light_move(data, type, d));
 }
 
-void non_light_rotate(t_minirt *data, t_vec axis, double d, int type)
+void	non_light_rotate(t_minirt *data, t_vec axis, double d, int type)
 {
-	t_objs *tmp;
+	t_objs	*tmp;
 
 	tmp = data->scene.objs;
 	while (tmp)
@@ -238,11 +234,11 @@ void non_light_rotate(t_minirt *data, t_vec axis, double d, int type)
 	}
 }
 
-void object_rotate(t_minirt *data, int type)
+void	object_rotate(t_minirt *data, int type)
 {
-	t_objs *tmp;
-	t_vec axis;
-	double d;
+	t_objs	*tmp;
+	t_vec	axis;
+	double	d;
 
 	if (data->is_move == 126 || data->is_move == 125)
 	{
@@ -265,12 +261,12 @@ void object_rotate(t_minirt *data, int type)
 	non_light_rotate(data, axis, d, type);
 }
 
-
-int	keypress(int keycode, t_minirt* vars)
+int	keypress(int keycode, t_minirt *vars)
 {
 	if (keycode == W || keycode == A || keycode == S || keycode == D)
 		key_press_move(vars, keycode);
-	else if (keycode == UP || keycode == LEFT || keycode == RIGHT || keycode == DOWN)
+	else if (keycode == UP || keycode == LEFT
+		|| keycode == RIGHT || keycode == DOWN)
 		key_press_rotate(vars, keycode);
 	else if (keycode == 15 || keycode == 35
 		|| keycode == 18 || keycode == 19 || keycode == 20)
@@ -280,9 +276,8 @@ int	keypress(int keycode, t_minirt* vars)
 	return (0);
 }
 
-int	keyrelease(int keycode, t_minirt* vars)
+int	keyrelease(int keycode, t_minirt *vars)
 {
-	// printf("key release=%d\n", keycode);
 	if (keycode == 13)
 		vars->is_move = -1;
 	else if (keycode == 0)
@@ -302,7 +297,7 @@ int	keyrelease(int keycode, t_minirt* vars)
 	return (0);
 }
 
-int scroll(int mousecode, int x, int y, t_minirt *vars)
+int	scroll(int mousecode, int x, int y, t_minirt *vars)
 {
 	if (vars->is_trace != 0)
 		printf("cannot zoom here\n");
@@ -329,26 +324,28 @@ void	key_press_rotate(t_minirt *vars, int keycode)
 		vars->is_move = keycode;
 }
 
+void	object_select_mode(t_minirt *vars, int keycode)
+{
+	if (vars->mode == 0)
+	{
+		if (keycode == 18)
+			vars->mode = SP;
+		else if (keycode == 19)
+			vars->mode = CY;
+		else if (keycode == 20)
+			vars->mode = -1;
+	}
+	else if (vars->mode != 0)
+		vars->mode = 0;
+}
+
 void	key_press_mode_change(t_minirt *vars, int keycode)
 {
 	if (vars->is_trace == 0)
 	{
 		if (keycode == 18 || keycode == 19 || keycode == 20)
-		{
-			if (vars->mode == 0)
-			{
-				if (keycode == 18)
-					vars->mode = SP;
-				else if (keycode == 19)
-					vars->mode = CY;
-				else if (keycode == 20)
-					vars->mode = -1;
-			}
-			else if (vars->mode != 0)
-				vars->mode = 0;
-			return ;
-		}
-		if (keycode == 15)
+			return (object_select_mode(vars, keycode));
+		else if (keycode == 15)
 			vars->is_trace = 1;
 		else if (keycode == 35)
 			vars->is_trace = 2;
