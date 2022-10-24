@@ -6,7 +6,7 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:29:03 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 18:29:55 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 19:24:44 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,35 +81,6 @@ int	find_hitpoint_path(t_ray *ray, t_objs *objs,
 	return (1);
 }
 
-void	hit_caps(t_objs *cy, t_ray *ray, t_hit_record *rec)
-{
-	t_objs			top_cap;
-	t_hit_record	hr;
-	t_hit_record	hr2;
-
-	set_vec(&top_cap.center, cy->dir.x, cy->dir.y, cy->dir.z);
-	top_cap.center = unit_vec(top_cap.center);
-	top_cap.center = vec_scalar_mul(top_cap.center, cy->height);
-	top_cap.center = vec_sum(top_cap.center, cy->center);
-	set_vec(&top_cap.dir, cy->dir.x, cy->dir.y, cy->dir.z);
-	set_vec(&top_cap.color, cy->color.x, cy->color.y, cy->color.z);
-	top_cap.mat = cy->mat;
-	top_cap.refraction = cy->refraction;
-	top_cap.specular = cy->specular;
-	top_cap.fuzzy = cy->fuzzy;
-	hr = *rec;
-	hr2 = *rec;
-	hit_plane(&top_cap, ray, &hr);
-	if (powf(hr.p.x - top_cap.center.x, 2) + powf(hr.p.y - top_cap.center.y, 2) + powf(hr.p.z - top_cap.center.z, 2) <= powf(cy->radius, 2))
-	{
-		hr2 = hr;
-		*rec = hr;
-	}
-	hit_plane(cy, ray, &hr2);
-	if (powf(hr2.p.x - cy->center.x, 2) + powf(hr2.p.y - cy->center.y, 2) + powf(hr2.p.z - cy->center.z, 2) <= powf(cy->radius, 2))
-		*rec = hr2;
-}
-
 void	set_record(t_objs *s, t_ray *r, t_hit_record *rec, double root)
 {
 	rec->t = root;
@@ -119,111 +90,6 @@ void	set_record(t_objs *s, t_ray *r, t_hit_record *rec, double root)
 	rec->specular = s->specular;
 	rec->fuzzy = s->fuzzy;
 	rec->type = s->type;
-}
-
-void	hit_sphere(t_objs *s, t_ray *r, t_hit_record *rec)
-{
-	t_hit_record	hr;
-	t_vec			oc;
-	t_discriminant	d;
-	double			root;
-
-	oc = vec_sub(r->origin, s->center);
-	d.a = vdot((r->dir), (r->dir));
-	d.b = vdot(oc, (r->dir));
-	d.c = vdot(oc, oc) - s->radius * s->radius;
-	d.dsc = d.b * d.b - d.a * d.c;
-	if (d.dsc < 0)
-		return ;
-	root = (-d.b - sqrt(d.dsc)) / d.a;
-	if (root < EPS || (rec->t != -1 && rec->t < root))
-	{
-		root = (-d.b + sqrt(d.dsc)) / d.a;
-		if (root < EPS || (rec->t != -1 && rec->t < root))
-			return ;
-	}
-	rec->p = ray_end(r, root);
-	set_face_normal(rec, r,
-		vec_division(vec_sub(rec->p, s->center), s->radius));
-	set_record(s, r, rec, root);
-}
-
-void	hit_cylinder(t_objs *cy, t_ray *ray, t_hit_record *rec)
-{
-	double			m;
-	t_vec			oc;
-	t_discriminant	d;
-    t_vec			normalized;
-    double			h1;
-	double			h2;
-	double			root;
-
-    normalized = unit_vec(cy->dir);
-	oc = vec_sub(ray->origin, cy->center);
-	d.a = vdot(ray->dir, ray->dir) - (vdot(ray->dir, normalized)
-			* vdot(ray->dir, normalized));
-	d.b = 2 * (vdot(ray->dir, oc) - (vdot(ray->dir, normalized)
-				* vdot(oc, normalized)));
-	d.c = vdot(oc, oc)
-		- (vdot(oc, normalized) * vdot(oc, normalized))
-		- (cy->radius) * (cy->radius);
-	d.dsc = d.b * d.b - 4 * d.a * d.c;
-	if (d.dsc < EPS)
-		return ;
-	else
-	{
-		d.t1 = (-d.b + sqrt(d.dsc)) / (2 * d.a);
-		d.t2 = (-d.b - sqrt(d.dsc)) / (2 * d.a);
-		if (d.t1 < EPS)
-			return ;
-		else
-		{
-			h1 = vdot(ray->dir, normalized) * d.t1 + vdot(oc, normalized);
-			h2 = vdot(ray->dir, normalized) * d.t2 + vdot(oc, normalized);
-			if (h2 >= EPS && h2 <= cy->height)
-				root = d.t2;
-			else if (h1 >= EPS && h1 <= cy->height)
-				root = d.t1;
-			else
-				return ;
-		}
-	}
-	if (root < EPS || (rec->t != -1 && rec->t < root))
-		return ;
-	set_record(cy, ray, rec, root);
-	rec->p = vec_sum(ray->origin, vec_scalar_mul(ray->dir, root));
-	oc = unit_vec(cy->dir);
-	m = vdot(ray->dir, vec_scalar_mul(oc, root))
-		+ vdot(vec_sub(ray->origin, cy->center), oc);
-	set_face_normal(rec, ray, unit_vec(vec_sub(vec_sub(rec->p,
-					cy->center), vec_scalar_mul(oc, m))));
-}
-
-void	hit_plane(t_objs *pl, t_ray *ray, t_hit_record* rec)
-{
-	t_vec	x;
-	t_vec	normal;
-	double	b;
-	double	a;
-	double	root;
-
-	normal = unit_vec(pl->dir);
-	x = vec_sub(ray->origin, pl->center);
-	b = vdot(ray->dir, normal);
-	if (b != 0)
-	{
-		a = vdot(x, normal);
-		root = -a / b;
-		if (root < EPS)
-			return ;
-	}
-	else
-		return ;
-	if (root < EPS || (rec->t != -1 && rec->t < root))
-		return ;
-	set_record(pl, ray, rec, root);
-	rec->p = vec_sum(ray->origin, vec_scalar_mul(ray->dir, root));
-	set_face_normal(rec, ray, pl->dir);
 }
 
 void hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record* rec)

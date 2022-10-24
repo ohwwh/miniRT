@@ -8,6 +8,7 @@ SRCS = main.c parse.c parse_objs.c utils.c parse_equip.c \
 		render.c vector.c ray.c color.c \
 		move.c hit.c random.c camera.c ray_hoh.c objects.c ft_mlx.c\
 		vector2.c vector3.c parse_utils.c \
+		hit_sphere.c hit_plane.c hit_cylinder.c \
 		tests.c
 INCS = ./includes/
 OBJS = $(SRCS:.c=.o)
