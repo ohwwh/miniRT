@@ -17,9 +17,9 @@ void set_face_normal(t_hit_record* rec, t_ray *ray, t_vec outward_normal)
 {
 	rec->front_face = vdot(ray->dir, outward_normal) < 0.0;
 	if (rec->front_face != 0)
-		rec->normal = outward_normal;
+		rec->normal = unit_vec(outward_normal);
 	else
-		rec->normal = vec_scalar_mul(outward_normal, -1);
+		rec->normal = vec_scalar_mul(unit_vec(outward_normal), -1);
 }
 
 int find_hitpoint_light(t_ray* ray, t_light *light, t_hit_record* rec)
@@ -29,21 +29,21 @@ int find_hitpoint_light(t_ray* ray, t_light *light, t_hit_record* rec)
 	temp = light;
 	while (temp)
     {
-        if (temp->object->type == SP)
-            hit_sphere(temp->object, ray, rec);
-        else if (temp->object->type == PL)
-			hit_plane(temp->object, ray, rec);
-        else if (temp->object->type == CY)
+        if (temp->object.type == SP)
+            hit_sphere(&temp->object, ray, rec);
+        else if (temp->object.type == PL)
+			hit_plane(&temp->object, ray, rec);
+        else if (temp->object.type == CY)
         {
-            hit_cylinder(temp->object, ray, rec);
-			hit_caps(temp->object, ray, rec);
+            hit_cylinder(&temp->object, ray, rec);
+			hit_caps(&temp->object, ray, rec);
         }
-/*		else if (temp->object->type == 4)
-			hit_rectangle_xy(temp->object, ray, rec);
-		else if (temp->object->type == 5)
-			hit_rectangle_yz(temp->object, ray, rec);
-		else if (temp->object->type == 6)
-			hit_rectangle_xz(temp->object, ray, rec);*/
+		/*else if (temp->object.type == 4)
+			hit_rectangle_xy(&temp->object, ray, rec);
+		else if (temp->object.type == 5)
+			hit_rectangle_yz(&temp->object, ray, rec);
+		else if (temp->object.type == 6)
+			hit_rectangle_xz(&temp->object, ray, rec);*/
         temp = temp->next;
     }
 	return (1);
@@ -68,7 +68,7 @@ int find_hitpoint_path(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* r
             hit_cylinder(tmp, ray, rec);
 			hit_caps(tmp, ray, rec);
         }
-/*		else if (tmp->type == 4)
+		/*else if (tmp->type == 4)
 			hit_rectangle_xy(tmp, ray, rec);
 		else if (tmp->type == 5)
 			hit_rectangle_yz(tmp, ray, rec);
@@ -76,7 +76,7 @@ int find_hitpoint_path(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* r
 			hit_rectangle_xz(tmp, ray, rec);*/
         tmp = tmp->next;
     }
-	if (!light && light->count != 0)
+	if (light && light->count != 0)
 		find_hitpoint_light(ray, light, rec);
     return (1);
 }
@@ -96,6 +96,7 @@ void hit_caps(t_objs *cy, t_ray *ray, t_hit_record *rec)
 	top_cap.mat = cy->mat;
 	top_cap.refraction = cy->refraction;
 	top_cap.specular = cy->specular;
+	top_cap.fuzzy = cy->fuzzy;
 	hr = *rec;
 	hr2 = *rec;
 	hit_plane(&top_cap, ray, &hr);
@@ -132,12 +133,12 @@ void hit_sphere(t_objs* s, t_ray* r, t_hit_record* rec)
 	}
 	rec->t = root;
 	rec->p = ray_end(r, root);
-	rec->tmax = root;
 	set_face_normal(rec, r, vec_division(vec_sub(rec->p, s->center), s->radius));
 	rec->color = s->color;
 	rec->mat = s->mat;
 	rec->refraction = s->refraction;
 	rec->specular = s->specular;
+	rec->fuzzy = s->fuzzy;
 	rec->type = s->type;
 }
 
@@ -184,10 +185,10 @@ void hit_cylinder(t_objs *cy, t_ray *ray, t_hit_record *rec)
 	if (root < EPS || (rec->t != -1 && rec->t < root))
 		return ;
 	rec->t = root;
-	rec->tmax = root;
 	rec->mat = cy->mat;
 	rec->refraction = cy->refraction;
 	rec->specular = cy->specular;
+	rec->fuzzy = cy->fuzzy;
 	rec->color = cy->color;
 	rec->p = vec_sum(ray->origin, vec_scalar_mul(ray->dir, root));
 	oc = unit_vec(cy->dir);
@@ -225,12 +226,9 @@ void hit_plane(t_objs *pl, t_ray *ray, t_hit_record* rec)
 	rec->mat = pl->mat;
 	rec->refraction = pl->refraction;
 	rec->specular = pl->specular;
+	rec->fuzzy = pl->fuzzy;
 	rec->color = pl->color;
 	rec->p = vec_sum(ray->origin, vec_scalar_mul(ray->dir, root));
-	//rec->normal = pl->dir;
-	/*if (vdot(ray->dir, rec->normal) > __DBL_EPSILON__) // 부동 소수점 오차 범위 내에서 비교
-		rec->normal = unit_vec(vec_scalar_mul(pl->dir, -1));*/
-	//rec->front_face = front_face(ray, rec);
 	set_face_normal(rec, ray, pl->dir);
 }
 
@@ -244,13 +242,12 @@ void hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record* rec)
     if (x < rect->center.x || x > rect->center.y
 	|| y < rect->dir.x || y > rect->dir.y)
         return ;
-   // rec->u = (x - rect->center.x) / (rect->center.y - rect->center.x);
-    //rec->v = (y - rect->dir.x) / (rect->dir.y - rect->dir.x);
     rec->t = t;
 	rec->tmax = t;
 	rec->mat = rect->mat;
 	rec->refraction = rect->refraction;
 	rec->specular = rect->specular;
+	rec->fuzzy = rect->fuzzy;
     set_face_normal(rec, ray, create_vec(0, 0, 1));
     rec->p = ray_end(ray, t);
 	rec->color = rect->color;
@@ -266,13 +263,12 @@ void hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record* rec)
     if (y < rect->center.x || y > rect->center.y
 	|| z < rect->dir.x || z > rect->dir.y)
         return ;
-    //rec->u = (y - rect->center.x) / (rect->center.y - rect->center.x);
-    //rec->v = (z - rect->dir.x) / (rect->dir.y - rect->dir.x);
     rec->t = t;
 	rec->tmax = t;
 	rec->mat = rect->mat;
 	rec->refraction = rect->refraction;
 	rec->specular = rect->specular;
+	rec->fuzzy = rect->fuzzy;
     set_face_normal(rec, ray, create_vec(1, 0, 0));
     rec->p = ray_end(ray, t);
 	rec->color = rect->color;
@@ -288,12 +284,11 @@ void hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record* rec)
     if (x < rect->center.x || x > rect->center.y
 	|| z < rect->dir.x || z > rect->dir.y)
         return ;
-    //rec->u = (x - rect->center.x) / (rect->center.y - rect->center.x);
-    //rec->v = (z - rect->dir.x) / (rect->dir.y - rect->dir.x);
     rec->t = t;
 	rec->tmax = t;
 	rec->mat = rect->mat;
 	rec->refraction = rect->refraction;
+	rec->fuzzy = rect->fuzzy;
 	rec->specular = rect->specular;
     set_face_normal(rec, ray, create_vec(0, 1, 0));
     rec->p = ray_end(ray, t);

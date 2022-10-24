@@ -19,8 +19,13 @@ t_light	*alloc_light(t_scene *sc)
 	new_light = malloc(sizeof(t_light));
 	if (!new_light)
 		err_handler("allocation failed\n");
+	if (!sc->light)
+		new_light->count = 1;
+	else
+		new_light->count = sc->light->count + 1;
 	new_light->next = sc->light;
 	sc->light = new_light;
+
 	return (new_light);
 }
 

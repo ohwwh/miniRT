@@ -32,8 +32,8 @@
 # define STEP 5
 # define MAX_DEPTH 50
 
-# define HEIGHT 600
-# define WIDTH 900
+# define HEIGHT 320
+# define WIDTH 640
 
 # define CY 1
 # define PL 2
@@ -118,13 +118,15 @@ typedef struct s_objs
 	int				mat;
 	double			refraction;
 	double			specular;
+	double			fuzzy;
 }	t_objs;
 
 typedef struct s_light
 {
 	t_vec			src;
 	double			ratio;
-	t_objs			*object;
+	double			distance;
+	t_objs			object;
 	int				count;
 	struct s_light	*next;
 }	t_light;
@@ -146,7 +148,7 @@ typedef struct s_ray
 	t_vec	color;
 }	t_ray;
 
-typedef struct s_hit_hit_record
+typedef struct s_hit_record
 {
 	t_vec		p;
 	t_vec		normal;
@@ -156,8 +158,9 @@ typedef struct s_hit_hit_record
 	t_bool		front_face;
 	t_vec		color;
 	int			mat;
-	int			refraction;
-	int			specular;
+	double		refraction;
+	double		specular;
+	double		fuzzy;
 	int			type;
 }	t_hit_record;
 
@@ -168,6 +171,7 @@ typedef struct s_minirt
 	t_ray		ray;
 	int			is_move;
 	int			is_trace;
+	int			mode;
 	double		u;
 	double		v;
 	int			x;
@@ -200,6 +204,7 @@ t_light	*alloc_light(t_scene *sc);
 void	parse_ambient(t_scene *sc, char **tokens);
 void	parse_camera(t_scene *sc, char **tokens);
 void	parse_light(t_scene *sc, char **tokens);
+int 	create_light_object(t_scene* scene);
 
 double	ft_atod(const char *str);
 void	free_split(char **s);
@@ -228,8 +233,8 @@ t_vec calcul_ratio(t_vec col1, t_vec col2, double ratio);
 t_vec	calcul_color(t_scene *sc, t_hit_record hr, t_vec amb, t_ray ray);
 
 
-t_color ray_color(t_ray r, t_objs* world, t_light* light, int depth);
-t_color ray_color_2(t_ray r, t_objs* world, t_light* light);
+t_color ray_color(t_ray r, t_scene* sc, int depth);
+t_color ray_color_raw(t_ray r, t_scene* sc);
 
 t_hit_record find_hitpoint(t_ray *ray, t_objs *objs);
 int find_hitpoint_path(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* rec);
@@ -259,7 +264,7 @@ int	ft_close(t_minirt *data);
 t_vec	reflect(t_vec v, t_vec n);
 
 
-void path_render(t_minirt vars);
+void path_render(t_minirt *vars);
 int		convert_rgb(int r, int g, int b);
 
 
