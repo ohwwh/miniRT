@@ -6,7 +6,7 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 18:15:30 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 19:22:48 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,8 @@ void			hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record *rec);
 t_point			ray_end(t_ray *ray, double t);
 void			set_face_normal(t_hit_record *rec,
 					t_ray *ray, t_vec outward_normal);
+
+void			set_record(t_objs *s, t_ray *r, t_hit_record *rec, double root);
 
 int				keypress(int keycode, t_minirt *vars);
 int				keyrelease(int keycode, t_minirt *vars);
