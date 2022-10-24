@@ -78,6 +78,15 @@ void	path_render(t_minirt *v)
 	mlx_put_image_to_window(v->mlx.mlx, v->mlx.mlx_win, v->mlx.img, 0, 0);
 }
 
+set_init_distance(t_minirt *data)
+{
+	data->scene.camera.distance = vec_len(vec_sub(data->scene.camera.origin,
+				data->scene.objs->center));
+	data->scene.light->distance = vec_len(vec_sub(data->scene.light->object.center, 
+				data->scene.objs->center));
+	//빛이 없는 경우 / 오브젝트가 없는 경우?
+}
+
 int	main(int ac, char **av)
 {
 	t_minirt	data;
@@ -88,15 +97,9 @@ int	main(int ac, char **av)
 	fd = open(av[1], O_RDONLY);
 	init_rt(&data);
 	parse(&data.scene, fd);
-	data.scene.camera.distance = vec_len(vec_sub(data.scene.camera.origin,
-				data.scene.objs->center));
-	data.scene.light->distance = vec_len(vec_sub(data.scene.light->object.center, 
-				data.scene.objs->center));
-	//빛이 없는 경우 / 오브젝트가 없는 경우?
+	set_init_distance(&data);
 	create_light_object(&data.scene);
 	set_camera(&data.scene.camera);
-	//data.scene.light = 0;
-	//data.scene.amb.ratio = 1;
 	path_render(&data);
 	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
 	mlx_hook(data.mlx.mlx_win, 3, 0, &keyrelease, &data);

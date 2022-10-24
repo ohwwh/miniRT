@@ -23,7 +23,7 @@ void	set_light_attribute(t_scene *sc, double min)
 		tmp->object.color = create_vec(45, 45, 45);
 		tmp->object.type = SP;
 		tmp->object.mat = -1;
-		tmp->object.radius = min / 4 * sc->light->distance;
+		tmp->object.radius = min / 2;
 		tmp->object.next = 0;
 		tmp = tmp->next;
 	}
@@ -87,8 +87,8 @@ t_vec	reflect(t_vec v, t_vec n)
 
 t_vec	random_to_sphere(double radius, double distance_squared)
 {
-	double	r1 = random_double(0,1,7);
-	double	r2 = random_double(0,1,7);
+	double	r1 = random_double(0, 1, 7);
+	double	r2 = random_double(0, 1, 7);
 	double	z = 1 + r2 * (sqrt(1 - radius * radius / distance_squared) - 1);
 
 	double	phi = 2 * PI * r1;
@@ -284,7 +284,7 @@ double	scatter_refraction(t_ray *r, t_hit_record *rec, t_ray *scattered)
 {
 	t_vec			dir;
 	double			ref_ratio;
-	const double	cos 
+	const double	cos
 		= fmin(vdot(vec_scalar_mul(unit_vec(r->dir), -1), rec->normal), 1);
 	const double	sin = sqrt(1.0 - cos * cos);
 
@@ -294,8 +294,8 @@ double	scatter_refraction(t_ray *r, t_hit_record *rec, t_ray *scattered)
 		ref_ratio = 1.0 / rec->refraction;
 	else
 		ref_ratio = rec->refraction;
-	if (ref_ratio * sin > 1.0 ||
-	reflectance(cos, ref_ratio) > random_double(0, 1, 7))
+	if (ref_ratio * sin > 1.0
+		|| reflectance(cos, ref_ratio) > random_double(0, 1, 7))
 		dir = reflect(unit_vec(r->dir), rec->normal);
 	else
 		dir = refract(unit_vec(r->dir), rec->normal, ref_ratio, cos);
@@ -308,8 +308,8 @@ double	scatter_reflect(t_ray *r, t_hit_record *rec, t_ray *scattered)
 	t_vec	fuzziness;
 
 	fuzziness = vec_scalar_mul(rand_sphere(), rec->fuzzy);
-	*scattered = 
-		ray(rec->p, vec_sum(reflect(unit_vec(r->dir), rec->normal), fuzziness));
+	*scattered = ray(rec->p,
+			vec_sum(reflect(unit_vec(r->dir), rec->normal), fuzziness));
 	if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
 		rec->color = create_vec(0, 0, 0);
 	return (1);
@@ -348,6 +348,16 @@ double	scatter(t_ray *r, t_hit_record *rec, t_ray *scattered, t_light *light)
 		return (1);
 }
 
+t_color	get_sky_color(t_ray r)
+{
+	double	t;
+
+	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
+	return (create_vec(
+			(1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t),
+			(1.0 - t) + (1.0 * t)));
+}
+
 t_color	ray_color_raw(t_ray r, t_scene *sc)
 {
 	t_hit_record	rec;
@@ -358,11 +368,7 @@ t_color	ray_color_raw(t_ray r, t_scene *sc)
 	if (rec.t > EPS)
 		return (rec.color);
 	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
-	return (vec_scalar_mul(
-		create_vec(
-			(1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)),
-			1)
-	);
+	return (vec_scalar_mul(get_sky_color(r), 1));
 }
 
 t_color	ray_color(t_ray r, t_scene *sc, int depth)
@@ -371,10 +377,10 @@ t_color	ray_color(t_ray r, t_scene *sc, int depth)
 	t_ray			scattered;
 	double			t;
 	double			pdf;
-	
+
 	rec.t = -1.0;
 	if (depth <= 0)
-		return (create_vec(0,0,0));
+		return (create_vec(0, 0, 0));
 	find_hitpoint_path(&r, sc->objs, sc->light, &rec);
 	if (rec.t >= EPS)
 	{
@@ -390,9 +396,5 @@ t_color	ray_color(t_ray r, t_scene *sc, int depth)
 		return (r.color);
 	}
 	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
-	return (vec_scalar_mul(
-		create_vec(
-			(1.0 - t) + (0.5 * t), (1.0 - t) + (0.7 * t), (1.0 - t) + (1.0 * t)), 
-			sc->amb.ratio * 0.5)
-	);
+	return (vec_scalar_mul(get_sky_color(r), sc->amb.ratio * 0.5));
 }
