@@ -38,6 +38,7 @@ t_objs create_sphere(t_point c, double r, t_color color, int mat)
 	ret.mat = mat;
 	ret.refraction = 1.5;
 	ret.specular = 0.6;
+	ret.fuzzy = 0;
 	return (ret);
 }
 
@@ -54,6 +55,7 @@ t_objs create_cylinder(t_point c, double r, double h, t_vec dir, t_color color, 
 	ret.mat = mat;
 	ret.refraction = 1.5;
 	ret.specular = 0.6;
+	ret.fuzzy = 0;
 	return (ret);
 }
 
@@ -68,6 +70,7 @@ t_objs create_plane(t_point c, t_vec dir, t_color color, int mat)
 	ret.mat = mat;
 	ret.refraction = 1.5;
 	ret.specular = 0;
+	ret.fuzzy = 0;
 	return (ret);
 }
 
@@ -83,6 +86,7 @@ t_objs create_rectangle_xy(t_vec x, t_vec y, double k, t_color color, int mat)
 	ret.mat = mat;
 	ret.refraction = 1.5;
 	ret.specular = 0;
+	ret.fuzzy = 0;
 
 	return (ret);
 }
@@ -99,6 +103,7 @@ t_objs create_rectangle_yz(t_vec y, t_vec z, double k, t_color color, int mat)
 	ret.mat = mat;
 	ret.refraction = 1.5;
 	ret.specular = 0;
+	ret.fuzzy = 0;
 
 	return (ret);
 }
@@ -115,6 +120,7 @@ t_objs create_rectangle_xz(t_vec x, t_vec z, double k, t_color color, int mat)
 	ret.mat = mat;
 	ret.refraction = 1.5;
 	ret.specular = 0;
+	ret.fuzzy = 0;
 
 	return (ret);
 }

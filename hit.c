@@ -84,6 +84,7 @@ void hit_caps(t_objs *cy, t_ray *ray, t_hit_record *rec)
 	top_cap.mat = cy->mat;
 	top_cap.refraction = cy->refraction;
 	top_cap.specular = cy->specular;
+	top_cap.fuzzy = cy->fuzzy;
 	hr = *rec;
 	hr2 = *rec;
 	hit_plane(&top_cap, ray, &hr);
@@ -126,6 +127,7 @@ void hit_sphere(t_objs* s, t_ray* r, t_hit_record* rec)
 	rec->mat = s->mat;
 	rec->refraction = s->refraction;
 	rec->specular = s->specular;
+	rec->fuzzy = s->fuzzy;
 	rec->type = s->type;
 }
 
@@ -176,6 +178,7 @@ void hit_cylinder(t_objs *cy, t_ray *ray, t_hit_record *rec)
 	rec->mat = cy->mat;
 	rec->refraction = cy->refraction;
 	rec->specular = cy->specular;
+	rec->fuzzy = cy->fuzzy;
 	rec->color = cy->color;
 	rec->p = vec_sum(ray->origin, vec_scalar_mul(ray->dir, root));
 	oc = unit_vec(cy->dir);
@@ -213,6 +216,7 @@ void hit_plane(t_objs *pl, t_ray *ray, t_hit_record* rec)
 	rec->mat = pl->mat;
 	rec->refraction = pl->refraction;
 	rec->specular = pl->specular;
+	rec->fuzzy = pl->fuzzy;
 	rec->color = pl->color;
 	rec->p = vec_sum(ray->origin, vec_scalar_mul(ray->dir, root));
 	//rec->normal = pl->dir;
@@ -239,6 +243,7 @@ void hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record* rec)
 	rec->mat = rect->mat;
 	rec->refraction = rect->refraction;
 	rec->specular = rect->specular;
+	rec->fuzzy = rect->fuzzy;
     set_face_normal(rec, ray, create_vec(0, 0, 1));
     rec->p = ray_end(ray, t);
 	rec->color = rect->color;
@@ -261,6 +266,7 @@ void hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record* rec)
 	rec->mat = rect->mat;
 	rec->refraction = rect->refraction;
 	rec->specular = rect->specular;
+	rec->fuzzy = rect->fuzzy;
     set_face_normal(rec, ray, create_vec(1, 0, 0));
     rec->p = ray_end(ray, t);
 	rec->color = rect->color;
@@ -282,6 +288,7 @@ void hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record* rec)
 	rec->tmax = t;
 	rec->mat = rect->mat;
 	rec->refraction = rect->refraction;
+	rec->fuzzy = rect->fuzzy;
 	rec->specular = rect->specular;
     set_face_normal(rec, ray, create_vec(0, 1, 0));
     rec->p = ray_end(ray, t);

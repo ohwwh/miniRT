@@ -118,6 +118,7 @@ typedef struct s_objs
 	int				mat;
 	double			refraction;
 	double			specular;
+	double			fuzzy;
 }	t_objs;
 
 typedef struct s_light
@@ -159,6 +160,7 @@ typedef struct s_hit_record
 	int			mat;
 	double		refraction;
 	double		specular;
+	double		fuzzy;
 	int			type;
 }	t_hit_record;
 
