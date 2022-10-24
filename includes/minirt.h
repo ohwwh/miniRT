@@ -6,7 +6,7 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 18:01:12 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 18:15:30 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include "random.h"
 
 # define PI 3.14159265358979323846
-# define EPS 0.001
 # define LUMEN 3 
 # define ROTATE 0.1
 # define STEP 5
