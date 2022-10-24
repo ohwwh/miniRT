@@ -23,10 +23,10 @@ int create_light_object(t_scene *sc)
 	while (temp)
 	{
 		temp->object.center = temp->src;
-		temp->object.color = create_vec(15, 15, 15);
+		temp->object.color = create_vec(45, 45, 45);
 		temp->object.type = SP;
 		temp->object.mat = -1;
-		temp->object.radius = min * 3;
+		temp->object.radius = min / 2;
 		temp->object.next = 0;
 		temp = temp->next;
 	}

@@ -124,6 +124,7 @@ typedef struct s_light
 {
 	t_vec			src;
 	double			ratio;
+	double			distance;
 	t_objs			object;
 	int				count;
 	struct s_light	*next;
@@ -146,7 +147,7 @@ typedef struct s_ray
 	t_vec	color;
 }	t_ray;
 
-typedef struct s_hit_hit_record
+typedef struct s_hit_record
 {
 	t_vec		p;
 	t_vec		normal;

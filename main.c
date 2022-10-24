@@ -83,6 +83,9 @@ int	main(int ac, char **av)
 
 	data.scene.camera.distance = vec_len(vec_sub(data.scene.camera.origin, 
 	data.scene.objs->center));
+	//data.scene.light->distance = vec_len(vec_sub(data.scene.light->object.center, 
+	//data.scene.objs->center));
+	//빛이 없는 경우 / 오브젝트가 없는 경우?
 
 	create_light_object(&data.scene);
 	set_camera(&data.scene.camera);
