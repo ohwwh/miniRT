@@ -351,7 +351,6 @@ double scattering_pdf(t_ray* scattered, t_hit_record* rec)
 
 double scatter_refraction(t_ray* r, t_hit_record* rec, t_ray* scattered)
 {
-	//t_vec attenuation;
 	t_vec dir;
 	double ref_ratio;
 	const double cos = fmin(vdot(vec_scalar_mul(unit_vec(r->dir), -1), rec->normal), 1.0);
@@ -359,13 +358,10 @@ double scatter_refraction(t_ray* r, t_hit_record* rec, t_ray* scattered)
 
 	if (rec->refraction == 0)
 		printf("refraction is not set\n");
-	//attenuation = create_vec(1, 1, 1);
-	
 	if (rec->front_face)
 		ref_ratio = 1.0 / rec->refraction;
 	else
 		ref_ratio = rec->refraction;
-
 	if (ref_ratio * sin > 1.0 || 
 	reflectance(cos, ref_ratio) > random_double(0,1,7))
 		dir = reflect(unit_vec(r->dir), rec->normal);
@@ -381,7 +377,6 @@ double scatter_reflect(t_ray* r, t_hit_record* rec, t_ray* scattered)
 
 	fuzziness = vec_scalar_mul(rand_sphere(), rec->fuzzy);
 	*scattered = ray(rec->p, vec_sum(reflect(unit_vec(r->dir), rec->normal), fuzziness));
-	//*scattered = ray(rec->p, reflect(unit_vec(r->dir), rec->normal));
 	if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
 		rec->color = create_vec(0, 0, 0);
 	return (1);
@@ -410,40 +405,7 @@ double scatter(t_ray* r, t_hit_record* rec, t_ray* scattered, t_light* light)
 	double pdf;
 
 	if (rec->mat == 0)
-	{
-		//코사인 분포를 따르는 랜덤 난반사 구현
-		/*uvw = create_onb(rec->normal);
-		dir = local(&uvw, random_cosine_direction()); //코사인 분포를 따르는 랜덤 벡터를 생성
-		*scattered = ray(rec->p, unit_vec(dir)); //난반사
-		//pdf = vdot(uvw.w, scattered->dir) / pi;
-		pdf = cosine_pdf_value(&(rec->normal), &(uvw.w)); // 이부분 진심으로 이해가 안간다*/
-
-
-		//광원을 샘플링. 
-		//ray(rec->p, unit_vec(dir))에서 위에서 생성한 dir대신 
-		//각 광원의 크기에 한정하여 랜덤 생성한 벡터를 집어넣는다.
-		//일단 xz사각형 광원만
-		/*t_point random_point;
-		t_vec ray_path;
-
-		random_point = create_vec(random_double(light->center.x, light->center.y, 7), light->radius,
-		random_double(light->dir.x, light->dir.y, 7)); // 광원의 크기 안에서 벡터를 랜덤 생성
-		ray_path = vec_sub(random_point, rec->p); // ray를 쏜 곳(시선)으로부터 광원 속 랜덤 지점의 벡터
-		*scattered = ray(rec->p, ray_path);
-		pdf = light_pdf_value(scattered, light);*/
-
-		/*if (random_double(0,1,7) > rec->specular)
-			pdf = mixture_pdf_value(rec, scattered, light);
-		else
-		{
-			*scattered = ray(rec->p, reflect(unit_vec(r->dir), rec->normal));
-			if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
-				rec->color = create_vec(0, 0, 0);
-			return (1);
-		}
-		return (pdf);*/
 		return (scatter_diffuse(r, rec, scattered, light));
-	}
 	else if (rec->mat == 1)
 		return (scatter_reflect(r, rec, scattered));
 	else if (rec->mat == 2)

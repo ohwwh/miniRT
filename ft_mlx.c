@@ -22,6 +22,12 @@ double clamp(double x)
 
 int rgb_to_int(t_color c)
 {
+	if (c.x != c.x)
+		c.x = 0;
+	if (c.y != c.y)
+		c.y = 0;
+	if (c.z != c.z)
+		c.z = 0;
 	return ((int)(255.999 * 0) << 24 | (int)(255.999 * sqrt(clamp(c.x))) << 16 | (int)(255.999 * sqrt(clamp(c.y))) << 8 | (int)(255.999 * sqrt(clamp(c.z))));
 	//return ((int)(255.999 * (clamp(c.x))) << 16 | (int)(255.999 * (clamp(c.y))) << 8 | (int)(255.999 * (clamp(c.z))));
 } //감마보정?

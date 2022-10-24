@@ -83,6 +83,8 @@ int	main(int ac, char **av)
 
 	create_light_object(&data.scene);
 	set_camera(&data.scene.camera);
+	//data.scene.light = 0;
+	//data.scene.amb.ratio = 1;
 	path_render(&data);
 	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
 	mlx_hook(data.mlx.mlx_win, 3, 0, &keyrelease, &data);

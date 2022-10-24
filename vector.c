@@ -103,3 +103,10 @@ t_vec  vmin(t_vec vec1, t_vec vec2)
         vec1.z = vec2.z;
     return (vec1);
 }
+
+int near_zero(t_vec vec)
+{
+    const double s = 1e-8;
+
+    return ((fabs(vec.x) < s) && (fabs(vec.y) < s) && (fabs(vec.z) < s));
+}

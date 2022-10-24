@@ -70,5 +70,5 @@ void parse_plane(t_scene *sc, char **tokens)
 	obj->mat = 0;
 	obj->refraction = 1.5;
 	obj->specular = 0;
-	obj->fuzzy = 0;
+	obj->fuzzy = 0.5;
 }

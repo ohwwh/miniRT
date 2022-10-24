@@ -37,5 +37,6 @@ double	vdot(t_vec vec, t_vec vec2);
 t_vec	vcross(t_vec vec1, t_vec vec2);
 t_vec   unit_vec(t_vec vec);
 t_vec	vmin(t_vec vec1, t_vec vec2);
+int	near_zero(t_vec vec);
 
 #endif
