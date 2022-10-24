@@ -6,18 +6,18 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:28:52 by hako              #+#    #+#             */
-/*   Updated: 2022/10/21 20:28:53 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 18:57:55 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void object_move(t_minirt *data, int type);
+void	object_move(t_minirt *data, int type);
 
 int	ft_close(t_minirt *data)
 {
-	t_light *light;
-	t_objs *obj;
+	t_light	*light;
+	t_objs	*obj;
 
 	mlx_clear_window(data->mlx.mlx, data->mlx.mlx_win);
 	mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
@@ -37,7 +37,7 @@ int	ft_close(t_minirt *data)
 	exit(0);
 }
 
-t_vec rotate(t_vec axis, t_minirt* vars, int dir)
+t_vec	rotate(t_vec axis, t_minirt *vars, int dir)
 {
 	//double c = (1 - cos(dir * 0.1));
 	//double s = sin(dir * 0.1);
@@ -45,10 +45,10 @@ t_vec rotate(t_vec axis, t_minirt* vars, int dir)
 	//double y = axis.y;
 	//double z = axis.z;
 
-	t_vec new_dir;
-	const double i = vars->scene.camera.forward.x;
-	const double j = vars->scene.camera.forward.y;
-	const double k = vars->scene.camera.forward.z;
+	t_vec			new_dir;
+	const double	i = vars->scene.camera.forward.x;
+	const double	j = vars->scene.camera.forward.y;
+	const double	k = vars->scene.camera.forward.z;
 
 	new_dir.x = - i * (1 - cos(dir * 0.1)) * axis.y * axis.y 
 	- k * sin(dir * 0.1) * axis.y + (1 - cos(dir * 0.1)) * j * axis.x * axis.y 
@@ -64,11 +64,11 @@ t_vec rotate(t_vec axis, t_minirt* vars, int dir)
 	return (new_dir);
 }
 
-void camera_move(t_minirt* vars)
+void	camera_move(t_minirt *vars)
 {
-	t_vec dir;
-	t_vec delta;
-	double d;
+	t_vec	dir;
+	t_vec	delta;
+	double	d;
 
 	if (vars->is_move == 13 || vars->is_move == 1)
 	{
@@ -88,15 +88,16 @@ void camera_move(t_minirt* vars)
 	}
 	else
 		return ;
-	delta = vec_scalar_mul(vec_scalar_mul(dir, d), vars->scene.camera.distance / 10);
+	delta = vec_scalar_mul(vec_scalar_mul(dir, d),
+			vars->scene.camera.distance / 10);
 	vars->scene.camera.origin = vec_sum(vars->scene.camera.origin, delta);
 }
 
-void camera_rotate(t_minirt* vars)
+void	camera_rotate(t_minirt *vars)
 {
-	t_vec axis;
-	t_vec new_dir;
-	double d;
+	t_vec	axis;
+	t_vec	new_dir;
+	double	d;
 
 	if (vars->is_move == 126 || vars->is_move == 125)
 	{
@@ -121,9 +122,9 @@ void camera_rotate(t_minirt* vars)
 	vars->scene.camera.dir = new_dir;
 }
 
-void camera_zoom(t_minirt* vars)
+void	camera_zoom(t_minirt *vars)
 {
-	double new_fov;
+	double	new_fov;
 
 	if (vars->is_move == 4 || vars->is_move == 5)
 	{
@@ -143,7 +144,7 @@ void camera_zoom(t_minirt* vars)
 	}
 }
 
-int key_hook_move(t_minirt* vars)
+int	key_hook_move(t_minirt *vars)
 {
 	if (vars->scene.changed == 1)
 	{
@@ -171,9 +172,9 @@ int key_hook_move(t_minirt* vars)
 	return (1);
 }
 
-void light_move(t_minirt *vars, t_vec delta)
+void	light_move(t_minirt *vars, t_vec delta)
 {
-	t_light *tmp;
+	t_light	*tmp;
 
 	tmp = vars->scene.light;
 	while (tmp)
@@ -184,9 +185,9 @@ void light_move(t_minirt *vars, t_vec delta)
 	}
 }
 
-void non_light_move(t_minirt *vars, int type, t_vec delta)
+void	non_light_move(t_minirt *vars, int type, t_vec delta)
 {
-	t_objs *tmp;
+	t_objs	*tmp;
 
 	tmp = vars->scene.objs;
 	while (tmp)
@@ -197,12 +198,12 @@ void non_light_move(t_minirt *vars, int type, t_vec delta)
 	}
 }
 
-void object_move(t_minirt *data, int type)
+void	object_move(t_minirt *data, int type)
 {
-	t_vec dir;
-	t_vec delta;
-	t_objs *tmp;
-	double d;
+	t_vec	dir;
+	t_vec	delta;
+	t_objs	*tmp;
+	double	d;
 
 	if (data->is_move == 13 || data->is_move == 1)
 	{
@@ -229,10 +230,11 @@ void object_move(t_minirt *data, int type)
 		return (non_light_move(data, type, delta));
 }
 
-int transpose_light(t_minirt *data, t_keycode keycode, int *status)
+int	transpose_light(t_minirt *data, t_keycode keycode, int *status)
 {
-	t_light *light = data->scene.light;
+	t_light	*light;
 
+	light = data->scene.light;
 	*status = -1;
 	if (keycode == W)
 		light->src.y += STEP;
@@ -352,7 +354,7 @@ int	keyrelease(int keycode, t_minirt* vars)
 	return (0);
 }
 
-int scroll(int mousecode, int x, int y, t_minirt* vars)
+int scroll(int mousecode, int x, int y, t_minirt *vars)
 {
 	if (vars->is_trace == 1)
 		printf("cannot zoom here\n");
@@ -363,7 +365,7 @@ int scroll(int mousecode, int x, int y, t_minirt* vars)
 	return (0);
 }
 
-void key_press_move(t_minirt* vars, int keycode)
+void	key_press_move(t_minirt *vars, int keycode)
 {
 	if (vars->is_trace == 1)
 		printf("cannot move here\n");
@@ -371,7 +373,7 @@ void key_press_move(t_minirt* vars, int keycode)
 		vars->is_move = keycode;
 }
 
-void key_press_rotate(t_minirt* vars, int keycode)
+void	key_press_rotate(t_minirt *vars, int keycode)
 {
 	if (vars->is_trace == 1)
 		printf("cannot rotate here\n");
@@ -379,7 +381,7 @@ void key_press_rotate(t_minirt* vars, int keycode)
 		vars->is_move = keycode;
 }
 
-void key_press_mode_change(t_minirt* vars, int keycode)
+void	key_press_mode_change(t_minirt *vars, int keycode)
 {
 	if (vars->is_trace == 0)
 	{
@@ -396,7 +398,6 @@ void key_press_mode_change(t_minirt* vars, int keycode)
 				vars->mode = 0;
 			return ;
 		}
-
 		if (keycode == 15)
 			vars->is_trace = 1;
 		else if (keycode == 35)
