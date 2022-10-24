@@ -6,14 +6,13 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:29:03 by hako              #+#    #+#             */
-/*   Updated: 2022/10/21 20:29:04 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 18:03:05 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-#define EPS 0.001
 
-void set_face_normal(t_hit_record* rec, t_ray *ray, t_vec outward_normal)
+void	set_face_normal(t_hit_record *rec, t_ray *ray, t_vec outward_normal)
 {
 	rec->front_face = vdot(ray->dir, outward_normal) < 0.0;
 	if (rec->front_face != 0)
@@ -22,39 +21,39 @@ void set_face_normal(t_hit_record* rec, t_ray *ray, t_vec outward_normal)
 		rec->normal = vec_scalar_mul(unit_vec(outward_normal), -1);
 }
 
-int find_hitpoint_light(t_ray* ray, t_light *light, t_hit_record* rec)
+int	find_hitpoint_light(t_ray *ray, t_light *light, t_hit_record *rec)
 {
-	t_light *temp;
+	t_light	*temp;
 
 	temp = light;
 	while (temp)
-    {
-        if (temp->object.type == SP)
-            hit_sphere(&temp->object, ray, rec);
-        else if (temp->object.type == PL)
+	{
+		if (temp->object.type == SP)
+			hit_sphere(&temp->object, ray, rec);
+		else if (temp->object.type == PL)
 			hit_plane(&temp->object, ray, rec);
-        else if (temp->object.type == CY)
-        {
-            hit_cylinder(&temp->object, ray, rec);
+		else if (temp->object.type == CY)
+		{
+			hit_cylinder(&temp->object, ray, rec);
 			hit_caps(&temp->object, ray, rec);
-        }
+		}
 		/*else if (temp->object.type == 4)
 			hit_rectangle_xy(&temp->object, ray, rec);
 		else if (temp->object.type == 5)
 			hit_rectangle_yz(&temp->object, ray, rec);
 		else if (temp->object.type == 6)
 			hit_rectangle_xz(&temp->object, ray, rec);*/
-        temp = temp->next;
-    }
+		temp = temp->next;
+	}
 	return (1);
 }
 
-int find_hitpoint_path(t_ray* ray, t_objs *objs, t_light *light, t_hit_record* rec)
+int	find_hitpoint_path(t_ray *ray, t_objs *objs, t_light *light, t_hit_record *rec)
 {
-    t_objs *tmp;
-	int end;
-    
-    tmp = objs;
+	t_objs	*tmp;
+	int		end;
+
+	tmp = objs;
 	while (tmp)
     {
 		if (tmp->mat == -1)
