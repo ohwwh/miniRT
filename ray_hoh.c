@@ -338,13 +338,13 @@ double	scatter(t_ray *r, t_hit_record *rec, t_ray *scattered, t_light *light)
 
 t_color	ray_color_raw(t_ray r, t_scene *sc)
 {
-	t_hit_record	hr;
+	t_hit_record	rec;
 	double			t;
 
-	hr.t = -1.0;
-	hr = find_hitpoint(&r, sc->objs);
-	if (hr.t > EPS)
-		return (hr.color);
+	rec.t = -1.0;
+	find_hitpoint_path(&r, sc->objs, sc->light, &rec);
+	if (rec.t > EPS)
+		return (rec.color);
 	t = 0.5 * (unit_vec((r.dir)).y + 1.0);
 	return (vec_scalar_mul(
 		create_vec(

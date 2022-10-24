@@ -206,7 +206,7 @@ void object_move(t_minirt *data, int type)
 	else
 		return ;
 	delta = vec_scalar_mul(vec_scalar_mul(dir, d), 1);
-	if (data->scene.objs->type == -1)
+	if (type == -1)
 		return (light_move(data, delta));
 	else
 		return (non_light_move(data, type, delta));
@@ -246,93 +246,6 @@ void object_rotate(t_minirt *data, int type)
 	}
 }
 
-int transpose_light(t_minirt *data, t_keycode keycode, int *status)
-{
-	t_light *light = data->scene.light;
-
-	*status = -1;
-	if (keycode == W)
-		light->src.y += STEP;
-	else if (keycode == A)
-		light->src.x += STEP;
-	else if (keycode == D)
-		light->src.z += STEP;
-	rt_render(data);
-	return (0);
-}
-
-void rotate_obj_step(t_minirt *data, int pos1, int pos2, int type)
-{
-	/*t_objs *tmp;
-	double 	pos[3];
-	double	r_pos[3];
-
-	tmp = data->scene.objs;
-	while (tmp)
-	{
-		if (tmp->type == type)
-		{
-			r_pos[0] = tmp->dir.x;
-			r_pos[1] = tmp->dir.y;
-			r_pos[2] = tmp->dir.z;
-			pos[0] = tmp->dir.x;
-			pos[1] = tmp->dir.y;
-			pos[2] = tmp->dir.z;
-			r_pos[pos1] = pos[pos1] * cos(ROTATE) - pos[pos2] * sin(ROTATE);
-			r_pos[pos2] = pos[pos1] * sin(ROTATE) + pos[pos2] * cos(ROTATE);
-			set_vec(&tmp->dir, r_pos[0], r_pos[1], r_pos[2]);
-		}
-		tmp = tmp->next;
-	}
-	rt_render(data);*/
-
-	t_objs *tmp;
-	t_vec axis;
-	t_vec delta;
-	double d;
-
-	if (data->is_move == 126 || data->is_move == 125)
-	{
-		axis = data->scene.camera.right;
-		if (data->is_move == 126)
-			d = -1;
-		else
-			d = 1;
-	}
-	else if (data->is_move == 123 || data->is_move == 124)
-	{
-		axis = data->scene.camera.up;
-		if (data->is_move == 124)
-			d = 1;
-		else
-			d = -1;
-	}
-	else
-		return ;
-	tmp = data->scene.objs;
-	while (tmp)
-	{
-		if (tmp->type == type && tmp->type != SP)
-			tmp->dir = rotate(axis, tmp->dir, d);
-		tmp = tmp->next;
-	}
-}
-
-int rotate_obj(t_minirt *data, t_keycode keycode, int type, int *status)
-{
-	t_objs *tmp;
-	t_vec ori;
-
-	*status = -1;
-	tmp = data->scene.objs;
-	if (keycode == W) // y축 중심 회전
-		rotate_obj_step(data, 2, 0, type);
-	else if (keycode == A) // x축 중심 회전
-		rotate_obj_step(data, 1, 2, type);
-	if (keycode == D) // z축 중심 회전
-		rotate_obj_step(data, 0, 1, type);
-	return (0);
-}
 
 int	keypress(int keycode, t_minirt* vars)
 {
@@ -340,7 +253,7 @@ int	keypress(int keycode, t_minirt* vars)
 		key_press_move(vars, keycode);
 	else if (keycode == UP || keycode == LEFT || keycode == RIGHT || keycode == DOWN)
 		key_press_rotate(vars, keycode);
-	else if (keycode == 15 || keycode == 35 || keycode == 18 || keycode == 19)
+	else if (keycode == 15 || keycode == 35 || keycode == 18 || keycode == 19 || keycode == 20)
 		key_press_mode_change(vars, keycode);
 	return (0);
 }
