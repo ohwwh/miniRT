@@ -6,7 +6,7 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:53:39 by hako              #+#    #+#             */
-/*   Updated: 2022/10/19 18:56:39 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/24 17:23:41 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ double	decimal_part(const char *str)
 		}
 	}
 	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-    	i++;
-  	if (str[i] != '\0')
-    	err_handler("wrong argument");
-  	return (nb);
+		i++;
+	if (str[i] != '\0')
+		err_handler("wrong argument");
+	return (nb);
 }
 
 double	ft_atod(const char *str)
