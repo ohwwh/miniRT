@@ -15,7 +15,7 @@ void parse_sphere(t_scene *sc, char **tokens)
 	if (obj->radius <= 0)
 		err_handler("invalid radius sphere");
 	obj->color = get_color(tokens[3]);
-	obj->mat = 1;
+	obj->mat = 0;
 	obj->refraction = 1.5;
 	obj->specular = 0.6;
 	obj->fuzzy = 0;

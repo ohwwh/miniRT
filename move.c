@@ -1,6 +1,7 @@
 #include "minirt.h"
 
 void object_move(t_minirt *data, int type);
+void object_rotate(t_minirt *data, int type);
 
 int	ft_close(t_minirt *data)
 {
@@ -25,7 +26,7 @@ int	ft_close(t_minirt *data)
 	exit(0);
 }
 
-t_vec rotate(t_vec axis, t_minirt* vars, int dir)
+t_vec rotate(t_vec axis, t_vec vec, int dir)
 {
 	//double c = (1 - cos(dir * 0.1));
 	//double s = sin(dir * 0.1);
@@ -34,9 +35,12 @@ t_vec rotate(t_vec axis, t_minirt* vars, int dir)
 	//double z = axis.z;
 
 	t_vec new_dir;
-	const double i = vars->scene.camera.forward.x;
+	/*const double i = vars->scene.camera.forward.x;
 	const double j = vars->scene.camera.forward.y;
-	const double k = vars->scene.camera.forward.z;
+	const double k = vars->scene.camera.forward.z;*/
+	const double i = vec.x;
+	const double j = vec.y;
+	const double k = vec.z;
 
 	new_dir.x = - i * (1 - cos(dir * 0.1)) * axis.y * axis.y 
 	- k * sin(dir * 0.1) * axis.y + (1 - cos(dir * 0.1)) * j * axis.x * axis.y 
@@ -104,7 +108,7 @@ void camera_rotate(t_minirt* vars)
 	}
 	else
 		return ;
-	new_dir = rotate(axis, vars, d);
+	new_dir = rotate(axis, vars->scene.camera.forward, d);
 	vars->scene.camera.forward = new_dir;
 	vars->scene.camera.dir = new_dir;
 }
@@ -153,6 +157,7 @@ int key_hook_move(t_minirt* vars)
 		else if (vars->mode != 0)
 		{
 			object_move(vars, vars->mode);
+			object_rotate(vars, vars->mode);
 		}
 		path_render(vars);
 	}
@@ -215,6 +220,40 @@ void object_move(t_minirt *data, int type)
 		return (light_move(data, delta));
 	else
 		return (non_light_move(data, type, delta));
+}
+
+void object_rotate(t_minirt *data, int type)
+{
+	t_objs *tmp;
+	t_vec axis;
+	t_vec delta;
+	double d;
+
+	if (data->is_move == 126 || data->is_move == 125)
+	{
+		axis = data->scene.camera.right;
+		if (data->is_move == 126)
+			d = -1;
+		else
+			d = 1;
+	}
+	else if (data->is_move == 123 || data->is_move == 124)
+	{
+		axis = data->scene.camera.up;
+		if (data->is_move == 124)
+			d = 1;
+		else
+			d = -1;
+	}
+	else
+		return ;
+	tmp = data->scene.objs;
+	while (tmp)
+	{
+		if (tmp->type == type && tmp->type != PL)
+			tmp->dir = rotate(axis, tmp->dir, d);
+		tmp = tmp->next;
+	}
 }
 
 int transpose_light(t_minirt *data, t_keycode keycode, int *status)
@@ -284,7 +323,7 @@ void rotate_obj_step(t_minirt *data, int pos1, int pos2, int type)
 	while (tmp)
 	{
 		if (tmp->type == type && tmp->type != SP)
-			tmp->dir = rotate(axis, data, d);
+			tmp->dir = rotate(axis, tmp->dir, d);
 		tmp = tmp->next;
 	}
 }
@@ -369,7 +408,7 @@ void key_press_mode_change(t_minirt* vars, int keycode)
 {
 	if (vars->is_trace == 0)
 	{
-		if(keycode == 18 || keycode == 19)
+		if (keycode == 18 || keycode == 19 || keycode == 20)
 		{
 			if (vars->mode == 0)
 			{
