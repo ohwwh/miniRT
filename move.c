@@ -12,7 +12,8 @@
 
 #include "minirt.h"
 
-void	object_move(t_minirt *data, int type);
+void object_move(t_minirt *data, int type);
+void object_rotate(t_minirt *data, int type);
 
 int	ft_close(t_minirt *data)
 {
@@ -37,29 +38,22 @@ int	ft_close(t_minirt *data)
 	exit(0);
 }
 
-t_vec	rotate(t_vec axis, t_minirt *vars, int dir)
+t_vec rotate(t_vec axis, t_vec vec, int dir)
 {
-	//double c = (1 - cos(dir * 0.1));
-	//double s = sin(dir * 0.1);
-	//double x = axis.x;
-	//double y = axis.y;
-	//double z = axis.z;
+    t_vec           new_dir;
+	const double    c = (1 - cos(dir * 0.1));
+	const double    s = sin(dir * 0.1);
 
-	t_vec			new_dir;
-	const double	i = vars->scene.camera.forward.x;
-	const double	j = vars->scene.camera.forward.y;
-	const double	k = vars->scene.camera.forward.z;
-
-	new_dir.x = - i * (1 - cos(dir * 0.1)) * axis.y * axis.y 
-	- k * sin(dir * 0.1) * axis.y + (1 - cos(dir * 0.1)) * j * axis.x * axis.y 
-	- i * (1 - cos(dir * 0.1)) * axis.z * axis.z + j * sin(dir * 0.1) * axis.z
-	+ (1 - cos(dir * 0.1)) * k * axis.x * axis.z +i;
-	new_dir.y = j - (1 - cos(dir * 0.1)) * j * axis.x * axis.x 
-	+ k * sin(dir * 0.1) * axis.x + i * (1 - cos(dir * 0.1)) * axis.x * axis.y 
-	- (1 - cos(dir * 0.1)) * j * axis.z * axis.z - i * sin(dir * 0.1) * axis.z + (1 - cos(dir * 0.1)) * k * axis.y * axis.z;
-	new_dir.z = k - (1 - cos(dir * 0.1)) * k * axis.x * axis.x
-	- j * sin(dir * 0.1) * axis.x - (1 - cos(dir * 0.1)) * k * axis.y * axis.y + i * sin(dir * 0.1) * axis.y 
-	+ i * (1 - cos(dir * 0.1)) * axis.x * axis.z + (1 - cos(dir * 0.1)) * j * axis.y * axis.z;
+	new_dir.x = - vec.x * c * axis.y * axis.y 
+	- vec.z * s * axis.y + c * vec.y * axis.x * axis.y 
+	- vec.x * c * axis.z * axis.z + vec.y * s * axis.z
+	+ c * vec.z * axis.x * axis.z + vec.x;
+	new_dir.y = vec.y - c * vec.y * axis.x * axis.x 
+	+ vec.z * s * axis.x + vec.x * c * axis.x * axis.y 
+	- c * vec.y * axis.z * axis.z - vec.x * s * axis.z + c * vec.z * axis.y * axis.z;
+	new_dir.z = vec.z - c * vec.z * axis.x * axis.x
+	- vec.y * s * axis.x - c * vec.z * axis.y * axis.y + vec.x * s * axis.y 
+	+ vec.x * c * axis.x * axis.z + c * vec.y * axis.y * axis.z;
 
 	return (new_dir);
 }
@@ -117,7 +111,7 @@ void	camera_rotate(t_minirt *vars)
 	}
 	else
 		return ;
-	new_dir = rotate(axis, vars, d);
+	new_dir = rotate(axis, vars->scene.camera.forward, d);
 	vars->scene.camera.forward = new_dir;
 	vars->scene.camera.dir = new_dir;
 }
@@ -166,6 +160,7 @@ int	key_hook_move(t_minirt *vars)
 		else if (vars->mode != 0)
 		{
 			object_move(vars, vars->mode);
+			object_rotate(vars, vars->mode);
 		}
 		path_render(vars);
 	}
@@ -224,56 +219,29 @@ void	object_move(t_minirt *data, int type)
 	else
 		return ;
 	delta = vec_scalar_mul(vec_scalar_mul(dir, d), 1);
-	if (data->scene.objs->type == -1)
+	if (type == -1)
 		return (light_move(data, delta));
 	else
 		return (non_light_move(data, type, delta));
 }
 
-int	transpose_light(t_minirt *data, t_keycode keycode, int *status)
+void non_light_rotate(t_minirt *data, t_vec axis, double d, int type)
 {
-	t_light	*light;
-
-	light = data->scene.light;
-	*status = -1;
-	if (keycode == W)
-		light->src.y += STEP;
-	else if (keycode == A)
-		light->src.x += STEP;
-	else if (keycode == D)
-		light->src.z += STEP;
-	rt_render(data);
-	return (0);
-}
-
-void rotate_obj_step(t_minirt *data, int pos1, int pos2, int type)
-{
-	/*t_objs *tmp;
-	double 	pos[3];
-	double	r_pos[3];
+	t_objs *tmp;
 
 	tmp = data->scene.objs;
 	while (tmp)
 	{
-		if (tmp->type == type)
-		{
-			r_pos[0] = tmp->dir.x;
-			r_pos[1] = tmp->dir.y;
-			r_pos[2] = tmp->dir.z;
-			pos[0] = tmp->dir.x;
-			pos[1] = tmp->dir.y;
-			pos[2] = tmp->dir.z;
-			r_pos[pos1] = pos[pos1] * cos(ROTATE) - pos[pos2] * sin(ROTATE);
-			r_pos[pos2] = pos[pos1] * sin(ROTATE) + pos[pos2] * cos(ROTATE);
-			set_vec(&tmp->dir, r_pos[0], r_pos[1], r_pos[2]);
-		}
+		if (tmp->type == type && tmp->type != PL)
+			tmp->dir = rotate(axis, tmp->dir, d);
 		tmp = tmp->next;
 	}
-	rt_render(data);*/
+}
 
+void object_rotate(t_minirt *data, int type)
+{
 	t_objs *tmp;
 	t_vec axis;
-	t_vec delta;
 	double d;
 
 	if (data->is_move == 126 || data->is_move == 125)
@@ -294,30 +262,9 @@ void rotate_obj_step(t_minirt *data, int pos1, int pos2, int type)
 	}
 	else
 		return ;
-	tmp = data->scene.objs;
-	while (tmp)
-	{
-		if (tmp->type == type && tmp->type != SP)
-			tmp->dir = rotate(axis, data, d);
-		tmp = tmp->next;
-	}
+	non_light_rotate(data, axis, d, type);
 }
 
-int rotate_obj(t_minirt *data, t_keycode keycode, int type, int *status)
-{
-	t_objs *tmp;
-	t_vec ori;
-
-	*status = -1;
-	tmp = data->scene.objs;
-	if (keycode == W) // y축 중심 회전
-		rotate_obj_step(data, 2, 0, type);
-	else if (keycode == A) // x축 중심 회전
-		rotate_obj_step(data, 1, 2, type);
-	if (keycode == D) // z축 중심 회전
-		rotate_obj_step(data, 0, 1, type);
-	return (0);
-}
 
 int	keypress(int keycode, t_minirt* vars)
 {
@@ -325,7 +272,8 @@ int	keypress(int keycode, t_minirt* vars)
 		key_press_move(vars, keycode);
 	else if (keycode == UP || keycode == LEFT || keycode == RIGHT || keycode == DOWN)
 		key_press_rotate(vars, keycode);
-	else if (keycode == 15 || keycode == 35 || keycode == 18 || keycode == 19)
+	else if (keycode == 15 || keycode == 35
+		|| keycode == 18 || keycode == 19 || keycode == 20)
 		key_press_mode_change(vars, keycode);
 	else if (keycode == ESC)
 		ft_close(vars);
@@ -356,11 +304,11 @@ int	keyrelease(int keycode, t_minirt* vars)
 
 int scroll(int mousecode, int x, int y, t_minirt *vars)
 {
-	if (vars->is_trace == 1)
+	if (vars->is_trace != 0)
 		printf("cannot zoom here\n");
 	else if (mousecode == 4 || mousecode == 5)
 		vars->is_move = mousecode;
-	else if (mousecode == 1)
+	else if (mousecode != 0)
 		printf("%d , %d\n", vars->x, vars->y);
 	return (0);
 }
@@ -385,7 +333,7 @@ void	key_press_mode_change(t_minirt *vars, int keycode)
 {
 	if (vars->is_trace == 0)
 	{
-		if(keycode == 18 || keycode == 19)
+		if (keycode == 18 || keycode == 19 || keycode == 20)
 		{
 			if (vars->mode == 0)
 			{
@@ -393,6 +341,8 @@ void	key_press_mode_change(t_minirt *vars, int keycode)
 					vars->mode = SP;
 				else if (keycode == 19)
 					vars->mode = CY;
+				else if (keycode == 20)
+					vars->mode = -1;
 			}
 			else if (vars->mode != 0)
 				vars->mode = 0;
