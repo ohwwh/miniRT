@@ -15,14 +15,12 @@
 t_vec	unit_vec(t_vec vec)
 {
 	double	len;
-	int		*ptr;
 
 	len = vec_len(vec);
 	if (len == 0)
 	{
-		*ptr = 0;
 		printf("Error : the length of vector is 0\n");
-		exit(1);
+		return (create_vec(1, 0, 0));
 	}
 	vec.x /= len;
 	vec.y /= len;
