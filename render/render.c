@@ -6,7 +6,7 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:28:20 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 17:26:22 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/25 13:46:04 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	define_color(t_minirt *data)
 	int		x;
 	double	u;
 	double	v;
-	t_vec	dir;
 
 	y = HEIGHT - 1;
 	x = 0;
@@ -37,8 +36,6 @@ void	define_color(t_minirt *data)
 		{
 			u = ((double)x * 2 / WIDTH) - 1;
 			v = (double)y * 2 / HEIGHT - 1;
-			if (x == 230 && y == 250)
-				x = x;
 			data->ray = ray_primary(&data->scene.camera, u, v);
 			data->ray.color = get_raycolor(data);
 			put_color(&data->mlx, x, HEIGHT - 1 - y,
