@@ -6,11 +6,11 @@
 /*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:28:47 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 17:35:17 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/25 13:33:15 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "objects.h"
+#include "minirt.h"
 
 double	get_light_size(t_objs object)
 {

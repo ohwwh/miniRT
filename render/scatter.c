@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scatter.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:40:55 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/25 00:48:41 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/25 13:28:24 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,7 @@ double	scatter(t_ray *r, t_hit_record *rec, t_ray *scattered, t_light *light)
 	else if (rec->mat == 2)
 		return (scatter_refraction(r, rec, scattered));
 	else if (rec->mat == -1)
+		return (1);
+	else
 		return (1);
 }

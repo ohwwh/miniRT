@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:29:20 by hako              #+#    #+#             */
-/*   Updated: 2022/10/25 00:04:42 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/25 13:21:04 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "camera.h"
+#include "minirt.h"
 
 double	degrees_to_radians(double degrees)
 {
