@@ -93,4 +93,6 @@ double	scatter(t_ray *r, t_hit_record *rec, t_ray *scattered, t_light *light)
 		return (scatter_refraction(r, rec, scattered));
 	else if (rec->mat == -1)
 		return (1);
+	else
+		return (1);
 }
