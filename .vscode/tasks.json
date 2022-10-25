@@ -1,0 +1,46 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: gcc 활성 파일 빌드",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "-I${workspaceFolder}/mlx/",
+                "-I${workspaceFolder}/includes/",
+                "-L${workspaceFolder}/mlx/",
+                "-L./libft/",
+                "${workspaceFolder}/*.c",
+                "${workspaceFolder}/hit/*.c",
+                "${workspaceFolder}/keybind/*.c",
+                "${workspaceFolder}/parse/*.c",
+                "${workspaceFolder}/ray/*.c",
+                "${workspaceFolder}/render/*.c",
+                "${workspaceFolder}/utils/*.c",
+                "${workspaceFolder}/vector/*.c",
+                //"${so_long.c parsing.c get_next_line.c get_next_line_utils.c}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-framework",
+                "OpenGL",
+                "-framework",
+                "AppKit",
+                "-lmlx",
+                "-lft",
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "디버거에서 생성된 작업입니다."
+        }
+    ],
+    "version": "2.0.0"
+}
