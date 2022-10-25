@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:10:20 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/25 00:11:16 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/25 14:17:45 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,20 @@ void	init_rt(t_minirt *data)
 
 void	set_init_distance(t_minirt *data)
 {
+	if (!data->scene.light)
+		err_handler("no light in rt file");
 	if (!data->scene.light->count)
 		return ;
-	data->scene.camera.distance = vec_len(vec_sub(data->scene.camera.origin,
-				data->scene.objs->center));
-	data->scene.light->distance = vec_len(
-			vec_sub(data->scene.light->object.center,
-				data->scene.objs->center));
+	if (!data->scene.objs)
+		data->scene.camera.distance = 1;
+	else
+	{
+		data->scene.camera.distance = vec_len(vec_sub(data->scene.camera.origin,
+					data->scene.objs->center));
+		data->scene.light->distance = vec_len(
+				vec_sub(data->scene.light->object.center,
+					data->scene.objs->center));
+	}	
 }
 
 void	set_light_attribute(t_scene *sc, double min)
