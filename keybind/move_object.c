@@ -82,7 +82,6 @@ void	non_light_rotate(t_minirt *data, t_vec axis, double d, int type)
 
 void	object_rotate(t_minirt *data, int type)
 {
-	t_objs	*tmp;
 	t_vec	axis;
 	double	d;
 

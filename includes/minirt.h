@@ -260,8 +260,7 @@ void			generate_random_importance(t_hit_record *rec,
 
 t_vec			random_to_sphere(double radius, double distance_squared);
 double			cosine_pdf(const t_vec *dir, const t_vec *w);
-double			sphere_light_pdf(t_hit_record *rec,
-					t_ray *scattered, t_objs *light);
+double			sphere_light_pdf(t_ray *scattered, t_objs *light);
 double			get_pdf(t_hit_record *rec,
 					t_ray *scattered, t_light *light, t_onb *uvw);
 double			mixture_pdf_value(t_hit_record *rec,
@@ -280,7 +279,7 @@ void			hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record *rec);
 void			set_face_normal(t_hit_record *rec,
 					t_ray *ray, t_vec outward_normal);
 
-void			set_record(t_objs *s, t_ray *r, t_hit_record *rec, double root);
+void			set_record(t_objs *s, t_hit_record *rec, double root);
 
 int				keypress(int keycode, t_minirt *vars);
 int				keyrelease(int keycode, t_minirt *vars);

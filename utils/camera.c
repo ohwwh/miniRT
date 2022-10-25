@@ -20,7 +20,6 @@ double	degrees_to_radians(double degrees)
 void	set_camera(t_camera *cam)
 {
 	double	theta;
-	double	h;
 
 	cam->ratio = ((double)WIDTH / (double)HEIGHT);
 	theta = cam->fov * PI / 180.0;

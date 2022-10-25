@@ -37,11 +37,9 @@ double	cosine_pdf(const t_vec *dir, const t_vec *w)
 	return (pdf);
 }
 
-double	sphere_light_pdf(
-	t_hit_record *rec, t_ray *scattered, t_objs *light)
+double	sphere_light_pdf(t_ray *scattered, t_objs *light)
 {
 	t_hit_record	rec_new;
-	const double	length_squared = powf(vec_len(scattered->dir), 2);
 	double			cos_max;
 	double			angle;
 
@@ -68,7 +66,7 @@ double	get_pdf(t_hit_record *rec, t_ray *scattered, t_light *light, t_onb *uvw)
 	while (temp)
 	{
 		if (temp->object.type == 3)
-			light_pdf_val += sphere_light_pdf(rec, scattered, &temp->object);
+			light_pdf_val += sphere_light_pdf(scattered, &temp->object);
 		temp = temp->next;
 	}
 	return (t * light_pdf_val / light->count

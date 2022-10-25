@@ -81,10 +81,6 @@ double	scatter_diffuse(
 
 double	scatter(t_ray *r, t_hit_record *rec, t_ray *scattered, t_light *light)
 {
-	t_onb	uvw;
-	t_vec	dir;
-	double	pdf;
-
 	if (rec->mat == 0)
 		return (scatter_diffuse(r, rec, scattered, light));
 	else if (rec->mat == 1)

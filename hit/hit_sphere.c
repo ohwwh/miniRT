@@ -14,7 +14,6 @@
 
 void	hit_sphere(t_objs *s, t_ray *r, t_hit_record *rec)
 {
-	t_hit_record	hr;
 	t_vec			oc;
 	t_discriminant	d;
 	double			root;
@@ -36,5 +35,5 @@ void	hit_sphere(t_objs *s, t_ray *r, t_hit_record *rec)
 	rec->p = ray_end(r, root);
 	set_face_normal(rec, r,
 		vec_division(vec_sub(rec->p, s->center), s->radius));
-	set_record(s, r, rec, root);
+	set_record(s, rec, root);
 }

@@ -24,7 +24,6 @@ void	generate_light_sample_sphere(
 	t_hit_record *rec, t_ray *scattered, t_objs *light)
 {
 	t_onb	uvw;
-	t_point	random_point;
 	t_vec	ray_path;
 	double	distance_squared;
 

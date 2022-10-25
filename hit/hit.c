@@ -46,7 +46,6 @@ int	find_hitpoint_path(t_ray *ray, t_objs *objs,
 		t_light *light, t_hit_record *rec)
 {
 	t_objs	*tmp;
-	int		end;
 
 	tmp = objs;
 	while (tmp)
@@ -69,7 +68,7 @@ int	find_hitpoint_path(t_ray *ray, t_objs *objs,
 	return (1);
 }
 
-void	set_record(t_objs *s, t_ray *r, t_hit_record *rec, double root)
+void	set_record(t_objs *s, t_hit_record *rec, double root)
 {
 	rec->t = root;
 	rec->color = s->color;

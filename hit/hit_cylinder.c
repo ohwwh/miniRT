@@ -68,7 +68,7 @@ void	hit_cylinder(t_objs *cy, t_ray *ray, t_hit_record *rec)
 	root = do_hit_cylinder(d, oc, cy, ray);
 	if (root < EPS || (rec->t != -1 && rec->t < root))
 		return ;
-	set_record(cy, ray, rec, root);
+	set_record(cy, rec, root);
 	rec->p = vec_sum(ray->origin, vec_scalar_mul(ray->dir, root));
 	m = vdot(ray->dir, vec_scalar_mul(normalized, root))
 		+ vdot(vec_sub(ray->origin, cy->center), normalized);

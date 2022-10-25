@@ -62,8 +62,6 @@ void	sampling(t_minirt *vars, int x, int y)
 	u = (((double)x + random_double(0, 1, vars->scene.anti)) * 2 / WIDTH) - 1;
 	v = (((double)y + random_double(0, 1, vars->scene.anti)) * 2 / HEIGHT) - 1;
 	init_ray = ray_primary(&(vars->scene.camera), u, v);
-	if (x == 0 && y == 0)
-		x = x;
 	if (vars->is_trace == 1)
 		vars->ray.color = vec_sum(vars->ray.color,
 				ray_color(init_ray, &vars->scene, MAX_DEPTH));

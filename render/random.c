@@ -40,7 +40,7 @@ t_vec	random_cosine_direction(void)
 	const double	z = sqrt(1 - r2);
 	const double	phi = 2 * PI * r1;
 
-	return (create_vec(cos(phi) * sqrt(r2), sin(phi) * sqrt(r2), sqrt(1 - r2)));
+	return (create_vec(cos(phi) * sqrt(r2), sin(phi) * sqrt(r2), z));
 }
 
 t_onb	create_onb(t_vec n)

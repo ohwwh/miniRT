@@ -34,7 +34,7 @@ void	hit_plane(t_objs *pl, t_ray *ray, t_hit_record *rec)
 		return ;
 	if (root < EPS || (rec->t != -1 && rec->t < root))
 		return ;
-	set_record(pl, ray, rec, root);
+	set_record(pl, rec, root);
 	rec->p = vec_sum(ray->origin, vec_scalar_mul(ray->dir, root));
 	set_face_normal(rec, ray, pl->dir);
 }
