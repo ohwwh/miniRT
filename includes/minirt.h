@@ -26,6 +26,7 @@
 # include "random.h"
 
 # define PI 3.14159265358979323846
+# define EPS 0.001
 # define LUMEN 3 
 # define ROTATE 0.1
 # define STEP 5
@@ -76,29 +77,6 @@ typedef struct s_mlx
 	int		line_length;
 	int		endian;
 }				t_mlx;
-
-/*typedef struct s_vec
-{
-	double	x;
-	double	y;
-	double	z;
-}	t_vec;*/
-
-/*typedef struct t_camera
-{
-	t_vec	origin;
-	t_vec	dir;
-	double	fov;
-	double	ratio;
-	double	viewport_height;
-	double 	viewport_width;
-	t_vec 	forward;
-	t_vec	vup;
-	t_vec	up;
-	t_vec	right;
-	int		count;
-
-}	t_camera;*/
 
 typedef struct s_amb
 {
@@ -188,6 +166,25 @@ typedef struct s_discriminant
 	double	t1;
 	double	t2;
 }	t_discriminant;
+
+typedef struct t_camera
+{
+	t_vec	origin;
+	t_vec	dir;
+	double	distance;
+	double	fov;
+	double	ratio;
+	double	viewport_height;
+	double	viewport_width;
+	t_vec	forward;
+	t_vec	vup;
+	t_vec	up;
+	t_vec	right;
+	int		count;
+
+}	t_camera;
+
+void			set_camera(t_camera *cam);
 
 int				check_file(int ac, char **av);
 void			err_handler(char *msg);
