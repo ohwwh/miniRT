@@ -43,18 +43,18 @@ void	object_move(t_minirt *data, int type)
 	t_vec	d;
 	double	dir;
 
-	if (data->is_move == 13 || data->is_move == 1)
+	if (data->is_move == W || data->is_move == S)
 	{
 		d = data->scene.camera.up;
-		if (data->is_move == 13)
+		if (data->is_move == W)
 			dir = 1;
 		else
 			dir = -1;
 	}
-	else if (data->is_move == 0 || data->is_move == 2)
+	else if (data->is_move == A || data->is_move == D)
 	{
 		d = data->scene.camera.right;
-		if (data->is_move == 2)
+		if (data->is_move == D)
 			dir = 1;
 		else
 			dir = -1;
@@ -86,18 +86,18 @@ void	object_rotate(t_minirt *data, int type)
 	t_vec	axis;
 	double	d;
 
-	if (data->is_move == 126 || data->is_move == 125)
+	if (data->is_move == UP || data->is_move == DOWN)
 	{
 		axis = data->scene.camera.right;
-		if (data->is_move == 126)
+		if (data->is_move == UP)
 			d = -1;
 		else
 			d = 1;
 	}
-	else if (data->is_move == 123 || data->is_move == 124)
+	else if (data->is_move == LEFT || data->is_move == RIGHT)
 	{
 		axis = data->scene.camera.up;
-		if (data->is_move == 124)
+		if (data->is_move == RIGHT)
 			d = 1;
 		else
 			d = -1;

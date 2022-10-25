@@ -17,18 +17,18 @@ void	camera_move(t_minirt *vars)
 	t_vec	d;
 	double	dir;
 
-	if (vars->is_move == 13 || vars->is_move == 1)
+	if (vars->is_move == W || vars->is_move == S)
 	{
 		d = vars->scene.camera.forward;
-		if (vars->is_move == 13)
+		if (vars->is_move == W)
 			dir = 1;
 		else
 			dir = -1;
 	}
-	else if (vars->is_move == 0 || vars->is_move == 2)
+	else if (vars->is_move == A || vars->is_move == D)
 	{
 		d = vars->scene.camera.right;
-		if (vars->is_move == 2)
+		if (vars->is_move == D)
 			dir = 1;
 		else
 			dir = -1;
@@ -46,18 +46,18 @@ void	camera_rotate(t_minirt *vars)
 	t_vec	new_dir;
 	double	dir;
 
-	if (vars->is_move == 126 || vars->is_move == 125)
+	if (vars->is_move == UP || vars->is_move == DOWN)
 	{
 		axis = vars->scene.camera.right;
-		if (vars->is_move == 126)
+		if (vars->is_move == UP)
 			dir = -1;
 		else
 			dir = 1;
 	}
-	else if (vars->is_move == 123 || vars->is_move == 124)
+	else if (vars->is_move == LEFT || vars->is_move == RIGHT)
 	{
 		axis = vars->scene.camera.up;
-		if (vars->is_move == 124)
+		if (vars->is_move == RIGHT)
 			dir = 1;
 		else
 			dir = -1;

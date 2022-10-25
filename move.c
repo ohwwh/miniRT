@@ -65,21 +65,21 @@ int	key_hook_move(t_minirt *vars)
 
 int	keyrelease(int keycode, t_minirt *vars)
 {
-	if (keycode == 13)
+	if (keycode == W)
 		vars->is_move = -1;
-	else if (keycode == 0)
+	else if (keycode == A)
 		vars->is_move = -1;
-	else if (keycode == 1)
+	else if (keycode == S)
 		vars->is_move = -1;
-	else if (keycode == 2)
+	else if (keycode == D)
 		vars->is_move = -1;
-	else if (keycode == 126)
+	else if (keycode == UP)
 		vars->is_move = -1;
-	else if (keycode == 123)
+	else if (keycode == LEFT)
 		vars->is_move = -1;
-	else if (keycode == 125)
+	else if (keycode == DOWN)
 		vars->is_move = -1;
-	else if (keycode == 124)
+	else if (keycode == RIGHT)
 		vars->is_move = -1;
 	return (0);
 }
