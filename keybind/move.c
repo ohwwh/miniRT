@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   move.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:28:52 by hako              #+#    #+#             */
-/*   Updated: 2022/10/25 00:14:58 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/25 13:46:40 by hako             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,6 @@ int	scroll(int mousecode, int x, int y, t_minirt *vars)
 	else if (mousecode == 4 || mousecode == 5)
 		vars->is_move = mousecode;
 	else if (mousecode != 0)
-		printf("%d , %d\n", vars->x, vars->y);
+		printf("%d , %d\n", x, y);
 	return (0);
 }

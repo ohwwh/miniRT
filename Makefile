@@ -25,7 +25,7 @@ $(NAME):		$(OBJS)
 				$(CC) -g3 $(OBJS) libft.a -I$(INCS) -o $(NAME) $(FRAMEW)
 
 %.o:			%.c
-				$(CC) -I $(INCS) -c $< -o $@
+				$(CC) $(CFLAGS) -I $(INCS) -c $< -o $@
 
 clean :
 	make --no-print-directory clean -C ./libft
