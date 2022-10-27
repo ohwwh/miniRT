@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:48:25 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/26 23:49:48 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/27 14:54:37 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	generate_light_sample_sphere(
 void	generate_random_importance(
 	t_hit_record *rec, t_ray *scattered, t_light *temp, t_onb *uvw)
 {
-	const double	t = 0.5;
+	const double	t = LT;
 
 	if (random_double(0, 1, 7) < t) //광원 샘플링
 	{

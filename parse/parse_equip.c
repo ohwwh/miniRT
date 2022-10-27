@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:52:19 by hako              #+#    #+#             */
-/*   Updated: 2022/10/27 11:35:38 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/27 15:53:19 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,19 @@ void	parse_camera(t_scene *sc, char **tokens)
 void	parse_light(t_scene *sc, char **tokens)
 {
 	t_light	*new;
+	double	r;
+	double	b;
+
+	
 
 	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
 		err_handler("invalid light !");
+	b = ft_atod(tokens[2]);
+	if (!b)
+		return ;
 	new = alloc_light(sc);
 	new->src = get_vec(tokens[1]);
-	new->ratio = ft_atod(tokens[2]);
+	new->ratio = b;
 	new->object.center = new->src;
 	new->object.radius = -1;
 	new->object.type = SP;

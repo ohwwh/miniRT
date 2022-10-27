@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:10:20 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/27 11:43:18 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/27 16:04:40 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ void	init_rt(t_minirt *data)
 
 void	set_init_distance(t_minirt *data)
 {
-	if (!data->scene.light)
-		return ;
 	data->scene.camera.distance = vec_len(vec_sub(data->scene.camera.origin,
 				data->scene.objs->center));
+	if (!data->scene.light)
+		return ;
 	data->scene.light->distance = vec_len(
 			vec_sub(data->scene.light->object.center,
 				data->scene.objs->center));

@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:08:40 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/27 12:05:15 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/27 15:44:48 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ void	path_render(t_minirt *v)
 		{
 			v->ray.color = create_vec(0, 0, 0);
 			s = 0;
+			if (x == 320 && y == 160)
+				x=x;
 			while (s ++ < v->scene.anti)
 				sampling(v, x, y);
 			v->ray.color = vec_division(v->ray.color, v->scene.anti);
