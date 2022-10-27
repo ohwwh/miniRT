@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_equip.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:52:19 by hako              #+#    #+#             */
-/*   Updated: 2022/10/24 17:35:35 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/27 11:35:38 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,127 @@ void	parse_light(t_scene *sc, char **tokens)
 	new = alloc_light(sc);
 	new->src = get_vec(tokens[1]);
 	new->ratio = ft_atod(tokens[2]);
+	new->object.center = new->src;
+	new->object.radius = -1;
+	new->object.type = SP;
+	new->object.mat = -1;
+	new->object.next = 0;	
+	new->object.color = vec_division(get_vec(tokens[3]), 255 / (60 * new->ratio));
+	if (new->ratio < 0 || new->ratio > 1)
+		err_handler("enter the light brightness ratio in range [0.0,1.0]");
+}
+
+void	parse_light_sphere(t_scene *sc, char **tokens)
+{
+	t_light	*new;
+	double	r;
+	double	b;
+
+	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || !tokens[4])
+		err_handler("invalid light !");
+	r = ft_atod(tokens[2]);
+	b = ft_atod(tokens[3]);
+	if (!r || !b)
+		return ;
+	new = alloc_light(sc);
+	new->src = get_vec(tokens[1]);
+	new->object.center = new->src;
+	new->object.radius = r / 2;
+	new->object.type = SP;
+	new->object.mat = -1;
+	new->object.next = 0;
+	new->ratio = b;
+	new->object.color = vec_division(get_vec(tokens[4]), 255 / (60 * new->ratio));
+	if (new->ratio < 0 || new->ratio > 1)
+		err_handler("enter the light brightness ratio in range [0.0,1.0]");
+}
+
+void	parse_light_rectangle_xy(t_scene *sc, char **tokens)
+{
+	t_light	*new;
+	t_vec	x;
+	t_vec	y;
+	double	z;
+	double	b;
+
+	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || !tokens[4])
+		err_handler("invalid light !");
+	x = get_vec(tokens[1]);
+	y = get_vec(tokens[2]);
+	z = ft_atod(tokens[3]);
+	b = ft_atod(tokens[4]);
+	if (x.x >= x.y || y.x >= y.y || !b)
+		return ;
+	new = alloc_light(sc);
+	new->src = create_vec((x.x + x.y) / 2, (y.x + y.y) / 2, z);
+	new->object.center = x;
+	new->object.dir = y;
+	new->object.radius = z;
+	new->object.type = RCXY;
+	new->object.mat = -1;
+	new->object.next = 0;
+	new->ratio = b;
+	new->object.color = vec_division(get_vec(tokens[5]), 255 / (60 * new->ratio));
+	if (new->ratio < 0 || new->ratio > 1)
+		err_handler("enter the light brightness ratio in range [0.0,1.0]");
+}
+
+void	parse_light_rectangle_yz(t_scene *sc, char **tokens)
+{
+	t_light	*new;
+	t_vec	x;
+	t_vec	y;
+	double	z;
+	double	b;
+
+	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || !tokens[4])
+		err_handler("invalid light !");
+	x = get_vec(tokens[1]);
+	y = get_vec(tokens[2]);
+	z = ft_atod(tokens[3]);
+	b = ft_atod(tokens[4]);
+	if (x.x >= x.y || y.x >= y.y || !b)
+		return ;
+	new = alloc_light(sc);
+	new->src = create_vec((x.x + x.y) / 2, (y.x + y.y) / 2, z);
+	new->object.center = x;
+	new->object.dir = y;
+	new->object.radius = z;
+	new->object.type = RCYZ;
+	new->object.mat = -1;
+	new->object.next = 0;
+	new->ratio = b;
+	new->object.color = vec_division(get_vec(tokens[5]), 255 / (60 * new->ratio));
+	if (new->ratio < 0 || new->ratio > 1)
+		err_handler("enter the light brightness ratio in range [0.0,1.0]");
+}
+
+void	parse_light_rectangle_xz(t_scene *sc, char **tokens)
+{
+	t_light	*new;
+	t_vec	x;
+	t_vec	y;
+	double	z;
+	double	b;
+
+	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || !tokens[4])
+		err_handler("invalid light !");
+	x = get_vec(tokens[1]);
+	y = get_vec(tokens[2]);
+	z = ft_atod(tokens[3]);
+	b = ft_atod(tokens[4]);
+	if (x.x >= x.y || y.x >= y.y || !b)
+		return ;
+	new = alloc_light(sc);
+	new->src = create_vec((x.x + x.y) / 2, (y.x + y.y) / 2, z);
+	new->object.center = x;
+	new->object.dir = y;
+	new->object.radius = z;
+	new->object.type = RCXZ;
+	new->object.mat = -1;
+	new->object.next = 0;
+	new->ratio = b;
+	new->object.color = vec_division(get_vec(tokens[5]), 255 / (60 * new->ratio));
 	if (new->ratio < 0 || new->ratio > 1)
 		err_handler("enter the light brightness ratio in range [0.0,1.0]");
 }

@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:28:52 by hako              #+#    #+#             */
-/*   Updated: 2022/10/25 00:14:58 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/27 04:40:10 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	ft_close(t_minirt *data)
 	t_light	*light;
 	t_objs	*obj;
 
+	free(data->thr[0].sh);
 	mlx_clear_window(data->mlx.mlx, data->mlx.mlx_win);
 	mlx_destroy_window(data->mlx.mlx, data->mlx.mlx_win);
 	while (data->scene.light)
@@ -38,8 +39,10 @@ int	key_hook_move(t_minirt *vars)
 {
 	if (vars->scene.changed == 1)
 	{
-		if (vars->is_trace == 1 || vars->is_trace == 0)
-			path_render(vars);
+		if (vars->is_trace == 1)
+			path_render_threaded(vars);
+		else if (vars->is_trace == 0)
+			raw_render(vars);
 		else if (vars->is_trace == 2)
 			rt_render(vars);
 		vars->scene.changed = 0;
@@ -58,7 +61,7 @@ int	key_hook_move(t_minirt *vars)
 			object_move(vars, vars->mode);
 			object_rotate(vars, vars->mode);
 		}
-		path_render(vars);
+		raw_render(vars);
 	}
 	return (1);
 }

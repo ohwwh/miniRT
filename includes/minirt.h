@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
-/*   Updated: 2022/10/25 13:20:48 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/27 11:33:22 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <stdio.h>
 # include <fcntl.h>
 # include <math.h>
+# include <pthread.h>
+# include <time.h>
 
 # include "../mlx/mlx.h"
 # include "../libft/libft.h"
@@ -33,12 +35,24 @@
 # define KSN 64 
 # define KS 0.5
 
-# define HEIGHT 320
-# define WIDTH 640
+# define WIDTH 800
+# define HEIGHT 600
+
+# define ANTI 111
+# define LT	0.6
+
+# define CAM_SPEED 30
 
 # define CY 1
 # define PL 2
 # define SP 3
+# define RCXY 4
+# define RCYZ 5
+# define RCXZ 6
+
+# define TH 3
+
+typedef struct s_minirt t_minirt;
 
 typedef enum s_bool{
 	FALSE = 0,
@@ -159,6 +173,25 @@ typedef struct s_hit_record
 	int			type;
 }	t_hit_record;
 
+typedef struct s_shared
+{
+	pthread_mutex_t	mutex;
+	t_minirt		*vars;
+	int				sampling;
+	int				working;
+	int				work[TH];
+	int				x;
+	int				y;
+} t_shared;
+
+typedef struct s_thread
+{
+	int 		thr_num;
+	pthread_t 	thr;
+	t_color		color;
+	t_shared	*sh;
+} t_thread;
+
 typedef struct s_minirt
 {
 	t_mlx		mlx;
@@ -171,6 +204,7 @@ typedef struct s_minirt
 	double		v;
 	int			x;
 	int			y;
+	t_thread	thr[TH];
 }	t_minirt;
 
 typedef struct s_discriminant
@@ -203,6 +237,13 @@ void			parse(t_scene *sc, int fd);
 void			parse_sphere(t_scene *sc, char **tockens);
 void			parse_cylinder(t_scene *sc, char **tockens);
 void			parse_plane(t_scene *sc, char **tockens);
+void			parse_light_sphere(t_scene *sc, char **tokens);
+void			parse_light_rectangle_xy(t_scene *sc, char **tokens);
+void			parse_light_rectangle_yz(t_scene *sc, char **tokens);
+void			parse_light_rectangle_xz(t_scene *sc, char **tokens);
+void			parse_rectangle_xy(t_scene *sc, char **tokens);
+void			parse_rectangle_yz(t_scene *sc, char **tokens);
+void			parse_rectangle_xz(t_scene *sc, char **tokens);
 
 t_light			*alloc_light(t_scene *sc);
 void			parse_ambient(t_scene *sc, char **tokens);
@@ -280,6 +321,13 @@ void			hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record *rec);
 void			set_face_normal(t_hit_record *rec,
 					t_ray *ray, t_vec outward_normal);
 
+t_objs 			create_sphere(t_point c, double r, t_color color, int mat);
+t_objs 			create_cylinder(t_point c, double r, double h, t_vec dir, t_color color, int mat);
+t_objs 			create_plane(t_point c, t_vec dir, t_color color, int mat);
+t_objs 			create_rectangle_xy(t_vec x, t_vec y, double k, t_color color, int mat);
+t_objs 			create_rectangle_yz(t_vec y, t_vec z, double k, t_color color, int mat);
+t_objs 			create_rectangle_xz(t_vec x, t_vec z, double k, t_color color, int mat);
+
 void			set_record(t_objs *s, t_ray *r, t_hit_record *rec, double root);
 
 int				keypress(int keycode, t_minirt *vars);
@@ -301,6 +349,7 @@ double			reflectance(double cos, double ref_ratio);
 t_vec			reflect(t_vec v, t_vec n);
 t_vec			refract(t_vec v, t_vec n, double e, double cos);
 
+void			raw_render(t_minirt *v);
 void			path_render(t_minirt *vars);
 int				convert_rgb(int r, int g, int b);
 
@@ -313,5 +362,7 @@ void			ft_mlx_new(t_minirt *vars, int x, int y, char *name);
 
 double			get_light_size(t_objs object);
 double			clamp(double x);
+
+void			path_render_threaded(t_minirt *vars);
 
 #endif

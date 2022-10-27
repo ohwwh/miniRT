@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:04:57 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/25 09:42:20 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/27 03:28:17 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	key_press_mode_change(t_minirt *vars, int keycode)
 			vars->is_trace = 1;
 		else if (keycode == 35)
 			vars->is_trace = 2;
-		vars->scene.anti = 100;
+		vars->scene.anti = ANTI;
 		vars->scene.changed = 1;
 	}
 	else
@@ -78,11 +78,13 @@ int	keypress(int keycode, t_minirt *vars)
 		ft_close(vars);
 	else if (keycode == 8)
 	{
+		t_vec unit;
+
+		unit = unit_vec(vars->scene.camera.dir);
 		printf("origin: (%lf, %lf, %lf), direction: (%lf, %lf, %lf)\n",
 			vars->scene.camera.origin.x, vars->scene.camera.origin.y,
 			vars->scene.camera.origin.z,
-			vars->scene.camera.dir.x, vars->scene.camera.dir.y,
-			vars->scene.camera.dir.z);
+			unit.x, unit.y, unit.z);
 	}
 	return (0);
 }

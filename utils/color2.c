@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:22:17 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/25 00:36:18 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/27 04:44:25 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,22 @@ double	clamp(double x)
 	return (x);
 }
 
+double tone_mapper(double x)
+{
+	double A = 0.15;
+    double B = 0.50;
+    double C = 0.10;
+    double D = 0.20;
+    double E = 0.02;
+    double F = 0.30;
+
+    return ((x*(A*x+C*B)+D*E)/(x*(A*x+B)+D*F))-E/F;
+}
+
 int	rgb_to_int(t_color c)
 {
+	t_vec tone;
+	
 	if (c.x != c.x)
 		c.x = 0;
 	if (c.y != c.y)
@@ -32,6 +46,9 @@ int	rgb_to_int(t_color c)
 	return ((int)(255.999 * sqrt(clamp(c.x))) << 16
 	| (int)(255.999 * sqrt(clamp(c.y))) << 8
 	| (int)(255.999 * sqrt(clamp(c.z))));
+	/*return ((int)(255.999 * sqrt(tone_mapper(c.x))) << 16
+	| (int)(255.999 * sqrt(tone_mapper(c.y))) << 8
+	| (int)(255.999 * sqrt(tone_mapper(c.z))));*/
 }
 
 t_color	get_sky_color(t_ray r)

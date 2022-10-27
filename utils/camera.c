@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:29:20 by hako              #+#    #+#             */
-/*   Updated: 2022/10/25 13:21:04 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/26 23:37:33 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,18 @@ void	set_camera(t_camera *cam)
 	cam->right = unit_vec(vcross(vec_scalar_mul(cam->forward, -1),
 				create_vec(0.0, -1.0, 0.0)));
 	cam->up = unit_vec(vcross(vec_scalar_mul(cam->forward, -1), cam->right));
+}
+
+t_camera	create_camera(t_point lookfrom, t_point dir, t_vec vup, double vfov, double aspect_ratio)
+{
+	t_camera	ret;
+
+	ret.origin = lookfrom;
+	//ret.dir = dir; -> 바라보는 "지점"
+	ret.dir = unit_vec(vec_sub(dir, lookfrom)); // -> 바라보는 "방향"
+	ret.vup = vup;
+	ret.fov = vfov;
+	ret.ratio = aspect_ratio;
+
+	return (ret);
 }

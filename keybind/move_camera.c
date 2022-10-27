@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:14:44 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/25 00:14:45 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/27 03:31:25 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	camera_move(t_minirt *vars)
 	else
 		return ;
 	d = vec_scalar_mul(vec_scalar_mul(d, dir),
-			vars->scene.camera.distance / 10);
+			vars->scene.camera.distance / CAM_SPEED);
 	vars->scene.camera.origin = vec_sum(vars->scene.camera.origin, d);
 }
 

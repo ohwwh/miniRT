@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scatter.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:40:55 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/25 13:28:24 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/26 23:51:09 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ double	scatter_reflect(t_ray *r, t_hit_record *rec, t_ray *scattered)
 	fuzziness = vec_scalar_mul(rand_sphere(), rec->fuzzy);
 	*scattered = ray(rec->p,
 			vec_sum(reflect(unit_vec(r->dir), rec->normal), fuzziness));
-	if (vdot(scattered->dir, rec->normal) <= 0)
+	if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
 		rec->color = create_vec(0, 0, 0);
 	return (1);
 }

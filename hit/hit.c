@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hako <hako@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:29:03 by hako              #+#    #+#             */
-/*   Updated: 2022/10/25 13:12:09 by hako             ###   ########.fr       */
+/*   Updated: 2022/10/26 23:53:44 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ int	find_hitpoint_light(t_ray *ray, t_light *light, t_hit_record *rec)
 			hit_cylinder(&temp->object, ray, rec);
 			hit_caps(&temp->object, ray, rec);
 		}
+		else if (temp->object.type == 4)
+			hit_rectangle_xy(&temp->object, ray, rec);
+		else if (temp->object.type == 5)
+			hit_rectangle_yz(&temp->object, ray, rec);
+		else if (temp->object.type == 6)
+			hit_rectangle_xz(&temp->object, ray, rec);
 		temp = temp->next;
 	}
 	return (1);
@@ -62,6 +68,12 @@ int	find_hitpoint_path(t_ray *ray, t_objs *objs,
 			hit_cylinder(tmp, ray, rec);
 			hit_caps(tmp, ray, rec);
 		}
+		else if (tmp->type == 4)
+			hit_rectangle_xy(tmp, ray, rec);
+		else if (tmp->type == 5)
+			hit_rectangle_yz(tmp, ray, rec);
+		else if (tmp->type == 6)
+			hit_rectangle_xz(tmp, ray, rec);
 		tmp = tmp->next;
 	}
 	if (light && light->count != 0)
