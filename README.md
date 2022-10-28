@@ -26,7 +26,7 @@ will never be afraid of implementing mathematical formulas again.
   ```
 
 
-### Result
+### 🔔 Result
 <table>
   <tr>
     <td>
@@ -45,3 +45,23 @@ will never be afraid of implementing mathematical formulas again.
     </td>
   <tr>
 </table>
+
+### 🕹 Keys
+
+- Mode change
+  - P : Phong Lighting mode
+  - R : Path Tracing mode
+  - number key 1 : sphere
+  - number key 2 : cylinder
+
+- Transpose
+  - W : forward
+  - A : left
+  - D : right
+  - S : back
+
+- Rotation
+  - ⬆️ : camera up for default, rotate the cylinder vertically for cylinder mode
+  - ⬇️ : camera down for default, rotate the cylinder vertically for cylinder mode
+  - ⬅️ : camera left for default, rotate the cylinder horizontally for cylinder mode
+  - ➡️ : camera right for default, rotate the cylinder horizontally for cylinder mode
