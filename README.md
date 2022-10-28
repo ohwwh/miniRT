@@ -12,7 +12,7 @@ will never be afraid of implementing mathematical formulas again.
 
 ### 🚀 Flow chart!
 <div align=center>
-<img width=650; src="https://user-images.githubusercontent.com/54932132/198565208-3dd0d365-c263-4845-b4b5-0f65da798ea3.jpg">
+<img width=650; src="https://user-images.githubusercontent.com/54932132/198628112-e348a7be-f282-4ef6-967e-311f1268417f.jpg">
 </div>
 </br>
 
