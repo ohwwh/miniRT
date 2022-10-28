@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:28:58 by hako              #+#    #+#             */
-/*   Updated: 2022/10/27 16:04:25 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/28 11:18:32 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	main(int ac, char **av)
 	create_light_object(&data.scene);
 	set_camera(&data.scene.camera);
 	raw_render(&data);
+	//path_render(&data);
 	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
 	mlx_hook(data.mlx.mlx_win, 3, 0, &keyrelease, &data);
 	mlx_hook(data.mlx.mlx_win, 4, 0, &scroll, &data);

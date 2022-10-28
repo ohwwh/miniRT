@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
-/*   Updated: 2022/10/27 18:05:24 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/28 11:35:45 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define LUMEN 3 
 # define ROTATE 0.1
 # define STEP 5
-# define MAX_DEPTH 50
+# define MAX_DEPTH 5
 # define KSN 64 
 # define KS 0.5
 
@@ -362,6 +362,7 @@ void			ft_mlx_new(t_minirt *vars, int x, int y, char *name);
 
 double			get_light_size(t_objs object);
 double			clamp(double x);
+void 			firefly(t_vec *color);
 
 void			path_render_threaded(t_minirt *vars);
 

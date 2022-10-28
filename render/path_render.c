@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:08:40 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/27 15:44:48 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/28 11:56:09 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ t_color	ray_color(t_ray r, t_scene *sc, int depth)
 			r.color = vec_mul(
 					vec_scalar_mul(rec.color, scattering_pdf(&scattered, &rec)),
 					vec_division(ray_color(scattered, sc, depth - 1), pdf));
+			firefly(&r.color);
 		}
 		else
 			r.color = rec.color;
@@ -68,6 +69,7 @@ void	sampling(t_minirt *vars, int x, int y)
 	else
 		vars->ray.color = vec_sum(vars->ray.color,
 				ray_color_raw(init_ray, &vars->scene));
+	//firefly(&vars->ray.color);
 }
 
 void	raw_render(t_minirt *v)
@@ -113,7 +115,7 @@ void	path_render(t_minirt *v)
 		{
 			v->ray.color = create_vec(0, 0, 0);
 			s = 0;
-			if (x == 320 && y == 160)
+			if (x == 366 && y == 496)
 				x=x;
 			while (s ++ < v->scene.anti)
 				sampling(v, x, y);

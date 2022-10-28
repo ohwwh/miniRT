@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hit_rectagle.c                                     :+:      :+:    :+:   */
+/*   hit_rectangle.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 23:54:08 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/26 23:54:43 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/28 11:03:05 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record* rec)
     set_face_normal(rec, ray, create_vec(0, 0, 1));
     rec->p = ray_end(ray, t);
 	rec->color = rect->color;
+	rec->type = rect->type;
 }
 
 void hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record* rec)
@@ -52,6 +53,7 @@ void hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record* rec)
 	set_face_normal(rec, ray, create_vec(1, 0, 0));
 	rec->p = ray_end(ray, t);
 	rec->color = rect->color;
+	rec->type = rect->type;
 }
 
 void	hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record* rec)
@@ -77,4 +79,5 @@ void	hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record* rec)
 	set_face_normal(rec, ray, create_vec(0, 1, 0));
 	rec->p = ray_end(ray, t);
 	rec->color = rect->color;
+	rec->type = rect->type;
 }

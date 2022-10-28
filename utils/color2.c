@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:22:17 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/27 04:44:25 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/28 12:06:57 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,18 @@ double	clamp(double x)
 	if (x > 1)
 		return (1);
 	return (x);
+}
+
+void firefly(t_vec *color)
+{
+	const double r = 10;
+	
+	if (color->x > r)
+		color->x = r;
+	if (color->y > r)
+		color->y = r;
+	if (color->z > r)
+		color->z = r;
 }
 
 double tone_mapper(double x)
