@@ -27,5 +27,21 @@ will never be afraid of implementing mathematical formulas again.
 
 
 ### Result
-- Phong Lighting
-<img width="502" alt="Screen Shot 2022-10-28 at 6 55 56 PM" src="https://user-images.githubusercontent.com/54932132/198560141-e016da0b-5a26-4b27-a827-3bdfda203ba5.png">
+<table>
+  <tr>
+    <td>
+    <b>Phong Lighting</b>
+    </td>
+    <td>
+    <b>Path Tracing</b>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img width="450" src="https://user-images.githubusercontent.com/54932132/198560141-e016da0b-5a26-4b27-a827-3bdfda203ba5.png" />
+    </td>
+    <td>
+      <img width="450" src="https://user-images.githubusercontent.com/54932132/198567917-f8912b46-7131-4a14-9686-776e73831a9d.png" />
+    </td>
+  <tr>
+</table>
