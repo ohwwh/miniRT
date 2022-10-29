@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:22:17 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/28 12:06:57 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/28 18:02:41 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,61 @@ double	clamp(double x)
 	return (x);
 }
 
+int dmax(double a, double b, double c)
+{
+	if (a > b)
+	{
+		if (a > c)
+			return (1);
+		else
+			return (3);
+	}
+	else
+	{
+		if (b > c)
+			return (2);
+		else
+			return (3);
+	}
+}
+
 void firefly(t_vec *color)
 {
-	const double r = 10;
+	const double	r = 15;
+	const int		ret = dmax(color->x, color->y, color->z);
+	double			a;
+
+	if (ret == 1)
+	{
+		if (color->x > r)
+		{
+			a = r / color->x;
+			color->x = r;
+			color->y *= a;
+			color->z *= a;
+		}
+	}
+	else if (ret == 2)
+	{
+		if (color->y > r)
+		{
+			a = r / color->y;
+			color->y = r;
+			color->x *= a;
+			color->z *= a;
+		}
+	}
+	else
+	{
+		if (color->z > r)
+		{
+			a = r / color->z;
+			color->z = r;
+			color->x *= a;
+			color->y *= a;
+		}
+	}
 	
-	if (color->x > r)
-		color->x = r;
-	if (color->y > r)
-		color->y = r;
-	if (color->z > r)
-		color->z = r;
 }
 
 double tone_mapper(double x)

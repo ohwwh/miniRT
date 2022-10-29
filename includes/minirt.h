@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
-/*   Updated: 2022/10/28 11:35:45 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/29 15:11:12 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define LUMEN 3 
 # define ROTATE 0.1
 # define STEP 5
-# define MAX_DEPTH 5
+# define MAX_DEPTH 30
 # define KSN 64 
 # define KS 0.5
 

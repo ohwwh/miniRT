@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:08:40 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/28 11:56:09 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/29 15:23:48 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,14 @@ t_color	ray_color(t_ray r, t_scene *sc, int depth)
 		pdf = scatter(&r, &rec, &scattered, sc->light);
 		if (rec.mat != -1)
 		{
-			r.color = vec_mul(
+			r.color = vec_scalar_mul(rec.color,
+					scattering_pdf(&scattered, &rec) / pdf);
+			if (r.color.x < EPS && r.color.y < EPS && r.color.z < EPS)
+				return (r.color);
+			r.color = vec_mul(r.color, ray_color(scattered, sc, depth - 1));
+			/*r.color = vec_mul(
 					vec_scalar_mul(rec.color, scattering_pdf(&scattered, &rec)),
-					vec_division(ray_color(scattered, sc, depth - 1), pdf));
+					vec_division(ray_color(scattered, sc, depth - 1), pdf));*/
 			firefly(&r.color);
 		}
 		else
