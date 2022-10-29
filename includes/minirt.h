@@ -38,7 +38,7 @@
 # define WIDTH 800
 # define HEIGHT 600
 
-# define ANTI 111
+# define ANTI 1110
 # define LT	0.5
 
 # define CAM_SPEED 30
@@ -355,6 +355,7 @@ int				convert_rgb(int r, int g, int b);
 
 int				rgb_to_int(t_color c);
 t_color			get_sky_color(t_ray r);
+int 			dmax(double a, double b, double c);
 void			put_color(t_mlx *data, int x, int y, int color);
 void			ft_pixel_put(t_minirt *vars, int x, int y, int color);
 void			ft_mlx_init(t_minirt *vars);

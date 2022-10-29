@@ -12,6 +12,14 @@
 
 #include "minirt.h"
 
+double roulette(t_color color)
+{
+	double 			q;
+	const double	sum = color.x + color.y + color.z;
+	q = (0.003 - sum) / 0.003;
+	return (q); //기각 확률
+}
+
 t_color	ray_color_raw(t_ray r, t_scene *sc)
 {
 	t_hit_record	rec;
@@ -46,9 +54,6 @@ t_color	ray_color(t_ray r, t_scene *sc, int depth)
 			if (r.color.x < EPS && r.color.y < EPS && r.color.z < EPS)
 				return (r.color);
 			r.color = vec_mul(r.color, ray_color(scattered, sc, depth - 1));
-			/*r.color = vec_mul(
-					vec_scalar_mul(rec.color, scattering_pdf(&scattered, &rec)),
-					vec_division(ray_color(scattered, sc, depth - 1), pdf));*/
 			firefly(&r.color);
 		}
 		else

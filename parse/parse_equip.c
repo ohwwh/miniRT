@@ -108,8 +108,8 @@ void	parse_light_sphere(t_scene *sc, char **tokens)
 	new->object.next = 0;
 	new->ratio = b;
 	new->object.color = vec_division(get_vec(tokens[4]), 255 / (60 * new->ratio));
-	if (new->ratio < 0 || new->ratio > 1)
-		err_handler("enter the light brightness ratio in range [0.0,1.0]");
+	/*if (new->ratio < 0 || new->ratio > 1)
+		err_handler("enter the light brightness ratio in range [0.0,1.0]");*/
 }
 
 void	parse_light_rectangle_xy(t_scene *sc, char **tokens)

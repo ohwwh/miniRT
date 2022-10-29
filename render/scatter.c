@@ -57,8 +57,10 @@ double	scatter_reflect(t_ray *r, t_hit_record *rec, t_ray *scattered)
 	fuzziness = vec_scalar_mul(rand_sphere(), rec->fuzzy);
 	*scattered = ray(rec->p,
 			vec_sum(reflect(unit_vec(r->dir), rec->normal), fuzziness));
+	/*if (rec->mat != 1)
+		set_vec(&rec->color, 1, 1, 1);*/
 	if (vdot(scattered->dir, rec->normal) <= 0) //이 조건식은 무슨 의미인가??
-		rec->color = create_vec(0, 0, 0);
+		set_vec(&rec->color, 0, 0, 0);
 	return (1);
 }
 
@@ -70,12 +72,7 @@ double	scatter_diffuse(
 	if (random_double(0, 1, 7) > rec->specular)
 		pdf = mixture_pdf_value(rec, scattered, light);
 	else
-	{
-		*scattered = ray(rec->p, reflect(unit_vec(r->dir), rec->normal));
-		if (vdot(scattered->dir, rec->normal) <= 0)
-			rec->color = create_vec(0, 0, 0);
-		return (1);
-	}
+		pdf = scatter_reflect(r, rec, scattered);
 	return (pdf);
 }
 
