@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:29:20 by hako              #+#    #+#             */
-/*   Updated: 2022/11/03 13:06:18 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/03 13:28:15 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	set_camera(t_camera *cam)
 
 	cam->ratio = ((double)WIDTH / (double)HEIGHT);
 	theta = cam->fov * PI / 180.0;
-	cam->viewport_height = tan(theta / 2);
+	cam->viewport_height = tan(theta * 0.5);
 	cam->viewport_width = cam->ratio * cam->viewport_height;
 	cam->forward = cam->dir;
 	cam->forward.x += EPS;

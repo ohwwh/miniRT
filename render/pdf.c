@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:40:46 by ohw               #+#    #+#             */
-/*   Updated: 2022/11/03 00:39:36 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/03 22:00:44 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ double	get_pdf(t_hit_record *rec, t_ray *scattered, t_light *light, t_onb *uvw)
 	light_pdf_val = 0.0;
 	pdf_sum = 0.0;
 	temp = light;
-	while (temp)
+	/*while (temp)
 	{
 		if (temp->object.type == 3)
 			light_pdf_val += sphere_light_pdf(rec, scattered, &temp->object);
@@ -102,7 +102,21 @@ double	get_pdf(t_hit_record *rec, t_ray *scattered, t_light *light, t_onb *uvw)
 		temp = temp->next;
 	}
 	return (t * light_pdf_val / light->count
-		+ (1 - t) * cosine_pdf(&(rec->normal), &(uvw->w)));
+		+ (1 - t) * cosine_pdf(&(rec->normal), &(uvw->w)));*/
+
+	while (temp)
+	{
+		if (temp->object.type == 3)
+			pdf_temp = sphere_light_pdf(rec, scattered, &temp->object);
+		else
+			pdf_temp = rectangle_light_pdf(rec, scattered, &temp->object);
+		pdf_sum += pdf_temp;
+		light_pdf_val += (pdf_temp * pdf_temp);
+		temp = temp->next;
+	}
+	if (pdf_sum < EPS)
+		pdf_sum = 1;
+	return (t * light_pdf_val / pdf_sum + (1 - t) * cosine_pdf(&(rec->normal), &(uvw->w)));
 
 	/*while (temp)
 	{
@@ -114,8 +128,12 @@ double	get_pdf(t_hit_record *rec, t_ray *scattered, t_light *light, t_onb *uvw)
 		light_pdf_val += (pdf_temp * pdf_temp);
 		temp = temp->next;
 	}
-	return (t * light_pdf_val / pdf_sum
-		+ (1 - t) * cosine_pdf(&(rec->normal), &(uvw->w)));*/
+	pdf_temp = cosine_pdf(&(rec->normal), &(uvw->w));
+	pdf_sum += pdf_temp;
+	light_pdf_val += (pdf_temp * pdf_temp);
+	if (pdf_sum < EPS)
+		pdf_sum = 1;
+	return (light_pdf_val / pdf_sum);*/ //brdf pdf까지 가중평균. 어둡다??
 }
 
 double	mixture_pdf_value(t_hit_record *rec, t_ray *scattered, t_light *light)
