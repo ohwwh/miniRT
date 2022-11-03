@@ -71,8 +71,10 @@ void *routine(void *data)
 		s = 0;
 		while (s ++ < pdata->sh->vars->scene.anti / TH)
 		{
-			u = (((double)x + random_double(0, 1, pdata->sh->vars->scene.anti)) * 2 / WIDTH) - 1;
-			v = (((double)y + random_double(0, 1, pdata->sh->vars->scene.anti)) * 2 / HEIGHT) - 1;
+			/*u = (((double)x + random_double(0, 1, pdata->sh->vars->scene.anti)) * 2 / WIDTH) - 1;
+			v = (((double)y + random_double(0, 1, pdata->sh->vars->scene.anti)) * 2 / HEIGHT) - 1;*/
+			u = (((double)x * 2 / WIDTH) - 1) + (random_double(-1, 1, pdata->sh->vars->scene.anti) / WIDTH);
+			v = (((double)y * 2 / HEIGHT) - 1) + (random_double(-1, 1, pdata->sh->vars->scene.anti) / HEIGHT);
 			//pthread_mutex_lock(&(pdata->sh->mutex));
 			init_ray = ray_primary(&(pdata->sh->vars->scene.camera), u, v);
 			if (pdata->sh->vars->is_trace == 1)

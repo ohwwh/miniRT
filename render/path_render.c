@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:08:40 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/29 15:23:48 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/03 12:49:21 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,14 @@ t_color	ray_color(t_ray r, t_scene *sc, int depth)
 	return (vec_scalar_mul(get_sky_color(r), sc->amb.ratio));
 }
 
-void	sampling(t_minirt *vars, int x, int y)
+void	stratified_sampling(t_minirt *vars, int x, int y, int s, int t)
 {
 	double	u;
 	double	v;
 	t_ray	init_ray;
 
-	u = (((double)x + random_double(0, 1, vars->scene.anti)) * 2 / WIDTH) - 1;
-	v = (((double)y + random_double(0, 1, vars->scene.anti)) * 2 / HEIGHT) - 1;
+	u = (((double)x + ((double)s + random_double(0, 1, vars->scene.anti)) / 10) * 2 / WIDTH) - 1;
+	v = (((double)y + ((double)t + random_double(-1, 0, vars->scene.anti)) / 10) * 2 / HEIGHT) - 1;
 	init_ray = ray_primary(&(vars->scene.camera), u, v);
 	if (vars->is_trace == 1)
 		vars->ray.color = vec_sum(vars->ray.color,
@@ -79,7 +79,25 @@ void	sampling(t_minirt *vars, int x, int y)
 	else
 		vars->ray.color = vec_sum(vars->ray.color,
 				ray_color_raw(init_ray, &vars->scene));
-	//firefly(&vars->ray.color);
+}
+
+void	sampling(t_minirt *vars, int x, int y)
+{
+	double	u;
+	double	v;
+	t_ray	init_ray;
+
+	u = (((double)x + random_double(0, 1, vars->scene.anti)) * 2 / WIDTH) - 1;
+	v = (((double)y + random_double(-1, 0, vars->scene.anti)) * 2 / HEIGHT) - 1;
+	/*u = (((double)x * 2 / WIDTH) - 1) + (random_double(-1, 1, vars->scene.anti) / WIDTH);
+	v = (((double)y * 2 / HEIGHT) - 1) + (random_double(-1, 1, vars->scene.anti) / HEIGHT);*/
+	init_ray = ray_primary(&(vars->scene.camera), u, v);
+	if (vars->is_trace == 1)
+		vars->ray.color = vec_sum(vars->ray.color,
+				ray_color(init_ray, &vars->scene, MAX_DEPTH));
+	else
+		vars->ray.color = vec_sum(vars->ray.color,
+				ray_color_raw(init_ray, &vars->scene));
 }
 
 void	raw_render(t_minirt *v)
@@ -108,6 +126,7 @@ void	path_render(t_minirt *v)
 	int			x;
 	int			y;
 	int			s;
+	int			t;
 	time_t		start, end;
 	double		result;
 
@@ -129,6 +148,12 @@ void	path_render(t_minirt *v)
 				x=x;
 			while (s ++ < v->scene.anti)
 				sampling(v, x, y);
+			/*while (s ++ < 10) 
+			{
+				t = 0;
+				while (t ++ < 10)
+					stratified_sampling(v, x, y, s, t);
+			}*/
 			v->ray.color = vec_division(v->ray.color, v->scene.anti);
 			put_color(&v->mlx, x - 1,
 				HEIGHT - 2 - y, rgb_to_int(v->ray.color));

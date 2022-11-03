@@ -12,7 +12,7 @@
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             //"program": "/Users/ohw/OHW/42Seoul/so_long/남의 것/so_long/so_long_bonus",
             "args": [
-                "map/example7.rt"
+                "map/fuzzy_specular3.rt"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
@@ -30,7 +30,7 @@
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             //"program": "/Users/ohw/OHW/42Seoul/so_long/남의 것/so_long/so_long_bonus",
             "args": [
-                "example2.rt"
+                "map/fuzzy_specular3.rt"
             ],
             "cwd": "${fileDirname}",
             //"cwd": "/Users/ohw/OHW/42Seoul/so_long/남의 것/so_long",

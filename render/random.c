@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:29:28 by hako              #+#    #+#             */
-/*   Updated: 2022/10/25 01:00:33 by ohw              ###   ########.fr       */
+/*   Updated: 2022/10/30 00:53:01 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,19 @@ t_vec	rand_sphere(void)
 			continue ;
 		return (ret);
 	}
+}
+
+t_vec	random_unit_disk(void)
+{
+	t_vec	ret;
+	
+	while (1) 
+	{
+        set_vec(&ret, random_double(-1, 1, 7), random_double(-1, 1, 7), 0);
+        if (powf(vec_len(ret), 2) >= 1)	
+			continue;
+        return (ret);
+    }
 }
 
 t_vec	random_cosine_direction(void)

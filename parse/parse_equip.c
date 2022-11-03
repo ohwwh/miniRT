@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:52:19 by hako              #+#    #+#             */
-/*   Updated: 2022/10/28 17:58:08 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/03 13:03:59 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	parse_ambient(t_scene *sc, char **tokens)
 
 void	parse_camera(t_scene *sc, char **tokens)
 {
-	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3] || tokens[4])
+	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3])
 		err_handler("invalid camera !");
 	if (sc->camera.count != 0)
 		err_handler("too many camera");
@@ -59,6 +59,10 @@ void	parse_camera(t_scene *sc, char **tokens)
 	sc->camera.fov = ft_atod(tokens[3]);
 	if (sc->camera.fov < 0 || sc->camera.fov > 180)
 		err_handler("FOV  in range [0,180]");
+	if (tokens[4])
+		sc->camera.aperture = ft_atod(tokens[4]);
+	else
+		sc->camera.aperture = 0;
 }
 
 void	parse_light(t_scene *sc, char **tokens)

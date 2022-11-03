@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "so_long": "c",
+        "libft.h": "c",
+        "ft_printf.h": "c",
+        "stdlib.h": "c",
+        "__functional_03": "c",
+        "functional": "c",
+        "ray": "c",
+        "ray.h": "c",
+        "objects.h": "c"
+    }
+}

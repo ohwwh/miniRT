@@ -1,0 +1,22 @@
+#include "thread.h"
+
+#define MAX_DEPTH 50
+
+void routine(void *data)
+{
+    t_data* pdata;
+    double u;
+    double v;
+    t_vec dir;
+	t_ray ray_tmp;
+    
+
+    pdata = (t_data *)data;
+    u = ((double)pdata->i + random_double()) / (pdata->window_width-1);
+    v = ((double)pdata->j + random_double()) / (pdata->window_height-1);
+    dir = create_vec(pdata->camera.lower_left_corner.x + (u * pdata->camera.horizontal.x) + (v * pdata->camera.vertical.x) - pdata->camera.origin.x,
+    pdata->camera.lower_left_corner.y + (u * pdata->camera.horizontal.y) + (v * pdata->camera.vertical.y) - pdata->camera.origin.y,
+    pdata->camera.lower_left_corner.z + (u * pdata->camera.horizontal.z) + (v * pdata->camera.vertical.z) - pdata->camera.origin.z);
+    ray_tmp = ray(pdata->camera.origin, dir);
+    color = vec_sum(color, ray_color(ray_tmp, pdata->world, MAX_DEPTH));
+}

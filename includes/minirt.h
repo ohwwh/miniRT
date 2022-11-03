@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
-/*   Updated: 2022/10/29 15:11:12 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/03 13:00:57 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 # define WIDTH 800
 # define HEIGHT 600
 
-# define ANTI 1110
+# define ANTI 111
 # define LT	0.5
 
 # define CAM_SPEED 30
@@ -120,6 +120,7 @@ typedef struct s_camera
 	double	distance;
 	double	fov;
 	double	ratio;
+	double	aperture;
 	double	viewport_height;
 	double	viewport_width;
 	t_vec	forward;
@@ -300,6 +301,7 @@ void			generate_random_importance(t_hit_record *rec,
 					t_ray *scattered, t_light *temp, t_onb *uvw);
 
 t_vec			random_to_sphere(double radius, double distance_squared);
+t_vec			random_unit_disk(void);
 double			cosine_pdf(const t_vec *dir, const t_vec *w);
 double			sphere_light_pdf(t_hit_record *rec,
 					t_ray *scattered, t_objs *light);

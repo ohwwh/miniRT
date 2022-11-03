@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:28:58 by hako              #+#    #+#             */
-/*   Updated: 2022/10/28 11:18:32 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/03 13:04:32 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(int ac, char **av)
 	set_init_distance(&data);
 	create_light_object(&data.scene);
 	set_camera(&data.scene.camera);
+	//printf("%lf\n", vec_len(vec_sub(create_vec(17.52,10,25.83), create_vec(0,10,-10))));
 	raw_render(&data);
 	//path_render(&data);
 	mlx_hook(data.mlx.mlx_win, 2, 0, &keypress, &data);
