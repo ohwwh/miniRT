@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:48:25 by ohw               #+#    #+#             */
-/*   Updated: 2022/10/27 14:54:37 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/05 11:35:04 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ void	generate_light_sample_sphere(
 void	generate_random_importance(
 	t_hit_record *rec, t_ray *scattered, t_light *temp, t_onb *uvw)
 {
-	const double	t = LT;
+	const double	t = LT; //LT = 0.5인 경우, 
+	//사실상 광원에서 온 빛과 난반사에서 온 빛을 더한 후 2로 나눠준 것과 같다.
 
 	if (random_double(0, 1, 7) < t) //광원 샘플링
 	{

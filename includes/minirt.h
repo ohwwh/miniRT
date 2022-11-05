@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:37:08 by hako              #+#    #+#             */
-/*   Updated: 2022/11/03 21:41:31 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/05 15:55:13 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 
 # define ANTI 111
 # define LT	0.5
+double	lt;
 
 # define CAM_SPEED 30
 
@@ -49,6 +50,7 @@
 # define RCXY 4
 # define RCYZ 5
 # define RCXZ 6
+# define BX 7
 
 # define TH 3
 
@@ -156,6 +158,7 @@ typedef struct s_ray
 	t_vec	origin;
 	t_vec	dir;
 	t_vec	color;
+	double	p;
 }	t_ray;
 
 typedef struct s_hit_record
@@ -188,6 +191,7 @@ typedef struct s_shared
 typedef struct s_thread
 {
 	int 		thr_num;
+	double		lt_p;
 	pthread_t 	thr;
 	t_color		color;
 	t_shared	*sh;
@@ -245,6 +249,7 @@ void			parse_light_rectangle_xz(t_scene *sc, char **tokens);
 void			parse_rectangle_xy(t_scene *sc, char **tokens);
 void			parse_rectangle_yz(t_scene *sc, char **tokens);
 void			parse_rectangle_xz(t_scene *sc, char **tokens);
+void			parse_box(t_scene *sc, char **tokens);
 
 t_light			*alloc_light(t_scene *sc);
 void			parse_ambient(t_scene *sc, char **tokens);
@@ -320,6 +325,7 @@ void			hit_caps(t_objs *cy, t_ray *ray, t_hit_record *rec);
 void			hit_rectangle_xy(t_objs *rect, t_ray *ray, t_hit_record *rec);
 void			hit_rectangle_yz(t_objs *rect, t_ray *ray, t_hit_record *rec);
 void			hit_rectangle_xz(t_objs *rect, t_ray *ray, t_hit_record *rec);
+void			hit_box(t_objs *box, t_ray *ray, t_hit_record* rec);
 void			set_face_normal(t_hit_record *rec,
 					t_ray *ray, t_vec outward_normal);
 

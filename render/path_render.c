@@ -6,18 +6,18 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:08:40 by ohw               #+#    #+#             */
-/*   Updated: 2022/11/03 21:58:48 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/05 16:32:41 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-double roulette(t_color color)
+double roulette(double p)
 {
-	double 			q;
-	const double	sum = color.x + color.y + color.z;
-	q = (0.003 - sum) / 0.003;
-	return (q); //기각 확률
+	if (p > 0.5)
+		return (1);
+	else
+		return (p);
 }
 
 t_color	ray_color_raw(t_ray r, t_scene *sc)
@@ -26,6 +26,8 @@ t_color	ray_color_raw(t_ray r, t_scene *sc)
 	double			t;
 
 	rec.t = -1.0;
+	rec.tmax = -1.0;
+	rec.tmin = EPS;
 	find_hitpoint_path(&r, sc->objs, sc->light, &rec);
 	if (rec.t > EPS)
 		return (rec.color);
@@ -41,6 +43,8 @@ t_color	ray_color(t_ray r, t_scene *sc, int depth)
 	double			pdf;
 
 	rec.t = -1.0;
+	rec.tmax = -1.0;
+	rec.tmin = EPS;
 	if (depth <= 0)
 		return (create_vec(0, 0, 0));
 	find_hitpoint_path(&r, sc->objs, sc->light, &rec);
@@ -49,11 +53,18 @@ t_color	ray_color(t_ray r, t_scene *sc, int depth)
 		pdf = scatter(&r, &rec, &scattered, sc->light);
 		if (rec.mat != -1)
 		{
-			r.color = vec_scalar_mul(rec.color,
-					scattering_pdf(&scattered, &rec) / pdf);
+			if (pdf != 1)
+				pdf = scattering_pdf(&scattered, &rec) / pdf;
+			r.color = vec_scalar_mul(rec.color, pdf);
 			if (r.color.x < EPS && r.color.y < EPS && r.color.z < EPS)
 				return (r.color);
 			r.color = vec_mul(r.color, ray_color(scattered, sc, depth - 1));
+			/*r.p = roulette(pdf);
+			if (random_double(0, 1, 7) > r.p)
+				return (vec_division(r.color, 1 - r.p));
+			else
+				r.color = vec_mul(vec_division(r.color, r.p), ray_color(scattered, sc, depth - 1));*/
+			//러시안 룰렛
 			firefly(&r.color);
 		}
 		else
@@ -111,6 +122,8 @@ void	raw_render(t_minirt *v)
 		x = 0;
 		while (x ++ < WIDTH)
 		{
+			if (x == 526 && y == HEIGHT - 414)
+				x=x;
 			v->ray.color = create_vec(0, 0, 0);
 			sampling(v, x, y);
 			v->ray.color = vec_division(v->ray.color, v->scene.anti);
@@ -146,6 +159,7 @@ void	path_render(t_minirt *v)
 			s = 0;
 			if (x == 366 && y == 496)
 				x=x;
+			lt = 0.5;
 			while (s ++ < v->scene.anti)
 				sampling(v, x, y);
 			/*while (s ++ < 10) 

@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:53:04 by hako              #+#    #+#             */
-/*   Updated: 2022/11/03 01:26:52 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/05 15:54:49 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,3 +213,33 @@ void	parse_rectangle_xz(t_scene *sc, char **tokens)
 		obj->fuzzy = ft_atod(tokens[8]);
 }
 
+void	parse_box(t_scene *sc, char **tokens)
+{
+	t_objs	*obj;
+
+	if (!tokens || !tokens[1] || !tokens[2] || !tokens[3])
+		err_handler("invalid plane!");
+	obj = (t_objs *)malloc(sizeof(t_objs));
+	obj->next = sc->objs;
+	sc->objs = obj;
+	obj->type = BX;
+	obj->center = get_vec(tokens[1]);
+	obj->dir = get_vec(tokens[2]);
+	obj->color = get_color(tokens[3]);
+	if (!tokens[4])
+		obj->mat = 0;
+	else
+		obj->mat = ft_atod(tokens[4]);
+	if (!tokens[5])
+		obj->refraction = 1.5;
+	else
+		obj->refraction = ft_atod(tokens[5]);
+	if (!tokens[6])
+		obj->specular = 0.0;
+	else
+		obj->specular = ft_atod(tokens[6]);
+	if (!tokens[7])
+		obj->fuzzy = 0;
+	else
+		obj->fuzzy = ft_atod(tokens[7]);
+}

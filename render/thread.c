@@ -7,6 +7,7 @@ void	thread_init(t_minirt *vars)
 		vars->thr[i].thr_num = i;
 		vars->thr[0].sh->work[i] = 0;
 		vars->thr[i].color = create_vec(0, 0, 0);
+		vars->thr[i].lt_p = 0.5;
 	}
 	vars->thr[0].sh->x = 0;
 	vars->thr[0].sh->y = HEIGHT - 2;

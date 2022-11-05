@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 20:29:03 by hako              #+#    #+#             */
-/*   Updated: 2022/10/26 23:53:44 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/05 16:55:20 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,8 @@ int	find_hitpoint_path(t_ray *ray, t_objs *objs,
 			hit_rectangle_yz(tmp, ray, rec);
 		else if (tmp->type == 6)
 			hit_rectangle_xz(tmp, ray, rec);
+		/*else if (tmp->type == BX)
+			hit_box(tmp, ray, rec);*/
 		tmp = tmp->next;
 	}
 	if (light && light->count != 0)

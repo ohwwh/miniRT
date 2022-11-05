@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:44:17 by ohw               #+#    #+#             */
-/*   Updated: 2022/11/03 13:10:18 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/04 15:22:10 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ t_ray	ray_primary(t_camera *cam, double u, double v)
 	t_vec	offset;
 	t_point	focul_point;
 
+	ray.p = 1;
 	ray.origin = cam->origin;
 	ray.dir = vec_sum(vec_sum(vec_scalar_mul(cam->up, v * cam->viewport_height),
 				vec_scalar_mul(cam->right,

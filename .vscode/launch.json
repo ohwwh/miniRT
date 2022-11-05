@@ -12,7 +12,7 @@
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             //"program": "/Users/ohw/OHW/42Seoul/so_long/남의 것/so_long/so_long_bonus",
             "args": [
-                "map/fuzzy_specular3.rt"
+                "map/cornell_box_empty.rt"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

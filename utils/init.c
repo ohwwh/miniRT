@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:10:20 by ohw               #+#    #+#             */
-/*   Updated: 2022/11/03 21:41:15 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/05 11:47:59 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	init_rt(t_minirt *data)
 	sh = (t_shared *)malloc(sizeof(t_shared));
 	for (int i=0; i<TH; i++)
 		data->thr[i].sh = sh;
+	data->ray.p = 1;
 	data->scene.objs = NULL;
 	data->scene.amb.count = 0;
 	data->scene.camera.count = 0;

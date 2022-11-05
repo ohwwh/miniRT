@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 18:49:45 by hako              #+#    #+#             */
-/*   Updated: 2022/10/27 01:51:02 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/05 15:55:56 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,14 @@ void	parse_line(char *id, char **tokens, t_scene *sc)
 		parse_plane(sc, tokens);
 	else if (id[0] == 'c' && id[1] == 'y' && id[2] == '\0')
 		parse_cylinder(sc, tokens);
-	else if (id[0] == 'x' && id[1] == 'y')
+	else if (id[0] == 'x' && id[1] == 'y' && id[2] == '\0')
 		parse_rectangle_xy(sc, tokens);
-	else if (id[0] == 'y' && id[1] == 'z')
+	else if (id[0] == 'y' && id[1] == 'z' && id[2] == '\0')
 		parse_rectangle_yz(sc, tokens);
-	else if (id[0] == 'x' && id[1] == 'z')
+	else if (id[0] == 'x' && id[1] == 'z' && id[2] == '\0')
 		parse_rectangle_xz(sc, tokens);
+	else if (id[0] == 'b' && id[1] == 'x' && id[2] == '\0')
+		parse_box(sc, tokens);
 	else
 		err_handler("invalid object type");
 }

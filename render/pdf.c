@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:40:46 by ohw               #+#    #+#             */
-/*   Updated: 2022/11/03 22:00:44 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/05 14:28:20 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ double	get_pdf(t_hit_record *rec, t_ray *scattered, t_light *light, t_onb *uvw)
 	light_pdf_val += (pdf_temp * pdf_temp);
 	if (pdf_sum < EPS)
 		pdf_sum = 1;
-	return (light_pdf_val / pdf_sum);*/ //brdf pdf까지 가중평균. 어둡다??
+	return (light_pdf_val / pdf_sum); //brdf pdf까지 가중평균. 어둡다??*/
 }
 
 double	mixture_pdf_value(t_hit_record *rec, t_ray *scattered, t_light *light)
