@@ -6,7 +6,7 @@
 /*   By: ohw <ohw@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/25 00:08:40 by ohw               #+#    #+#             */
-/*   Updated: 2022/11/05 16:32:41 by ohw              ###   ########.fr       */
+/*   Updated: 2022/11/06 23:25:10 by ohw              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ t_color	ray_color(t_ray r, t_scene *sc, int depth)
 		{
 			if (pdf != 1)
 				pdf = scattering_pdf(&scattered, &rec) / pdf;
+			pdf = 1;
 			r.color = vec_scalar_mul(rec.color, pdf);
 			if (r.color.x < EPS && r.color.y < EPS && r.color.z < EPS)
 				return (r.color);
@@ -167,7 +168,7 @@ void	path_render(t_minirt *v)
 				t = 0;
 				while (t ++ < 10)
 					stratified_sampling(v, x, y, s, t);
-			}*/
+			}*/ //stratified sampling
 			v->ray.color = vec_division(v->ray.color, v->scene.anti);
 			put_color(&v->mlx, x - 1,
 				HEIGHT - 2 - y, rgb_to_int(v->ray.color));
